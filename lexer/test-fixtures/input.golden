@@ -1,2 +1,5 @@
 illegal | @
+illegal | asdf
+true | true
+false | false
 EOF | EOF

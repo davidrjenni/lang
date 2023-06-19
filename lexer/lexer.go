@@ -39,8 +39,12 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 			return tok, lit, err
 		}
 	}
-	lit = string(l.ch)
 
+	if unicode.IsLetter(l.ch) {
+		return l.scanKeyword()
+	}
+
+	lit = string(l.ch)
 	ch := l.ch
 
 	// Advance l.ch to the next rune, ch is the previous one.
@@ -69,4 +73,20 @@ func (l *Lexer) next() error {
 
 	l.ch = ch
 	return nil
+}
+
+func (l *Lexer) scanKeyword() (Tok, string, error) {
+	var buf []rune
+	for unicode.IsLetter(l.ch) {
+		buf = append(buf, l.ch)
+		if err := l.next(); err != nil {
+			return Illegal, "", err
+		}
+	}
+
+	lit := string(buf)
+	if t, ok := keywords[lit]; ok {
+		return t, lit, nil
+	}
+	return Illegal, lit, nil
 }

@@ -17,3 +17,9 @@ const (
 	True  // true
 	False // false
 )
+
+// keywords map all keywords to their corresponding token.
+var keywords = map[string]Tok{
+	"true":  True,
+	"false": False,
+}
