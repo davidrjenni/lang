@@ -55,6 +55,50 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 	switch ch {
 	case eof:
 		tok, lit = EOF, "EOF"
+
+	case '+':
+		tok = Plus
+	case '-':
+		tok = Minus
+	case '*', '·':
+		tok = Multiply
+	case '/', '÷':
+		tok = Divide
+	case '&', '∧':
+		tok = And
+	case '|', '∨':
+		tok = Or
+	case '⟹':
+		tok = Implies
+	case '<':
+		if tok = Less; l.ch == '=' {
+			tok, lit = LessEq, "<="
+		}
+	case '≤':
+		tok = LessEq
+	case '=':
+		if tok = Equal; l.ch == '>' {
+			tok, lit = Implies, "=>"
+			if err := l.next(); err != nil {
+				return tok, lit, err
+			}
+		}
+	case '#', '≠':
+		tok = NotEqual
+	case '>':
+		if tok = Greater; l.ch == '=' {
+			tok, lit = GreaterEq, ">="
+			if err := l.next(); err != nil {
+				return tok, lit, err
+			}
+		}
+	case '≥':
+		tok = GreaterEq
+	case '∈':
+		tok = In
+	case '~', '¬':
+		tok = Not
+
 	default:
 		tok = Illegal
 	}
