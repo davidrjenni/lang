@@ -43,6 +43,9 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 	if unicode.IsLetter(l.ch) {
 		return l.scanKeyword()
 	}
+	if unicode.IsDigit(l.ch) {
+		return l.scanNumber()
+	}
 
 	lit = string(l.ch)
 	ch := l.ch
@@ -144,4 +147,27 @@ func (l *Lexer) scanKeyword() (Tok, string, error) {
 		return t, lit, nil
 	}
 	return Illegal, lit, nil
+}
+
+func (l *Lexer) scanNumber() (Tok, string, error) {
+	var (
+		buf []rune
+		tok = I64
+	)
+	for unicode.IsDigit(l.ch) || l.ch == '_' || l.ch == '.' {
+		if l.ch != '_' {
+			buf = append(buf, l.ch)
+		}
+		if l.ch == '.' {
+			if tok == F64 {
+				tok = Illegal
+			} else {
+				tok = F64
+			}
+		}
+		if err := l.next(); err != nil {
+			return tok, "", err
+		}
+	}
+	return tok, string(buf), nil
 }
