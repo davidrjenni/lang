@@ -38,8 +38,11 @@ const (
 	Is        // is
 	Not       // ¬
 
-	True  // true
-	False // false
+	I64Lit    // i64 literal
+	F64Lit    // f64 literal
+	StringLit // string literal
+	True      // true
+	False     // false
 
 	Bool   // bool
 	I64    // i64
