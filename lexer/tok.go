@@ -40,6 +40,11 @@ const (
 
 	True  // true
 	False // false
+
+	Bool   // bool
+	I64    // i64
+	F64    // f64
+	String // string
 )
 
 // keywords map all keywords to their corresponding token.
@@ -49,4 +54,9 @@ var keywords = map[string]Tok{
 
 	"in": In,
 	"is": Is,
+
+	"bool":   Bool,
+	"i64":    I64,
+	"f64":    F64,
+	"string": String,
 }
