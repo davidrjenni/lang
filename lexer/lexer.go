@@ -132,7 +132,7 @@ func (l *Lexer) next() error {
 
 func (l *Lexer) scanKeyword() (Tok, string, error) {
 	var buf []rune
-	for unicode.IsLetter(l.ch) {
+	for unicode.IsLetter(l.ch) || unicode.IsDigit(l.ch) {
 		buf = append(buf, l.ch)
 		if err := l.next(); err != nil {
 			return Illegal, "", err
