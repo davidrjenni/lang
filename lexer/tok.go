@@ -14,6 +14,23 @@ const (
 	EOF     Tok = iota // EOF
 	Illegal            // illegal
 
+	Plus      // +
+	Minus     // -
+	Multiply  // ·
+	Divide    // ÷
+	And       // ∧
+	Or        // ∨
+	Implies   // ⟹
+	Less      // <
+	LessEq    // ≤
+	Equal     // =
+	NotEqual  // ≠
+	Greater   // >
+	GreaterEq // ≥
+	In        // ∈
+	Is        // is
+	Not       // ¬
+
 	True  // true
 	False // false
 )
@@ -22,4 +39,7 @@ const (
 var keywords = map[string]Tok{
 	"true":  True,
 	"false": False,
+
+	"in": In,
+	"is": Is,
 }
