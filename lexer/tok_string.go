@@ -10,29 +10,34 @@ func _() {
 	var x [1]struct{}
 	_ = x[EOF-0]
 	_ = x[Illegal-1]
-	_ = x[Plus-2]
-	_ = x[Minus-3]
-	_ = x[Multiply-4]
-	_ = x[Divide-5]
-	_ = x[And-6]
-	_ = x[Or-7]
-	_ = x[Implies-8]
-	_ = x[Less-9]
-	_ = x[LessEq-10]
-	_ = x[Equal-11]
-	_ = x[NotEqual-12]
-	_ = x[Greater-13]
-	_ = x[GreaterEq-14]
-	_ = x[In-15]
-	_ = x[Is-16]
-	_ = x[Not-17]
-	_ = x[True-18]
-	_ = x[False-19]
+	_ = x[LeftParen-2]
+	_ = x[RightParen-3]
+	_ = x[LeftBracket-4]
+	_ = x[RightBracket-5]
+	_ = x[Comma-6]
+	_ = x[Plus-7]
+	_ = x[Minus-8]
+	_ = x[Multiply-9]
+	_ = x[Divide-10]
+	_ = x[And-11]
+	_ = x[Or-12]
+	_ = x[Implies-13]
+	_ = x[Less-14]
+	_ = x[LessEq-15]
+	_ = x[Equal-16]
+	_ = x[NotEqual-17]
+	_ = x[Greater-18]
+	_ = x[GreaterEq-19]
+	_ = x[In-20]
+	_ = x[Is-21]
+	_ = x[Not-22]
+	_ = x[True-23]
+	_ = x[False-24]
 }
 
-const _Tok_name = "EOFillegal+-·÷∧∨⟹<≤=≠>≥∈is¬truefalse"
+const _Tok_name = "EOFillegal()[],+-·÷∧∨⟹<≤=≠>≥∈is¬truefalse"
 
-var _Tok_index = [...]uint8{0, 3, 10, 11, 12, 14, 16, 19, 22, 25, 26, 29, 30, 33, 34, 37, 40, 42, 44, 48, 53}
+var _Tok_index = [...]uint8{0, 3, 10, 11, 12, 13, 14, 15, 16, 17, 19, 21, 24, 27, 30, 31, 34, 35, 38, 39, 42, 45, 47, 49, 53, 58}
 
 func (i Tok) String() string {
 	if i < 0 || i >= Tok(len(_Tok_index)-1) {

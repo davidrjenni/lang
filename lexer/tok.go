@@ -14,6 +14,13 @@ const (
 	EOF     Tok = iota // EOF
 	Illegal            // illegal
 
+	LeftParen    // (
+	RightParen   // )
+	LeftBracket  // [
+	RightBracket // ]
+
+	Comma // ,
+
 	Plus      // +
 	Minus     // -
 	Multiply  // ·
