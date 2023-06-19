@@ -56,6 +56,17 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 	case eof:
 		tok, lit = EOF, "EOF"
 
+	case '(':
+		tok = LeftParen
+	case ')':
+		tok = RightParen
+	case '[':
+		tok = LeftBracket
+	case ']':
+		tok = RightBracket
+	case ',':
+		tok = Comma
+
 	case '+':
 		tok = Plus
 	case '-':
