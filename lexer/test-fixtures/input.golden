@@ -44,4 +44,13 @@ i64 | 1000000
 f64 | 1000.00
 f64 | 1000.0001
 illegal | 1000.0001.000
+string literal | "asdf"
+string literal | "\t\\\"\n"
+illegal | "\q"
+illegal | "asdf
+
+
+illegal | "
+
+
 EOF | EOF

@@ -115,6 +115,9 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 	case '~', '¬':
 		tok = Not
 
+	case '"':
+		return l.scanString()
+
 	default:
 		tok = Illegal
 	}
@@ -172,4 +175,44 @@ func (l *Lexer) scanNumber() (Tok, string, error) {
 		}
 	}
 	return tok, string(buf), nil
+}
+
+func (l *Lexer) scanString() (Tok, string, error) {
+	var (
+		buf = []rune{'"'}
+		tok = StringLit
+	)
+	for l.ch != '"' {
+		buf = append(buf, l.ch)
+		if l.ch == '\\' {
+			if err := l.next(); err != nil {
+				return tok, "", err
+			}
+			buf = append(buf, l.ch)
+			if !l.escape('"') {
+				tok = Illegal
+			}
+		}
+		if l.ch == '\n' || l.ch == eof {
+			tok = Illegal
+			break
+		}
+		if err := l.next(); err != nil {
+			return tok, "", err
+		}
+	}
+	buf = append(buf, l.ch)
+	if err := l.next(); err != nil {
+		return tok, "", err
+	}
+	return tok, string(buf), nil
+}
+
+func (l *Lexer) escape(q rune) bool {
+	switch l.ch {
+	case 'n', 't', '\\', q:
+		return true
+	default:
+		return false
+	}
 }
