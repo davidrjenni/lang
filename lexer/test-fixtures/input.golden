@@ -38,11 +38,11 @@ bool | bool
 i64 | i64
 f64 | f64
 string | string
-f64 | 13.37
-i64 | 1000
-i64 | 1000000
-f64 | 1000.00
-f64 | 1000.0001
+f64 literal | 13.37
+i64 literal | 1000
+i64 literal | 1000000
+f64 literal | 1000.00
+f64 literal | 1000.0001
 illegal | 1000.0001.000
 string literal | "asdf"
 string literal | "\t\\\"\n"

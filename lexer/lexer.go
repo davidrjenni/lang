@@ -157,17 +157,17 @@ func (l *Lexer) scanKeyword() (Tok, string, error) {
 func (l *Lexer) scanNumber() (Tok, string, error) {
 	var (
 		buf []rune
-		tok = I64
+		tok = I64Lit
 	)
 	for unicode.IsDigit(l.ch) || l.ch == '_' || l.ch == '.' {
 		if l.ch != '_' {
 			buf = append(buf, l.ch)
 		}
 		if l.ch == '.' {
-			if tok == F64 {
+			if tok == F64Lit {
 				tok = Illegal
 			} else {
-				tok = F64
+				tok = F64Lit
 			}
 		}
 		if err := l.next(); err != nil {
