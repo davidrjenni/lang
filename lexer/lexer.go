@@ -19,6 +19,8 @@ type Lexer struct {
 	ch rune          // current rune
 }
 
+// New creates a new lexer which reads source code from the given reader.
+// If the lexer cannot read from the reader, an error is returned.
 func New(r io.Reader, filename string) (*Lexer, error) {
 	l := &Lexer{r: bufio.NewReader(r)}
 
