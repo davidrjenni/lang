@@ -31,7 +31,7 @@ func Parse(r io.Reader, filename string) (ast.Node, error) {
 	}
 	p := &parser{l: l}
 	p.next()
-	n := p.parseExpr()
+	n := p.parseCmd()
 	if len(p.errs) == 0 {
 		return n, nil
 	}
@@ -45,6 +45,14 @@ type parser struct {
 	// lookahead
 	lit string
 	tok lexer.Tok
+}
+
+// Cmd -> "assert" Expr ";" .
+func (p *parser) parseCmd() ast.Cmd {
+	p.expect(lexer.Assert)
+	x := p.parseExpr()
+	p.expect(lexer.Semicolon)
+	return &ast.Assert{X: x}
 }
 
 // Expr -> UnaryExpr { BinOp UnaryExpr } .
@@ -83,7 +91,7 @@ func (p *parser) parseUnaryExpr() ast.Expr {
 	}
 }
 
-// PrimaryExpr -> F64Lit | I64Lit | StringLit | True | False .
+// PrimaryExpr -> F64Lit | I64Lit | StringLit | "true" | "false" .
 func (p *parser) parsePrimaryExpr() ast.Expr {
 	switch p.tok {
 	case lexer.F64Lit:
