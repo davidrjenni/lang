@@ -89,6 +89,9 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 	case '<':
 		if tok = Less; l.ch == '=' {
 			tok, lit = LessEq, "<="
+			if err := l.next(); err != nil {
+				return tok, lit, err
+			}
 		}
 	case '≤':
 		tok = LessEq
