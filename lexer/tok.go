@@ -19,7 +19,8 @@ const (
 	LeftBracket  // [
 	RightBracket // ]
 
-	Comma // ,
+	Comma     // ,
+	Semicolon // ;
 
 	Plus      // +
 	Minus     // -
@@ -48,6 +49,8 @@ const (
 	I64    // i64
 	F64    // f64
 	String // string
+
+	Assert // assert
 )
 
 // keywords map all keywords to their corresponding token.
@@ -62,4 +65,6 @@ var keywords = map[string]Tok{
 	"i64":    I64,
 	"f64":    F64,
 	"string": String,
+
+	"assert": Assert,
 }
