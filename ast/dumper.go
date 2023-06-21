@@ -22,33 +22,44 @@ type dumper struct {
 
 func (d *dumper) dump(n Node) {
 	switch n := n.(type) {
+	case *Assert:
+		d.enter("Assert(")
+		d.dumpExpr(n.X)
+		d.exit(")")
+	case Expr:
+		d.dumpExpr(n)
+	}
+}
+
+func (d *dumper) dumpExpr(x Expr) {
+	switch x := x.(type) {
 	case *BinaryExpr:
 		d.enter("BinaryExpr(")
 		d.print("LHS: ")
-		d.dump(n.LHS)
+		d.dump(x.LHS)
 		d.println()
-		d.printf("Op: %s", n.Op.String())
+		d.printf("Op: %s", x.Op.String())
 		d.println()
 		d.print("RHS: ")
-		d.dump(n.RHS)
+		d.dump(x.RHS)
 		d.exit(")")
 	case *UnaryExpr:
 		d.enter("UnaryExpr(")
-		d.printf("Op: %s", n.Op.String())
+		d.printf("Op: %s", x.Op.String())
 		d.println()
 		d.print("X: ")
-		d.dump(n.X)
+		d.dump(x.X)
 		d.exit(")")
 	case *Bool:
-		d.printf("Bool(Val: %v)", n.Val)
+		d.printf("Bool(Val: %v)", x.Val)
 	case *F64:
-		d.printf("F64(Val: %v)", n.Val)
+		d.printf("F64(Val: %v)", x.Val)
 	case *I64:
-		d.printf("I64(Val: %v)", n.Val)
+		d.printf("I64(Val: %v)", x.Val)
 	case *String:
-		d.printf("String(Val: %q)", n.Val)
+		d.printf("String(Val: %q)", x.Val)
 	default:
-		panic(fmt.Sprintf("unexpected type %T", n))
+		panic(fmt.Sprintf("unexpected type %T", x))
 	}
 }
 
