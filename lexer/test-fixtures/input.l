@@ -8,7 +8,7 @@ true false
 > >= ≥
 is in ∈
 ~ ¬
-([,])
+([,]);
 
 bool i64 f64 string
 
@@ -23,3 +23,5 @@ bool i64 f64 string
 "\q"
 "asdf
 "
+
+assert

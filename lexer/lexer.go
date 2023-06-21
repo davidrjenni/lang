@@ -71,6 +71,8 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 		tok = RightBracket
 	case ',':
 		tok = Comma
+	case ';':
+		tok = Semicolon
 
 	case '+':
 		tok = Plus

@@ -33,6 +33,7 @@ is | is
 , | ,
 ] | ]
 ) | )
+; | ;
 bool | bool
 i64 | i64
 f64 | f64
@@ -52,4 +53,5 @@ illegal | "asdf
 illegal | "
 
 
+assert | assert
 EOF | EOF
