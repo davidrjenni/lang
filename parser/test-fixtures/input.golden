@@ -1,0 +1,17 @@
+BinaryExpr(
+	LHS: BinaryExpr(
+		LHS: BinaryExpr(
+			LHS: I64(Val: 42)
+			Op: ·
+			RHS: I64(Val: 2)
+		)
+		Op: ≤
+		RHS: I64(Val: 84)
+	)
+	Op: ≤
+	RHS: BinaryExpr(
+		LHS: I64(Val: 85)
+		Op: ·
+		RHS: I64(Val: 1)
+	)
+)
