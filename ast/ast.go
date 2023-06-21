@@ -10,6 +10,19 @@ type Node interface {
 	node()
 }
 
+type Cmd interface {
+	cmd()
+	Node
+}
+
+type Assert struct {
+	X Expr
+}
+
+func (*Assert) node() {}
+
+func (*Assert) cmd() {}
+
 type Expr interface {
 	expr()
 	Node
