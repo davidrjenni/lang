@@ -91,7 +91,7 @@ func (p *parser) parseUnaryExpr() ast.Expr {
 	}
 }
 
-// PrimaryExpr -> F64Lit | I64Lit | StringLit | "true" | "false" .
+// PrimaryExpr -> "(" Expr ")" | F64Lit | I64Lit | StringLit | "true" | "false" .
 func (p *parser) parsePrimaryExpr() ast.Expr {
 	switch p.tok {
 	case lexer.F64Lit:
