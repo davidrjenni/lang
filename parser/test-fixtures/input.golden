@@ -1,17 +1,25 @@
-BinaryExpr(
-	LHS: BinaryExpr(
+Assert(
+	BinaryExpr(
 		LHS: BinaryExpr(
-			LHS: I64(Val: 42)
-			Op: ·
-			RHS: I64(Val: 2)
+			LHS: BinaryExpr(
+				LHS: I64(Val: 42)
+				Op: ·
+				RHS: I64(Val: 2)
+			)
+			Op: ≤
+			RHS: I64(Val: 84)
 		)
 		Op: ≤
-		RHS: I64(Val: 84)
-	)
-	Op: ≤
-	RHS: BinaryExpr(
-		LHS: I64(Val: 85)
-		Op: ·
-		RHS: I64(Val: 1)
+		RHS: BinaryExpr(
+			LHS: I64(Val: 85)
+			Op: ·
+			RHS: ParenExpr(
+				X: BinaryExpr(
+					LHS: I64(Val: 1)
+					Op: +
+					RHS: I64(Val: 1)
+				)
+			)
+		)
 	)
 )

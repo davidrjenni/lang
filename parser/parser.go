@@ -110,6 +110,11 @@ func (p *parser) parsePrimaryExpr() ast.Expr {
 			panic(fmt.Sprintf("cannot convert i64: %v", err))
 		}
 		return &ast.I64{Val: val}
+	case lexer.LeftParen:
+		p.expect(lexer.LeftParen)
+		x := p.parseExpr()
+		p.expect(lexer.RightParen)
+		return &ast.ParenExpr{X: x}
 	case lexer.StringLit:
 		lit := p.lit
 		p.expect(lexer.StringLit)

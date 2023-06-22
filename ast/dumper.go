@@ -43,6 +43,11 @@ func (d *dumper) dumpExpr(x Expr) {
 		d.print("RHS: ")
 		d.dump(x.RHS)
 		d.exit(")")
+	case *ParenExpr:
+		d.enter("ParenExpr(")
+		d.print("X: ")
+		d.dump(x.X)
+		d.exit(")")
 	case *UnaryExpr:
 		d.enter("UnaryExpr(")
 		d.printf("Op: %s", x.Op.String())

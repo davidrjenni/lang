@@ -34,15 +34,21 @@ type BinaryExpr struct {
 	RHS Expr
 }
 
+type ParenExpr struct {
+	X Expr
+}
+
 type UnaryExpr struct {
 	Op lexer.Tok
 	X  Expr
 }
 
 func (*BinaryExpr) node() {}
+func (*ParenExpr) node()  {}
 func (*UnaryExpr) node()  {}
 
 func (*BinaryExpr) expr() {}
+func (*ParenExpr) expr()  {}
 func (*UnaryExpr) expr()  {}
 
 type Lit interface {
