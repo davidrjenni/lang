@@ -69,6 +69,10 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 		tok = LeftBracket
 	case ']':
 		tok = RightBracket
+	case '{':
+		tok = LeftBrace
+	case '}':
+		tok = RightBrace
 	case ',':
 		tok = Comma
 	case ';':

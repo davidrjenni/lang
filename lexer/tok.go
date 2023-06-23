@@ -18,6 +18,8 @@ const (
 	RightParen   // )
 	LeftBracket  // [
 	RightBracket // ]
+	LeftBrace    // {
+	RightBrace   // }
 
 	Comma     // ,
 	Semicolon // ;
