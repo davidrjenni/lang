@@ -22,12 +22,31 @@ type dumper struct {
 
 func (d *dumper) dump(n Node) {
 	switch n := n.(type) {
-	case *Assert:
-		d.enter("Assert(")
-		d.dumpExpr(n.X)
-		d.exit(")")
+	case Cmd:
+		d.dumpCmd(n)
 	case Expr:
 		d.dumpExpr(n)
+	default:
+		panic(fmt.Sprintf("unexpected type %T", n))
+	}
+}
+
+func (d *dumper) dumpCmd(cmd Cmd) {
+	switch cmd := cmd.(type) {
+	case *Assert:
+		d.enter("Assert(")
+		d.dumpExpr(cmd.X)
+		d.exit(")")
+	case *Block:
+		d.enter("Block(")
+		for i, c := range cmd.Cmds {
+			d.printf("%d: ", i)
+			d.dumpCmd(c)
+			d.println()
+		}
+		d.exit(")")
+	default:
+		panic(fmt.Sprintf("unexpected type %T", cmd))
 	}
 }
 

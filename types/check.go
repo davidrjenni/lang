@@ -34,6 +34,12 @@ func (c *checker) check(n ast.Node) {
 		if _, ok := t.(*Bool); !ok {
 			c.errorf("expr must be of type bool, got %s", t)
 		}
+	case *ast.Block:
+		for _, cmd := range n.Cmds {
+			c.check(cmd)
+		}
+	default:
+		panic(fmt.Sprintf("unexpected expr %T", n))
 	}
 }
 

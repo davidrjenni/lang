@@ -31,7 +31,7 @@ func Parse(r io.Reader, filename string) (ast.Node, error) {
 	}
 	p := &parser{l: l}
 	p.next()
-	n := p.parseCmd()
+	n := p.parseBlock()
 	if len(p.errs) == 0 {
 		return n, nil
 	}
@@ -45,6 +45,17 @@ type parser struct {
 	// lookahead
 	lit string
 	tok lexer.Tok
+}
+
+// Block -> "{" Cmd { Cmd } "}" .
+func (p *parser) parseBlock() *ast.Block {
+	var b ast.Block
+	p.expect(lexer.LeftBrace)
+	for p.in(lexer.Assert) {
+		b.Cmds = append(b.Cmds, p.parseCmd())
+	}
+	p.expect(lexer.RightBrace)
+	return &b
 }
 
 // Cmd -> "assert" Expr ";" .

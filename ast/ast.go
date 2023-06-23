@@ -19,9 +19,15 @@ type Assert struct {
 	X Expr
 }
 
+type Block struct {
+	Cmds []Cmd
+}
+
 func (*Assert) node() {}
+func (*Block) node()  {}
 
 func (*Assert) cmd() {}
+func (*Block) cmd()  {}
 
 type Expr interface {
 	expr()
