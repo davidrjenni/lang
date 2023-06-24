@@ -62,6 +62,8 @@ func (d *dumper) dumpExpr(x Expr) {
 		d.print("RHS: ")
 		d.dump(x.RHS)
 		d.exit(")")
+	case Lit:
+		d.dumpLit(x)
 	case *ParenExpr:
 		d.enter("ParenExpr(")
 		d.print("X: ")
@@ -74,16 +76,23 @@ func (d *dumper) dumpExpr(x Expr) {
 		d.print("X: ")
 		d.dump(x.X)
 		d.exit(")")
-	case *Bool:
-		d.printf("Bool(Val: %v)", x.Val)
-	case *F64:
-		d.printf("F64(Val: %v)", x.Val)
-	case *I64:
-		d.printf("I64(Val: %v)", x.Val)
-	case *String:
-		d.printf("String(Val: %q)", x.Val)
 	default:
 		panic(fmt.Sprintf("unexpected type %T", x))
+	}
+}
+
+func (d *dumper) dumpLit(l Lit) {
+	switch l := l.(type) {
+	case *Bool:
+		d.printf("Bool(Val: %v)", l.Val)
+	case *F64:
+		d.printf("F64(Val: %v)", l.Val)
+	case *I64:
+		d.printf("I64(Val: %v)", l.Val)
+	case *String:
+		d.printf("String(Val: %q)", l.Val)
+	default:
+		panic(fmt.Sprintf("unexpected type %T", l))
 	}
 }
 
