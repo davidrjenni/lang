@@ -16,11 +16,11 @@ func Equal(t, u Type) bool {
 	case *Bool:
 		_, ok := u.(*Bool)
 		return ok
-	case *I64:
-		_, ok := u.(*I64)
-		return ok
 	case *F64:
 		_, ok := u.(*F64)
+		return ok
+	case *I64:
+		_, ok := u.(*I64)
 		return ok
 	case *String:
 		_, ok := u.(*String)
@@ -30,17 +30,19 @@ func Equal(t, u Type) bool {
 	}
 }
 
-type Bool struct{}
-type I64 struct{}
-type F64 struct{}
-type String struct{}
+type (
+	Bool   struct{}
+	F64    struct{}
+	I64    struct{}
+	String struct{}
+)
 
 func (*Bool) String() string   { return "bool" }
-func (*I64) String() string    { return "i64" }
 func (*F64) String() string    { return "f64" }
+func (*I64) String() string    { return "i64" }
 func (*String) String() string { return "string" }
 
 func (*Bool) typ()   {}
-func (*I64) typ()    {}
 func (*F64) typ()    {}
+func (*I64) typ()    {}
 func (*String) typ() {}
