@@ -39,7 +39,7 @@ func (c *checker) check(n ast.Node) {
 			c.check(cmd)
 		}
 	default:
-		panic(fmt.Sprintf("unexpected expr %T", n))
+		panic(fmt.Sprintf("unexpected type %T", n))
 	}
 }
 
@@ -60,7 +60,7 @@ func (c *checker) checkExpr(x ast.Expr) (Type, bool) {
 	case *ast.UnaryExpr:
 		return c.checkUnaryExpr(x)
 	default:
-		panic(fmt.Sprintf("unexpected expr %T", x))
+		panic(fmt.Sprintf("unexpected type %T", x))
 	}
 }
 
