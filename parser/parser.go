@@ -15,7 +15,7 @@ import (
 	"davidrjenni.io/lang/lexer"
 )
 
-func ParseFile(filename string) (ast.Node, error) {
+func ParseFile(filename string) (*ast.Block, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -24,7 +24,7 @@ func ParseFile(filename string) (ast.Node, error) {
 	return Parse(f, filename)
 }
 
-func Parse(r io.Reader, filename string) (ast.Node, error) {
+func Parse(r io.Reader, filename string) (*ast.Block, error) {
 	l, err := lexer.New(r, filename)
 	if err != nil {
 		return nil, err
