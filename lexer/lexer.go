@@ -169,9 +169,7 @@ func (l *Lexer) scanNumber() (Tok, string, error) {
 		tok = I64Lit
 	)
 	for unicode.IsDigit(l.ch) || l.ch == '_' || l.ch == '.' {
-		if l.ch != '_' {
-			buf = append(buf, l.ch)
-		}
+		buf = append(buf, l.ch)
 		if l.ch == '.' {
 			if tok == F64Lit {
 				tok = Illegal
