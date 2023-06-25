@@ -8,20 +8,18 @@ import (
 	"fmt"
 
 	"davidrjenni.io/lang/ast"
+	"davidrjenni.io/lang/internal/errors"
 	"davidrjenni.io/lang/lexer"
 )
 
 func Check(n ast.Node) error {
 	c := &checker{}
 	c.check(n)
-	if len(c.errs) == 0 {
-		return nil
-	}
-	return c.errs[0]
+	return c.errs.Err()
 }
 
 type checker struct {
-	errs []error
+	errs errors.Errors
 }
 
 func (c *checker) check(n ast.Node) {
@@ -147,5 +145,5 @@ func (c *checker) checkUnaryExpr(x *ast.UnaryExpr) (Type, bool) {
 }
 
 func (c *checker) errorf(format string, args ...interface{}) {
-	c.errs = append(c.errs, fmt.Errorf(format, args...))
+	c.errs.Append(format, args...)
 }
