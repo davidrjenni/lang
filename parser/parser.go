@@ -89,13 +89,13 @@ func (p *parser) parseBinaryExpr(parse func() ast.Expr, ops ...lexer.Tok) ast.Ex
 	return x
 }
 
-// UnaryExpr -> [ "-" | "~" ] PrimaryExpr .
+// UnaryExpr -> [ "-" | "~" ] UnaryExprExpr | PrimaryExpr .
 func (p *parser) parseUnaryExpr() ast.Expr {
 	switch p.tok {
 	case lexer.Minus, lexer.Not:
 		op := p.tok
 		p.expect(lexer.Minus, lexer.Not)
-		x := p.parsePrimaryExpr()
+		x := p.parseUnaryExpr()
 		return &ast.UnaryExpr{X: x, Op: op}
 	default:
 		return p.parsePrimaryExpr()

@@ -35,5 +35,27 @@ Block(
 			RHS: I64(Val: 25)
 		)
 	)
+	2: Assert(
+		BinaryExpr(
+			LHS: UnaryExpr(
+				Op: -
+				X: UnaryExpr(
+					Op: -
+					X: I64(Val: 1)
+				)
+			)
+			Op: =
+			RHS: I64(Val: 1)
+		)
+	)
+	3: Assert(
+		UnaryExpr(
+			Op: ¬
+			X: UnaryExpr(
+				Op: ¬
+				X: Bool(Val: true)
+			)
+		)
+	)
 	
 )
