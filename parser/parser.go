@@ -12,6 +12,7 @@ import (
 	"strconv"
 
 	"davidrjenni.io/lang/ast"
+	"davidrjenni.io/lang/internal/errors"
 	"davidrjenni.io/lang/lexer"
 )
 
@@ -32,15 +33,12 @@ func Parse(r io.Reader, filename string) (*ast.Block, error) {
 	p := &parser{l: l}
 	p.next()
 	n := p.parseBlock()
-	if len(p.errs) == 0 {
-		return n, nil
-	}
-	return n, p.errs[0]
+	return n, p.errs.Err()
 }
 
 type parser struct {
 	l    *lexer.Lexer
-	errs []error
+	errs errors.Errors
 
 	// lookahead
 	lit string
@@ -137,7 +135,7 @@ func (p *parser) parsePrimaryExpr() ast.Expr {
 		p.expect(lexer.False)
 		return &ast.Bool{Val: false}
 	default:
-		p.errs = append(p.errs, fmt.Errorf("unexpected %s", p.lit))
+		p.errs.Append("unexpected %s", p.lit)
 		return nil
 	}
 }
@@ -147,11 +145,11 @@ func (p *parser) next() {
 		var err error
 		p.tok, p.lit, err = p.l.Read()
 		if err != nil {
-			p.errs = append(p.errs, err)
+			p.errs.Append("syntax error: %v", err)
 			continue
 		}
 		if p.tok == lexer.Illegal {
-			p.errs = append(p.errs, fmt.Errorf("syntax error: %v", p.lit))
+			p.errs.Append("syntax error: %s", p.lit)
 			continue
 		}
 		break
@@ -180,7 +178,7 @@ func (p *parser) expect(toks ...lexer.Tok) {
 		return
 	}
 	if len(toks) == 1 {
-		p.errs = append(p.errs, fmt.Errorf("unexpected %s, expected %s", p.lit, toks[0]))
+		p.errs.Append("unexpected %s, expected %s", p.lit, toks[0])
 		return
 	}
 	var b bytes.Buffer
@@ -190,7 +188,7 @@ func (p *parser) expect(toks ...lexer.Tok) {
 		}
 		b.WriteString(tok.String())
 	}
-	p.errs = append(p.errs, fmt.Errorf("unexpected %s, expected one of %s", p.lit, b.String()))
+	p.errs.Append("unexpected %s, expected one of %s", p.lit, b.String())
 }
 
 var relOps = []lexer.Tok{
