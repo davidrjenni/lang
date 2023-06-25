@@ -1,0 +1,46 @@
+
+.macro AssertViolated
+    movq $___fmt_assert, %rdi
+    movq $0, %rax
+    call printf
+    movq $1, %rdi
+    movq $0, %rax
+    call exit
+.endm
+
+	.section .text
+	.global main
+main:
+	pushq %rbp
+	movq %rsp, %rbp
+	subq $8, %rsp
+	movb $1, %al
+	cmpb $1, %al
+	setne %al
+	movb %al, %al
+	cmpb $1, %al
+	setne %al
+	movb %al, %al
+	cmpb $1, %al
+	je .L1
+	AssertViolated
+.L1:
+	movb $0, %al
+	cmpb $1, %al
+	setne %al
+	movb %al, %al
+	cmpb $1, %al
+	setne %al
+	movb %al, %al
+	cmpb $1, %al
+	je .L2
+	AssertViolated
+.L2:
+
+	movq $0, %rax
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+
+	.section .data
+___fmt_assert: .string "Assertion violated\n"
