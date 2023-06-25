@@ -1,0 +1,22 @@
+load rbool.0 <- bool(true)
+cmp rbool.0 bool(true)
+setne rbool.0
+load rbool.0 <- rbool.0
+cmp rbool.0 bool(true)
+setne rbool.0
+load rbool.0 <- rbool.0
+cmp rbool.0 bool(true)
+cjump .L1
+call AssertViolated
+.L1
+load rbool.0 <- bool(false)
+cmp rbool.0 bool(true)
+setne rbool.0
+load rbool.0 <- rbool.0
+cmp rbool.0 bool(true)
+setne rbool.0
+load rbool.0 <- rbool.0
+cmp rbool.0 bool(true)
+cjump .L2
+call AssertViolated
+.L2
