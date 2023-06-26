@@ -86,7 +86,6 @@ type (
 	LVal interface {
 		lval()
 		RVal
-		Node
 	}
 
 	Mem struct {
