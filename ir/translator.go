@@ -66,16 +66,10 @@ func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 }
 
 func (t *translator) boolCheck(x ast.Expr, expect Bool) Seq {
+	check := t.translateRVal(x)
 	return Seq{
-		&Load{
-			Src: t.translateRVal(x),
-			Dst: boolReg1,
-		},
-		&BinaryExpr{
-			RHS: boolReg1,
-			Op:  Cmp,
-			LHS: expect,
-		},
+		&Load{Src: check, Dst: boolReg1},
+		&BinaryExpr{RHS: boolReg1, Op: Cmp, LHS: expect},
 	}
 }
 
