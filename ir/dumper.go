@@ -21,7 +21,7 @@ type dumper struct {
 func (d *dumper) dump(n Node) {
 	switch n := n.(type) {
 	case *BinaryExpr:
-		seqx, ok := n.LHS.(*SeqExpr)
+		seqx, ok := n.LHS.(*seqExpr)
 		lhs := n.LHS
 		if ok {
 			d.dump(seqx.Seq)
@@ -37,7 +37,7 @@ func (d *dumper) dump(n Node) {
 	case Label:
 		d.printf("%s", n)
 	case *Load:
-		seqx, ok := n.Src.(*SeqExpr)
+		seqx, ok := n.Src.(*seqExpr)
 		src := n.Src
 		if ok {
 			d.dump(seqx.Seq)

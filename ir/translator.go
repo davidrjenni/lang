@@ -84,7 +84,7 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 	case *ast.UnaryExpr:
 		switch x.Op {
 		case lexer.Not:
-			return &SeqExpr{
+			return &seqExpr{
 				Seq: Seq{
 					t.boolCheck(x.X, true_),
 					&UnaryExpr{Op: Setne, Reg: boolReg1},

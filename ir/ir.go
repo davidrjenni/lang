@@ -66,7 +66,7 @@ type (
 
 	I64 int64
 
-	SeqExpr struct {
+	seqExpr struct {
 		Seq Seq
 		Dst *Reg
 	}
@@ -75,12 +75,12 @@ type (
 func (Bool) node()     {}
 func (F64) node()      {}
 func (I64) node()      {}
-func (*SeqExpr) node() {}
+func (*seqExpr) node() {}
 
 func (Bool) rval()     {}
 func (F64) rval()      {}
 func (I64) rval()      {}
-func (*SeqExpr) rval() {}
+func (*seqExpr) rval() {}
 
 type (
 	LVal interface {

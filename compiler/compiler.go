@@ -27,13 +27,7 @@ type compiler struct {
 func (c *compiler) compile(n ir.Node) {
 	switch n := n.(type) {
 	case *ir.BinaryExpr:
-		seqx, ok := n.LHS.(*ir.SeqExpr)
-		src := n.LHS
-		if ok {
-			c.compile(seqx.Seq)
-			src = seqx.Dst
-		}
-		c.printf("%s %s, %s", op(n.Op, n.RHS.Type), rval(src), reg(n.RHS))
+		c.printf("%s %s, %s", op(n.Op, n.RHS.Type), rval(n.LHS), reg(n.RHS))
 	case ir.Call:
 		c.printf("%s", n)
 	case ir.CJump:
@@ -43,13 +37,7 @@ func (c *compiler) compile(n ir.Node) {
 	case ir.Label:
 		fmt.Fprintf(c.out, "%s:\n", n)
 	case *ir.Load:
-		seqx, ok := n.Src.(*ir.SeqExpr)
-		src := n.Src
-		if ok {
-			c.compile(seqx.Seq)
-			src = seqx.Dst
-		}
-		c.printf("%s %s, %s", mov(n.Dst.Type), rval(src), reg(n.Dst))
+		c.printf("%s %s, %s", mov(n.Dst.Type), rval(n.Src), reg(n.Dst))
 	case ir.Seq:
 		for _, s := range n {
 			c.compile(s)

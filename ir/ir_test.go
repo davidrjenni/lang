@@ -19,7 +19,6 @@ var (
 	_ ir.Node = &ir.Mem{}
 	_ ir.Node = &ir.Reg{}
 	_ ir.Node = ir.Seq{}
-	_ ir.Node = &ir.SeqExpr{}
 	_ ir.Node = &ir.Store{}
 	_ ir.Node = &ir.UnaryExpr{}
 
@@ -28,7 +27,6 @@ var (
 	_ ir.RVal = ir.I64(0)
 	_ ir.RVal = &ir.Mem{}
 	_ ir.RVal = &ir.Reg{}
-	_ ir.RVal = &ir.SeqExpr{}
 
 	_ ir.LVal = &ir.Mem{}
 	_ ir.LVal = &ir.Reg{}

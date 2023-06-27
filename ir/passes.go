@@ -8,7 +8,7 @@ func flatten(seq Seq) (tseq Seq) {
 	for _, n := range seq {
 		switch n := n.(type) {
 		case *BinaryExpr:
-			if seqx, ok := n.LHS.(*SeqExpr); ok {
+			if seqx, ok := n.LHS.(*seqExpr); ok {
 				s := flatten(seqx.Seq)
 				tseq = append(tseq, s...)
 				tseq = append(tseq, &BinaryExpr{
@@ -19,7 +19,7 @@ func flatten(seq Seq) (tseq Seq) {
 				continue
 			}
 		case *Load:
-			if seqx, ok := n.Src.(*SeqExpr); ok {
+			if seqx, ok := n.Src.(*seqExpr); ok {
 				s := flatten(seqx.Seq)
 				tseq = append(tseq, s...)
 				tseq = append(tseq, &Load{
