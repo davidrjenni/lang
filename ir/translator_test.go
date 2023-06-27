@@ -36,13 +36,28 @@ func TestTranslate(t *testing.T) {
 		t.Fatalf("%v", err)
 	}
 
-	n := ir.Translate(b)
+	id := ir.Pass(func(s ir.Seq) ir.Seq { return s })
 
+	passes := [...]struct {
+		filename string
+		pass     ir.Pass
+	}{
+		{filename: "input.golden", pass: id},
+		{filename: "input.loads.golden", pass: ir.Loads},
+	}
+
+	for _, p := range passes {
+		seq := ir.Translate(b, p.pass)
+		cmpGolden(t, seq, p.filename, *update)
+	}
+}
+
+func cmpGolden(t *testing.T, seq ir.Seq, filename string, update bool) {
 	var actual bytes.Buffer
-	ir.Dump(&actual, n)
+	ir.Dump(&actual, seq)
 
-	golden := filepath.Join("test-fixtures", "input.golden")
-	if *update {
+	golden := filepath.Join("test-fixtures", filename)
+	if update {
 		if err := ioutil.WriteFile(golden, actual.Bytes(), 0644); err != nil {
 			t.Fatalf("cannot update golden file: %v", err)
 		}
@@ -54,6 +69,6 @@ func TestTranslate(t *testing.T) {
 	}
 
 	if !bytes.Equal(actual.Bytes(), expected) {
-		t.Fatalf("expected\n%s\ngot\n%s\n", string(expected), actual.String())
+		t.Fatalf("%s: expected\n%s\ngot\n%s\n", filename, string(expected), actual.String())
 	}
 }

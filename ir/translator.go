@@ -25,10 +25,14 @@ var (
 	boolReg1 = &Reg{Type: BoolReg}
 )
 
-func Translate(b *ast.Block) Seq {
+func Translate(b *ast.Block, passes ...Pass) Seq {
 	t := &translator{}
 	s := t.translateCmd(b)
-	return flatten(s)
+	s = flatten(s)
+	for _, p := range passes {
+		s = p(s)
+	}
+	return s
 }
 
 type translator struct {

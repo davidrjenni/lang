@@ -4,6 +4,10 @@
 
 package ir // import "davidrjenni.io/lang/ir"
 
+type Pass func(Seq) Seq
+
+var Loads = Pass(loads)
+
 func flatten(seq Seq) (tseq Seq) {
 	for _, n := range seq {
 		switch n := n.(type) {
@@ -32,6 +36,19 @@ func flatten(seq Seq) (tseq Seq) {
 			s := flatten(n)
 			tseq = append(tseq, s...)
 			continue
+		}
+		tseq = append(tseq, n)
+	}
+	return tseq
+}
+
+func loads(seq Seq) (tseq Seq) {
+	for _, n := range seq {
+		if n, ok := n.(*Load); ok {
+			src, ok := n.Src.(*Reg)
+			if ok && src.Type == n.Dst.Type && src.Second == n.Dst.Second {
+				continue
+			}
 		}
 		tseq = append(tseq, n)
 	}
