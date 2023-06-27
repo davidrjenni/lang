@@ -25,7 +25,7 @@ var (
 	boolReg1 = &Reg{Type: BoolReg}
 )
 
-func Translate(b *ast.Block) Node {
+func Translate(b *ast.Block) Seq {
 	t := &translator{}
 	return t.translateCmd(b)
 }
@@ -34,7 +34,7 @@ type translator struct {
 	labels int
 }
 
-func (t *translator) translateCmd(cmd ast.Cmd) Node {
+func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 	switch cmd := cmd.(type) {
 	case *ast.Assert:
 		label := t.label()
