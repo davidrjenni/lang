@@ -21,8 +21,12 @@ const (
 )
 
 var (
-	intReg1  = &Reg{Type: I64Reg}
-	boolReg1 = &Reg{Type: BoolReg}
+	i64Reg1  = &Reg{Type: I64Reg, Second: false}
+	i64Reg2  = &Reg{Type: I64Reg, Second: true}
+	boolReg1 = &Reg{Type: BoolReg, Second: false}
+	boolReg2 = &Reg{Type: BoolReg, Second: true}
+	f64Reg1  = &Reg{Type: F64Reg, Second: false}
+	f64Reg2  = &Reg{Type: F64Reg, Second: true}
 )
 
 func Translate(b *ast.Block, passes ...Pass) Seq {
