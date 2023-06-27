@@ -27,7 +27,8 @@ var (
 
 func Translate(b *ast.Block) Seq {
 	t := &translator{}
-	return t.translateCmd(b)
+	s := t.translateCmd(b)
+	return flatten(s)
 }
 
 type translator struct {
