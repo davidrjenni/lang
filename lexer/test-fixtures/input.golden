@@ -1,59 +1,61 @@
-illegal | @
-illegal | asdf
-true | true
-false | false
-+ | +
-- | -
-· | *
-· | ·
-÷ | /
-÷ | ÷
-∧ | &
-∧ | ∧
-∨ | |
-∨ | ∨
-⟹ | =>
-⟹ | ⟹
-< | <
-≤ | <=
-≤ | ≤
-= | =
-≠ | #
-≠ | ≠
-> | >
-≥ | >=
-≥ | ≥
-is | is
-∈ | in
-∈ | ∈
-¬ | ~
-¬ | ¬
-{ | {
-( | (
-[ | [
-, | ,
-] | ]
-) | )
-} | }
-; | ;
-bool | bool
-i64 | i64
-f64 | f64
-string | string
-f64 literal | 13.37
-i64 literal | 1_000
-i64 literal | 1_000_000
-f64 literal | 1_000.00
-f64 literal | 1_000.000_1
-illegal | 1_000.000_1.000
-string literal | "asdf"
-string literal | "\t\\\"\n"
-illegal | "\q"
-illegal | "asdf
+input.l:1:2: illegal | @
+input.l:2:1: illegal | asdf
+input.l:3:1: true | true
+input.l:3:6: false | false
+input.l:4:1: + | +
+input.l:4:3: - | -
+input.l:4:5: · | *
+input.l:4:7: · | ·
+input.l:4:10: ÷ | /
+input.l:4:12: ÷ | ÷
+input.l:5:1: ∧ | &
+input.l:5:3: ∧ | ∧
+input.l:5:7: ∨ | |
+input.l:5:9: ∨ | ∨
+input.l:5:13: ⟹ | =>
+input.l:5:16: ⟹ | ⟹
+input.l:6:1: < | <
+input.l:6:3: ≤ | <=
+input.l:6:6: ≤ | ≤
+input.l:7:1: = | =
+input.l:7:3: ≠ | #
+input.l:7:5: ≠ | ≠
+input.l:8:1: > | >
+input.l:8:3: ≥ | >=
+input.l:8:6: ≥ | ≥
+input.l:9:1: is | is
+input.l:9:4: ∈ | in
+input.l:9:7: ∈ | ∈
+input.l:10:1: ¬ | ~
+input.l:10:3: ¬ | ¬
+input.l:11:1: { | {
+input.l:11:2: ( | (
+input.l:11:3: [ | [
+input.l:11:4: , | ,
+input.l:11:5: ] | ]
+input.l:11:6: ) | )
+input.l:11:7: } | }
+input.l:11:8: ; | ;
+input.l:13:1: bool | bool
+input.l:13:6: i64 | i64
+input.l:13:10: f64 | f64
+input.l:13:14: string | string
+input.l:15:1: f64 literal | 13.37
+input.l:16:1: i64 literal | 1_000
+input.l:17:1: i64 literal | 1_000_000
+input.l:18:1: f64 literal | 1_000.00
+input.l:19:1: f64 literal | 1_000.000_1
+input.l:20:1: illegal | 1_000.000_1.000
+input.l:21:1: string literal | "asdf"
+input.l:21:8: string literal | "Δ"
+input.l:21:13: string literal | "ᴦ"
+input.l:22:1: string literal | "\t\\\"\n"
+input.l:23:1: illegal | "\q"
+input.l:24:1: illegal | "asdf
 
 
-illegal | "
+input.l:25:1: illegal | "
 
 
-assert | assert
-EOF | EOF
+input.l:27:1: assert | assert
+input.l:28:1: EOF | EOF

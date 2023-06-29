@@ -19,8 +19,9 @@ import (
 var update = flag.Bool("update", false, "update golden files")
 
 func TestLexer(t *testing.T) {
-	filename := filepath.Join("test-fixtures", "input.l")
-	f, err := os.Open(filename)
+	filename := "input.l"
+	path := filepath.Join("test-fixtures", filename)
+	f, err := os.Open(path)
 	if err != nil {
 		t.Fatalf("cannot open file: %v", err)
 	}
@@ -33,11 +34,11 @@ func TestLexer(t *testing.T) {
 
 	var actual bytes.Buffer
 	for {
-		tok, lit, err := l.Read()
+		pos, tok, lit, err := l.Read()
 		if err != nil {
 			t.Fatalf("cannot read from lexer: %v", err)
 		}
-		fmt.Fprintf(&actual, "%v | %v\n", tok, lit)
+		fmt.Fprintf(&actual, "%s: %v | %v\n", pos, tok, lit)
 		if tok == lexer.EOF {
 			break
 		}

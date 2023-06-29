@@ -143,7 +143,7 @@ func (p *parser) parsePrimaryExpr() ast.Expr {
 func (p *parser) next() {
 	for {
 		var err error
-		p.tok, p.lit, err = p.l.Read()
+		_, p.tok, p.lit, err = p.l.Read()
 		if err != nil {
 			p.errs.Append("syntax error: %v", err)
 			continue

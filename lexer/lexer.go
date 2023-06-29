@@ -15,46 +15,54 @@ const eof = -1
 
 // Lexer holds the state of the lexical analyzer.
 type Lexer struct {
-	r  *bufio.Reader // source reader
-	ch rune          // current rune
+	r   *bufio.Reader // source reader
+	ch  rune          // current rune
+	w   uint32        // width of current rune
+	pos Pos           // current position
 }
 
 // New creates a new lexer which reads source code from the given reader.
 // If the lexer cannot read from the reader, an error is returned.
 func New(r io.Reader, filename string) (*Lexer, error) {
-	l := &Lexer{r: bufio.NewReader(r)}
+	l := &Lexer{
+		r:   bufio.NewReader(r),
+		w:   1,
+		pos: Pos{Filename: filename, Line: 1},
+	}
 
-	// Initialize the current rune.
+	// Initialize the current rune and position.
 	err := l.next()
 	return l, err
 }
 
 // Read reads the next token in the reader and returns its
-// token type and literal or returns an error. For unknown
-// tokens, Illegal is returned as token type. To indicate
-// the end of the input, EOF is returned. If an error is
-// returned, all other return values are invalid.
-func (l *Lexer) Read() (tok Tok, lit string, err error) {
+// position, token type and literal or returns an error.
+// For unknown tokens, Illegal is returned as token type.
+// To indicate the end of the input, EOF is returned. If an
+// error is returned, all other return values are invalid.
+func (l *Lexer) Read() (pos Pos, tok Tok, lit string, err error) {
 	// Skip the spaces.
 	for unicode.IsSpace(l.ch) {
 		if err := l.next(); err != nil {
-			return tok, lit, err
+			return pos, tok, lit, err
 		}
 	}
 
+	pos, lit = l.pos, string(l.ch)
+	ch := l.ch
+
 	if unicode.IsLetter(l.ch) {
-		return l.scanKeyword()
+		tok, lit, err = l.scanKeyword()
+		return pos, tok, lit, err
 	}
 	if unicode.IsDigit(l.ch) {
-		return l.scanNumber()
+		tok, lit, err = l.scanNumber()
+		return pos, tok, lit, err
 	}
-
-	lit = string(l.ch)
-	ch := l.ch
 
 	// Advance l.ch to the next rune, ch is the previous one.
 	if err := l.next(); err != nil {
-		return tok, lit, err
+		return pos, tok, lit, err
 	}
 
 	switch ch {
@@ -96,7 +104,7 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 		if tok = Less; l.ch == '=' {
 			tok, lit = LessEq, "<="
 			if err := l.next(); err != nil {
-				return tok, lit, err
+				return pos, tok, lit, err
 			}
 		}
 	case '≤':
@@ -105,7 +113,7 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 		if tok = Equal; l.ch == '>' {
 			tok, lit = Implies, "=>"
 			if err := l.next(); err != nil {
-				return tok, lit, err
+				return pos, tok, lit, err
 			}
 		}
 	case '#', '≠':
@@ -114,7 +122,7 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 		if tok = Greater; l.ch == '=' {
 			tok, lit = GreaterEq, ">="
 			if err := l.next(); err != nil {
-				return tok, lit, err
+				return pos, tok, lit, err
 			}
 		}
 	case '≥':
@@ -125,25 +133,32 @@ func (l *Lexer) Read() (tok Tok, lit string, err error) {
 		tok = Not
 
 	case '"':
-		return l.scanString()
+		tok, lit, err = l.scanString()
+		return pos, tok, lit, err
 
 	default:
 		tok = Illegal
 	}
 
-	return tok, lit, nil
+	return pos, tok, lit, nil
 }
 
 func (l *Lexer) next() error {
-	ch, _, err := l.r.ReadRune()
+	ch, sz, err := l.r.ReadRune()
 	switch {
 	case err == io.EOF:
-		ch = eof
+		ch, sz = eof, 1
 	case err != nil:
 		return err
 	}
 
+	l.pos.Column += l.w
+	l.w = uint32(sz)
 	l.ch = ch
+	if ch == '\n' {
+		l.pos.Line++
+		l.pos.Column = 0
+	}
 	return nil
 }
 
