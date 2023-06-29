@@ -13,6 +13,17 @@ type Pos struct {
 	Column   uint32 // column number within a line, starting at 1
 }
 
+// Shift creates a new position starting at the
+// current position, adding the given number to
+// the column.
+func (p Pos) Shift(col int) Pos {
+	return Pos{
+		Filename: p.Filename,
+		Line:     p.Line,
+		Column:   p.Column + uint32(col),
+	}
+}
+
 // String returns a string representation of the position.
 // An invalid position is indicated with "-".
 func (p Pos) String() string {

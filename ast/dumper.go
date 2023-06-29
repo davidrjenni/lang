@@ -35,10 +35,12 @@ func (d *dumper) dumpCmd(cmd Cmd) {
 	switch cmd := cmd.(type) {
 	case *Assert:
 		d.enter("Assert(")
+		d.dumpPos(cmd)
 		d.dumpExpr(cmd.X)
 		d.exit(")")
 	case *Block:
 		d.enter("Block(")
+		d.dumpPos(cmd)
 		for i, c := range cmd.Cmds {
 			d.printf("%d: ", i)
 			d.dumpCmd(c)
@@ -54,6 +56,7 @@ func (d *dumper) dumpExpr(x Expr) {
 	switch x := x.(type) {
 	case *BinaryExpr:
 		d.enter("BinaryExpr(")
+		d.dumpPos(x)
 		d.print("LHS: ")
 		d.dump(x.LHS)
 		d.println()
@@ -66,11 +69,13 @@ func (d *dumper) dumpExpr(x Expr) {
 		d.dumpLit(x)
 	case *ParenExpr:
 		d.enter("ParenExpr(")
+		d.dumpPos(x)
 		d.print("X: ")
 		d.dump(x.X)
 		d.exit(")")
 	case *UnaryExpr:
 		d.enter("UnaryExpr(")
+		d.dumpPos(x)
 		d.printf("Op: %s", x.Op.String())
 		d.println()
 		d.print("X: ")
@@ -84,16 +89,21 @@ func (d *dumper) dumpExpr(x Expr) {
 func (d *dumper) dumpLit(l Lit) {
 	switch l := l.(type) {
 	case *Bool:
-		d.printf("Bool(Val: %v)", l.Val)
+		d.printf("Bool(Val: %v, Pos: %s, End: %s)", l.Val, l.Pos(), l.End())
 	case *F64:
-		d.printf("F64(Val: %v)", l.Val)
+		d.printf("F64(Val: %v, Pos: %s, End: %s)", l.Val, l.Pos(), l.End())
 	case *I64:
-		d.printf("I64(Val: %v)", l.Val)
+		d.printf("I64(Val: %v, Pos: %s, End: %s)", l.Val, l.Pos(), l.End())
 	case *String:
-		d.printf("String(Val: %q)", l.Val)
+		d.printf("String(Val: %q, Pos: %s, End: %s)", l.Val, l.Pos(), l.End())
 	default:
 		panic(fmt.Sprintf("unexpected type %T", l))
 	}
+}
+
+func (d *dumper) dumpPos(n Node) {
+	d.printf("Pos: (Start: %s, End: %s)", n.Pos(), n.End())
+	d.println()
 }
 
 func (d *dumper) enter(s string) {

@@ -41,6 +41,7 @@ type parser struct {
 	errs errors.Errors
 
 	// lookahead
+	pos lexer.Pos
 	lit string
 	tok lexer.Tok
 }
@@ -48,20 +49,20 @@ type parser struct {
 // Block -> "{" Cmd { Cmd } "}" .
 func (p *parser) parseBlock() *ast.Block {
 	var b ast.Block
-	p.expect(lexer.LeftBrace)
+	b.StartPos = p.expect(lexer.LeftBrace)
 	for p.in(lexer.Assert) {
 		b.Cmds = append(b.Cmds, p.parseCmd())
 	}
-	p.expect(lexer.RightBrace)
+	b.EndPos = p.expect(lexer.RightBrace)
 	return &b
 }
 
 // Cmd -> "assert" Expr ";" .
 func (p *parser) parseCmd() ast.Cmd {
-	p.expect(lexer.Assert)
+	pos := p.expect(lexer.Assert)
 	x := p.parseExpr()
-	p.expect(lexer.Semicolon)
-	return &ast.Assert{X: x}
+	end := p.expect(lexer.Semicolon)
+	return &ast.Assert{X: x, StartPos: pos, EndPos: end}
 }
 
 // Expr -> UnaryExpr { BinOp UnaryExpr } .
@@ -92,9 +93,9 @@ func (p *parser) parseUnaryExpr() ast.Expr {
 	switch p.tok {
 	case lexer.Minus, lexer.Not:
 		op := p.tok
-		p.expect(lexer.Minus, lexer.Not)
+		pos := p.expect(lexer.Minus, lexer.Not)
 		x := p.parseUnaryExpr()
-		return &ast.UnaryExpr{X: x, Op: op}
+		return &ast.UnaryExpr{X: x, Op: op, StartPos: pos}
 	default:
 		return p.parsePrimaryExpr()
 	}
@@ -105,35 +106,42 @@ func (p *parser) parsePrimaryExpr() ast.Expr {
 	switch p.tok {
 	case lexer.F64Lit:
 		lit := p.lit
-		p.expect(lexer.F64Lit)
+		pos := p.expect(lexer.F64Lit)
+		end := pos.Shift(len(lit))
 		val, err := strconv.ParseFloat(lit, 64)
 		if err != nil {
 			panic(fmt.Sprintf("cannot convert f64: %v", err))
 		}
-		return &ast.F64{Val: val}
+		return &ast.F64{Val: val, StartPos: pos, EndPos: end}
 	case lexer.I64Lit:
 		lit := p.lit
-		p.expect(lexer.I64Lit)
+		pos := p.expect(lexer.I64Lit)
+		end := pos.Shift(len(lit))
 		val, err := strconv.ParseInt(lit, 10, 0)
 		if err != nil {
 			panic(fmt.Sprintf("cannot convert i64: %v", err))
 		}
-		return &ast.I64{Val: val}
+		return &ast.I64{Val: val, StartPos: pos, EndPos: end}
 	case lexer.LeftParen:
-		p.expect(lexer.LeftParen)
+		pos := p.expect(lexer.LeftParen)
 		x := p.parseExpr()
-		p.expect(lexer.RightParen)
-		return &ast.ParenExpr{X: x}
+		end := p.expect(lexer.RightParen)
+		return &ast.ParenExpr{X: x, StartPos: pos, EndPos: end}
 	case lexer.StringLit:
 		lit := p.lit
-		p.expect(lexer.StringLit)
-		return &ast.String{Val: lit}
+		pos := p.expect(lexer.StringLit)
+		end := pos.Shift(len(lit))
+		return &ast.String{Val: lit, StartPos: pos, EndPos: end}
 	case lexer.True:
-		p.expect(lexer.True)
-		return &ast.Bool{Val: true}
+		lit := p.lit
+		pos := p.expect(lexer.True)
+		end := pos.Shift(len(lit))
+		return &ast.Bool{Val: true, StartPos: pos, EndPos: end}
 	case lexer.False:
-		p.expect(lexer.False)
-		return &ast.Bool{Val: false}
+		lit := p.lit
+		pos := p.expect(lexer.False)
+		end := pos.Shift(len(lit))
+		return &ast.Bool{Val: false, StartPos: pos, EndPos: end}
 	default:
 		p.errs.Append("unexpected %s", p.lit)
 		return nil
@@ -143,7 +151,7 @@ func (p *parser) parsePrimaryExpr() ast.Expr {
 func (p *parser) next() {
 	for {
 		var err error
-		_, p.tok, p.lit, err = p.l.Read()
+		p.pos, p.tok, p.lit, err = p.l.Read()
 		if err != nil {
 			p.errs.Append("syntax error: %v", err)
 			continue
@@ -173,13 +181,14 @@ func (p *parser) in(toks ...lexer.Tok) bool {
 	return false
 }
 
-func (p *parser) expect(toks ...lexer.Tok) {
+func (p *parser) expect(toks ...lexer.Tok) lexer.Pos {
+	pos := p.pos
 	if p.got(toks...) {
-		return
+		return pos
 	}
 	if len(toks) == 1 {
 		p.errs.Append("unexpected %s, expected %s", p.lit, toks[0])
-		return
+		return pos
 	}
 	var b bytes.Buffer
 	for i, tok := range toks {
@@ -189,6 +198,7 @@ func (p *parser) expect(toks ...lexer.Tok) {
 		b.WriteString(tok.String())
 	}
 	p.errs.Append("unexpected %s, expected one of %s", p.lit, b.String())
+	return pos
 }
 
 var relOps = []lexer.Tok{

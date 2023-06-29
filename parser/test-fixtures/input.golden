@@ -1,59 +1,77 @@
 Block(
+	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:6:1)
 	0: Assert(
+		Pos: (Start: test-fixtures/input.l:2:2, End: test-fixtures/input.l:2:37)
 		BinaryExpr(
+			Pos: (Start: test-fixtures/input.l:2:9, End: test-fixtures/input.l:2:36)
 			LHS: BinaryExpr(
+				Pos: (Start: test-fixtures/input.l:2:9, End: test-fixtures/input.l:2:21)
 				LHS: BinaryExpr(
-					LHS: I64(Val: 42)
+					Pos: (Start: test-fixtures/input.l:2:9, End: test-fixtures/input.l:2:15)
+					LHS: I64(Val: 42, Pos: test-fixtures/input.l:2:9, End: test-fixtures/input.l:2:11)
 					Op: ·
-					RHS: I64(Val: 2)
+					RHS: I64(Val: 2, Pos: test-fixtures/input.l:2:14, End: test-fixtures/input.l:2:15)
 				)
 				Op: ≤
-				RHS: I64(Val: 84)
+				RHS: I64(Val: 84, Pos: test-fixtures/input.l:2:19, End: test-fixtures/input.l:2:21)
 			)
 			Op: ≤
 			RHS: BinaryExpr(
-				LHS: I64(Val: 85)
+				Pos: (Start: test-fixtures/input.l:2:25, End: test-fixtures/input.l:2:36)
+				LHS: I64(Val: 85, Pos: test-fixtures/input.l:2:25, End: test-fixtures/input.l:2:27)
 				Op: ·
 				RHS: ParenExpr(
+					Pos: (Start: test-fixtures/input.l:2:30, End: test-fixtures/input.l:2:36)
 					X: BinaryExpr(
-						LHS: I64(Val: 1)
+						Pos: (Start: test-fixtures/input.l:2:31, End: test-fixtures/input.l:2:36)
+						LHS: I64(Val: 1, Pos: test-fixtures/input.l:2:31, End: test-fixtures/input.l:2:32)
 						Op: +
-						RHS: I64(Val: 1)
+						RHS: I64(Val: 1, Pos: test-fixtures/input.l:2:35, End: test-fixtures/input.l:2:36)
 					)
 				)
 			)
 		)
 	)
 	1: Assert(
+		Pos: (Start: test-fixtures/input.l:3:2, End: test-fixtures/input.l:3:30)
 		BinaryExpr(
+			Pos: (Start: test-fixtures/input.l:3:9, End: test-fixtures/input.l:3:30)
 			LHS: BinaryExpr(
-				LHS: I64(Val: 5)
+				Pos: (Start: test-fixtures/input.l:3:9, End: test-fixtures/input.l:3:22)
+				LHS: F64(Val: 5, Pos: test-fixtures/input.l:3:9, End: test-fixtures/input.l:3:12)
 				Op: ·
-				RHS: I64(Val: 5)
+				RHS: F64(Val: 5, Pos: test-fixtures/input.l:3:13, End: test-fixtures/input.l:3:22)
 			)
 			Op: =
-			RHS: I64(Val: 25)
+			RHS: F64(Val: 25, Pos: test-fixtures/input.l:3:25, End: test-fixtures/input.l:3:30)
 		)
 	)
 	2: Assert(
+		Pos: (Start: test-fixtures/input.l:4:2, End: test-fixtures/input.l:4:16)
 		BinaryExpr(
+			Pos: (Start: test-fixtures/input.l:4:9, End: test-fixtures/input.l:4:16)
 			LHS: UnaryExpr(
+				Pos: (Start: test-fixtures/input.l:4:9, End: test-fixtures/input.l:4:12)
 				Op: -
 				X: UnaryExpr(
+					Pos: (Start: test-fixtures/input.l:4:10, End: test-fixtures/input.l:4:12)
 					Op: -
-					X: I64(Val: 1)
+					X: I64(Val: 1, Pos: test-fixtures/input.l:4:11, End: test-fixtures/input.l:4:12)
 				)
 			)
 			Op: =
-			RHS: I64(Val: 1)
+			RHS: I64(Val: 1, Pos: test-fixtures/input.l:4:15, End: test-fixtures/input.l:4:16)
 		)
 	)
 	3: Assert(
+		Pos: (Start: test-fixtures/input.l:5:2, End: test-fixtures/input.l:5:15)
 		UnaryExpr(
+			Pos: (Start: test-fixtures/input.l:5:9, End: test-fixtures/input.l:5:15)
 			Op: ¬
 			X: UnaryExpr(
+				Pos: (Start: test-fixtures/input.l:5:10, End: test-fixtures/input.l:5:15)
 				Op: ¬
-				X: Bool(Val: true)
+				X: Bool(Val: true, Pos: test-fixtures/input.l:5:11, End: test-fixtures/input.l:5:15)
 			)
 		)
 	)
