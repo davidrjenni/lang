@@ -7,6 +7,8 @@ package ast // import "davidrjenni.io/lang/ast"
 import "davidrjenni.io/lang/lexer"
 
 type Node interface {
+	Pos() lexer.Pos
+	End() lexer.Pos
 	node()
 }
 
@@ -17,13 +19,23 @@ type (
 	}
 
 	Assert struct {
-		X Expr
+		X        Expr
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
 	}
 
 	Block struct {
-		Cmds []Cmd
+		Cmds     []Cmd
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
 	}
 )
+
+func (c *Assert) Pos() lexer.Pos { return c.StartPos }
+func (c *Assert) End() lexer.Pos { return c.EndPos }
+
+func (c *Block) Pos() lexer.Pos { return c.StartPos }
+func (c *Block) End() lexer.Pos { return c.EndPos }
 
 func (*Assert) node() {}
 func (*Block) node()  {}
@@ -44,14 +56,26 @@ type (
 	}
 
 	ParenExpr struct {
-		X Expr
+		X        Expr
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
 	}
 
 	UnaryExpr struct {
-		Op lexer.Tok
-		X  Expr
+		Op       lexer.Tok
+		X        Expr
+		StartPos lexer.Pos
 	}
 )
+
+func (x *BinaryExpr) Pos() lexer.Pos { return x.LHS.Pos() }
+func (x *BinaryExpr) End() lexer.Pos { return x.RHS.End() }
+
+func (x *ParenExpr) Pos() lexer.Pos { return x.StartPos }
+func (x *ParenExpr) End() lexer.Pos { return x.EndPos }
+
+func (x *UnaryExpr) Pos() lexer.Pos { return x.StartPos }
+func (x *UnaryExpr) End() lexer.Pos { return x.X.End() }
 
 func (*BinaryExpr) node() {}
 func (*ParenExpr) node()  {}
@@ -68,21 +92,41 @@ type (
 	}
 
 	Bool struct {
-		Val bool
+		Val      bool
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
 	}
 
 	F64 struct {
-		Val float64
+		Val      float64
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
 	}
 
 	I64 struct {
-		Val int64
+		Val      int64
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
 	}
 
 	String struct {
-		Val string
+		Val      string
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
 	}
 )
+
+func (l *Bool) Pos() lexer.Pos { return l.StartPos }
+func (l *Bool) End() lexer.Pos { return l.EndPos }
+
+func (l *F64) Pos() lexer.Pos { return l.StartPos }
+func (l *F64) End() lexer.Pos { return l.EndPos }
+
+func (l *I64) Pos() lexer.Pos { return l.StartPos }
+func (l *I64) End() lexer.Pos { return l.EndPos }
+
+func (l *String) Pos() lexer.Pos { return l.StartPos }
+func (l *String) End() lexer.Pos { return l.EndPos }
 
 func (*Bool) node()   {}
 func (*F64) node()    {}
