@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"flag"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -21,12 +20,6 @@ var update = flag.Bool("update", false, "update golden files")
 
 func TestTranslate(t *testing.T) {
 	filename := filepath.Join("test-fixtures", "input.l")
-	f, err := os.Open(filename)
-	if err != nil {
-		t.Fatalf("cannot parse file: %v", err)
-	}
-	defer f.Close()
-
 	b, err := parser.ParseFile(filename)
 	if err != nil {
 		t.Fatalf("cannot parse file: %v", err)
