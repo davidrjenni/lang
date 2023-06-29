@@ -10,17 +10,30 @@ func _() {
 	var x [1]struct{}
 	_ = x[Movq-0]
 	_ = x[Movb-1]
-	_ = x[Jump-2]
-	_ = x[CJump-3]
-	_ = x[Cmpq-4]
-	_ = x[Cmpb-5]
-	_ = x[Setne-6]
-	_ = x[Call-7]
+	_ = x[Push-2]
+	_ = x[Pop-3]
+	_ = x[Jump-4]
+	_ = x[CJump-5]
+	_ = x[Add-6]
+	_ = x[Sub-7]
+	_ = x[Mul-8]
+	_ = x[Div-9]
+	_ = x[And-10]
+	_ = x[Or-11]
+	_ = x[Cmpq-12]
+	_ = x[Cmpb-13]
+	_ = x[Setl-14]
+	_ = x[Setle-15]
+	_ = x[Sete-16]
+	_ = x[Setne-17]
+	_ = x[Setg-18]
+	_ = x[Setge-19]
+	_ = x[Call-20]
 }
 
-const _Op_name = "movqmovbjmpjecmpqcmpbsetnecall"
+const _Op_name = "movqmovbpushqpopqjmpjeaddqsubqimulqidivandborbcmpqcmpbsetlsetlesetesetnesetgsetgecall"
 
-var _Op_index = [...]uint8{0, 4, 8, 11, 13, 17, 21, 26, 30}
+var _Op_index = [...]uint8{0, 4, 8, 13, 17, 20, 22, 26, 30, 35, 39, 43, 46, 50, 54, 58, 63, 67, 72, 76, 81, 85}
 
 func (i Op) String() string {
 	if i < 0 || i >= Op(len(_Op_index)-1) {

@@ -18,20 +18,52 @@ const (
 	Movq Op = iota // movq
 	Movb           // movb
 
+	Push // pushq
+	Pop  // popq
+
 	Jump  // jmp
 	CJump // je
+
+	Add // addq
+	Sub // subq
+	Mul // imulq
+	Div // idiv
+
+	And // andb
+	Or  // orb
 
 	Cmpq // cmpq
 	Cmpb // cmpb
 
+	Setl  // setl
+	Setle // setle
+	Sete  // sete
 	Setne // setne
+	Setg  // setg
+	Setge // setge
 
 	Call // call
 )
 
 var ops = map[ir.Op]map[ir.RegType]Op{
-	ir.Cmp:   {ir.I64Reg: Cmpq, ir.BoolReg: Cmpb},
+	ir.Push: {ir.I64Reg: Push},
+	ir.Pop:  {ir.I64Reg: Pop},
+
+	ir.Add: {ir.I64Reg: Add},
+	ir.Sub: {ir.I64Reg: Sub},
+	ir.Mul: {ir.I64Reg: Mul},
+	ir.Div: {ir.I64Reg: Div},
+
+	ir.And: {ir.BoolReg: And},
+	ir.Or:  {ir.BoolReg: Or},
+	ir.Cmp: {ir.I64Reg: Cmpq, ir.BoolReg: Cmpb},
+
+	ir.Setl:  {ir.BoolReg: Setl},
+	ir.Setle: {ir.BoolReg: Setle},
+	ir.Sete:  {ir.BoolReg: Sete},
 	ir.Setne: {ir.BoolReg: Setne},
+	ir.Setg:  {ir.BoolReg: Setg},
+	ir.Setge: {ir.BoolReg: Setge},
 }
 
 func mov(t ir.RegType) Op {
