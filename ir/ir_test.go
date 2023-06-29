@@ -22,6 +22,14 @@ var (
 	_ ir.Node = &ir.Store{}
 	_ ir.Node = &ir.UnaryExpr{}
 
+	_ ir.Cmd = &ir.BinaryExpr{}
+	_ ir.Cmd = ir.Call("")
+	_ ir.Cmd = ir.CJump("")
+	_ ir.Cmd = ir.Jump("")
+	_ ir.Cmd = &ir.Load{}
+	_ ir.Cmd = &ir.Store{}
+	_ ir.Cmd = &ir.UnaryExpr{}
+
 	_ ir.RVal = ir.Bool(false)
 	_ ir.RVal = ir.F64(0)
 	_ ir.RVal = ir.I64(0)

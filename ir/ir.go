@@ -12,6 +12,20 @@ type (
 		node()
 	}
 
+	Label string
+
+	Seq []Node
+)
+
+func (Label) node() {}
+func (Seq) node()   {}
+
+type (
+	Cmd interface {
+		cmd()
+		Node
+	}
+
 	BinaryExpr struct {
 		RHS *Reg
 		Op  Op
@@ -24,14 +38,10 @@ type (
 
 	Jump Label
 
-	Label string
-
 	Load struct {
 		Src RVal
 		Dst *Reg
 	}
-
-	Seq []Node
 
 	Store struct {
 		Src RVal
@@ -48,11 +58,17 @@ func (*BinaryExpr) node() {}
 func (Call) node()        {}
 func (CJump) node()       {}
 func (Jump) node()        {}
-func (Label) node()       {}
 func (*Load) node()       {}
-func (Seq) node()         {}
 func (*Store) node()      {}
 func (*UnaryExpr) node()  {}
+
+func (*BinaryExpr) cmd() {}
+func (Call) cmd()        {}
+func (CJump) cmd()       {}
+func (Jump) cmd()        {}
+func (*Load) cmd()       {}
+func (*Store) cmd()      {}
+func (*UnaryExpr) cmd()  {}
 
 type (
 	RVal interface {
