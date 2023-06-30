@@ -1,22 +1,22 @@
-load rbool.0 <- bool(true)
-cmp rbool.0 bool(true)
-setne rbool.0
-load rbool.0 <- rbool.0
-cmp rbool.0 bool(true)
-setne rbool.0
-load rbool.0 <- rbool.0
-cmp rbool.0 bool(true)
-cjump .L1
-call AssertViolated
+load rbool.0 <- bool(true)  // test-fixtures/input.l:2:12
+cmp rbool.0 bool(true)  // test-fixtures/input.l:2:12
+setne rbool.0  // test-fixtures/input.l:2:11
+load rbool.0 <- rbool.0  // test-fixtures/input.l:2:10
+cmp rbool.0 bool(true)  // test-fixtures/input.l:2:10
+setne rbool.0  // test-fixtures/input.l:2:9
+load rbool.0 <- rbool.0  // test-fixtures/input.l:2:9
+cmp rbool.0 bool(true)  // test-fixtures/input.l:2:9
+cjump .L1  // test-fixtures/input.l:2:2
+call AssertViolated  // test-fixtures/input.l:2:2
 .L1
-load rbool.0 <- bool(false)
-cmp rbool.0 bool(true)
-setne rbool.0
-load rbool.0 <- rbool.0
-cmp rbool.0 bool(true)
-setne rbool.0
-load rbool.0 <- rbool.0
-cmp rbool.0 bool(true)
-cjump .L2
-call AssertViolated
+load rbool.0 <- bool(false)  // test-fixtures/input.l:3:12
+cmp rbool.0 bool(true)  // test-fixtures/input.l:3:12
+setne rbool.0  // test-fixtures/input.l:3:11
+load rbool.0 <- rbool.0  // test-fixtures/input.l:3:10
+cmp rbool.0 bool(true)  // test-fixtures/input.l:3:10
+setne rbool.0  // test-fixtures/input.l:3:9
+load rbool.0 <- rbool.0  // test-fixtures/input.l:3:9
+cmp rbool.0 bool(true)  // test-fixtures/input.l:3:9
+cjump .L2  // test-fixtures/input.l:3:2
+call AssertViolated  // test-fixtures/input.l:3:2
 .L2

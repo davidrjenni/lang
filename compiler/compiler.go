@@ -27,23 +27,23 @@ type compiler struct {
 func (c *compiler) compile(n ir.Node) {
 	switch n := n.(type) {
 	case *ir.BinaryExpr:
-		c.printf("%s %s, %s", op(n.Op, n.RHS.Type), rval(n.LHS), reg(n.RHS))
-	case ir.Call:
-		c.printf("%s", n)
-	case ir.CJump:
-		c.printf("%s %s", CJump, n)
-	case ir.Jump:
-		c.printf("%s %s", Jump, n)
+		c.printf("%s %s, %s  # %s", op(n.Op, n.RHS.Type), rval(n.LHS), reg(n.RHS), n.Pos())
+	case *ir.Call:
+		c.printf("%s  # %s", n.Label, n.Pos())
+	case *ir.CJump:
+		c.printf("%s %s  # %s", CJump, n.Label, n.Pos())
+	case *ir.Jump:
+		c.printf("%s %s  # %s", Jump, n.Label, n.Pos())
 	case ir.Label:
 		fmt.Fprintf(c.out, "%s:\n", n)
 	case *ir.Load:
-		c.printf("%s %s, %s", mov(n.Dst.Type), rval(n.Src), reg(n.Dst))
+		c.printf("%s %s, %s  # %s", mov(n.Dst.Type), rval(n.Src), reg(n.Dst), n.Pos())
 	case ir.Seq:
 		for _, s := range n {
 			c.compile(s)
 		}
 	case *ir.UnaryExpr:
-		c.printf("%s %s", op(n.Op, n.Reg.Type), reg(n.Reg))
+		c.printf("%s %s  # %s", op(n.Op, n.Reg.Type), reg(n.Reg), n.Pos())
 	default:
 		panic(fmt.Sprintf("unexpected type %T", n))
 	}

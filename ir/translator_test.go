@@ -62,6 +62,6 @@ func cmpGolden(t *testing.T, seq ir.Seq, filename string, update bool) {
 	}
 
 	if !bytes.Equal(actual.Bytes(), expected) {
-		t.Fatalf("%s: expected\n%s\ngot\n%s\n", filename, string(expected), actual.String())
+		t.Errorf("%s: expected\n%s\ngot\n%s\n", filename, string(expected), actual.String())
 	}
 }

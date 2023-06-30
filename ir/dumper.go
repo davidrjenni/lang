@@ -27,13 +27,13 @@ func (d *dumper) dump(n Node) {
 			d.dump(seqx.Seq)
 			lhs = seqx.Dst
 		}
-		d.printf("%s %s %s", n.Op, lval(n.RHS), rval(lhs))
-	case Call:
-		d.printf("call %s", n)
-	case CJump:
-		d.printf("cjump %s", n)
-	case Jump:
-		d.printf("jump %s", n)
+		d.printf("%s %s %s  // %s", n.Op, lval(n.RHS), rval(lhs), n.Pos())
+	case *Call:
+		d.printf("call %s  // %s", n.Label, n.Pos())
+	case *CJump:
+		d.printf("cjump %s  // %s", n.Label, n.Pos())
+	case *Jump:
+		d.printf("jump %s  // %s", n.Label, n.Pos())
 	case Label:
 		d.printf("%s", n)
 	case *Load:
@@ -43,13 +43,13 @@ func (d *dumper) dump(n Node) {
 			d.dump(seqx.Seq)
 			src = seqx.Dst
 		}
-		d.printf("load %s <- %s", lval(n.Dst), rval(src))
+		d.printf("load %s <- %s  // %s", lval(n.Dst), rval(src), n.Pos())
 	case Seq:
 		for _, s := range n {
 			d.dump(s)
 		}
 	case *UnaryExpr:
-		d.printf("%s %s", n.Op, lval(n.Reg))
+		d.printf("%s %s  // %s", n.Op, lval(n.Reg), n.Pos())
 	default:
 		panic(fmt.Sprintf("unexpected type %T", n))
 	}

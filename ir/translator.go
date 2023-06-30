@@ -49,8 +49,8 @@ func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 		label := t.label()
 		return Seq{
 			t.boolCheck(cmd.X, true_),
-			CJump(label),
-			Call(assertViolated),
+			&CJump{Label: label, pos: cmd.Pos()},
+			&Call{Label: assertViolated, pos: cmd.Pos()},
 			label,
 		}
 	case *ast.Block:
@@ -68,8 +68,8 @@ func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 func (t *translator) boolCheck(x ast.Expr, expect Bool) Seq {
 	check := t.translateRVal(x)
 	return Seq{
-		&Load{Src: check, Dst: boolReg1},
-		&BinaryExpr{RHS: boolReg1, Op: Cmp, LHS: expect},
+		&Load{Src: check, Dst: boolReg1, pos: x.Pos()},
+		&BinaryExpr{RHS: boolReg1, Op: Cmp, LHS: expect, pos: x.Pos()},
 	}
 }
 
@@ -89,7 +89,7 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 			return &seqExpr{
 				Seq: Seq{
 					t.boolCheck(x.X, true_),
-					&UnaryExpr{Op: Setne, Reg: boolReg1},
+					&UnaryExpr{Op: Setne, Reg: boolReg1, pos: x.Pos()},
 				},
 				Dst: boolReg1,
 			}

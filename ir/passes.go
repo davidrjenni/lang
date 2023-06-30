@@ -19,6 +19,7 @@ func flatten(seq Seq) (tseq Seq) {
 					RHS: n.RHS,
 					Op:  n.Op,
 					LHS: seqx.Dst,
+					pos: n.Pos(),
 				})
 				continue
 			}
@@ -29,6 +30,7 @@ func flatten(seq Seq) (tseq Seq) {
 				tseq = append(tseq, &Load{
 					Src: seqx.Dst,
 					Dst: n.Dst,
+					pos: n.Pos(),
 				})
 				continue
 			}

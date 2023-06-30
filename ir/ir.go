@@ -4,6 +4,12 @@
 
 package ir // import "davidrjenni.io/lang/ir"
 
+import (
+	"fmt"
+
+	"davidrjenni.io/lang/lexer"
+)
+
 //go:generate stringer -type=Op -linecomment
 //go:generate stringer -type=RegType -linecomment
 
@@ -22,6 +28,7 @@ func (Seq) node()   {}
 
 type (
 	Cmd interface {
+		Pos() lexer.Pos
 		cmd()
 		Node
 	}
@@ -30,42 +37,63 @@ type (
 		RHS *Reg
 		Op  Op
 		LHS RVal
+		pos lexer.Pos
 	}
 
-	Call Label
+	Call struct {
+		Label Label
+		pos   lexer.Pos
+	}
 
-	CJump Label
+	CJump struct {
+		Label Label
+		pos   lexer.Pos
+	}
 
-	Jump Label
+	Jump struct {
+		Label Label
+		pos   lexer.Pos
+	}
 
 	Load struct {
 		Src RVal
 		Dst *Reg
+		pos lexer.Pos
 	}
 
 	Store struct {
 		Src RVal
 		Dst *Mem
+		pos lexer.Pos
 	}
 
 	UnaryExpr struct {
 		Reg *Reg
 		Op  Op
+		pos lexer.Pos
 	}
 )
 
+func (c *BinaryExpr) Pos() lexer.Pos { return c.pos }
+func (c *Call) Pos() lexer.Pos       { return c.pos }
+func (c *CJump) Pos() lexer.Pos      { return c.pos }
+func (c *Jump) Pos() lexer.Pos       { return c.pos }
+func (c *Load) Pos() lexer.Pos       { return c.pos }
+func (c *Store) Pos() lexer.Pos      { return c.pos }
+func (c *UnaryExpr) Pos() lexer.Pos  { return c.pos }
+
 func (*BinaryExpr) node() {}
-func (Call) node()        {}
-func (CJump) node()       {}
-func (Jump) node()        {}
+func (*Call) node()       {}
+func (*CJump) node()      {}
+func (*Jump) node()       {}
 func (*Load) node()       {}
 func (*Store) node()      {}
 func (*UnaryExpr) node()  {}
 
 func (*BinaryExpr) cmd() {}
-func (Call) cmd()        {}
-func (CJump) cmd()       {}
-func (Jump) cmd()        {}
+func (*Call) cmd()       {}
+func (*CJump) cmd()      {}
+func (*Jump) cmd()       {}
 func (*Load) cmd()       {}
 func (*Store) cmd()      {}
 func (*UnaryExpr) cmd()  {}

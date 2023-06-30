@@ -9,11 +9,11 @@ import "davidrjenni.io/lang/ir"
 var (
 	_ ir.Node = &ir.BinaryExpr{}
 	_ ir.Node = ir.Bool(false)
-	_ ir.Node = ir.Call("")
-	_ ir.Node = ir.CJump("")
+	_ ir.Node = &ir.Call{}
+	_ ir.Node = &ir.CJump{}
 	_ ir.Node = ir.F64(0)
 	_ ir.Node = ir.I64(0)
-	_ ir.Node = ir.Jump("")
+	_ ir.Node = &ir.Jump{}
 	_ ir.Node = ir.Label("")
 	_ ir.Node = &ir.Load{}
 	_ ir.Node = &ir.Mem{}
@@ -23,9 +23,9 @@ var (
 	_ ir.Node = &ir.UnaryExpr{}
 
 	_ ir.Cmd = &ir.BinaryExpr{}
-	_ ir.Cmd = ir.Call("")
-	_ ir.Cmd = ir.CJump("")
-	_ ir.Cmd = ir.Jump("")
+	_ ir.Cmd = &ir.Call{}
+	_ ir.Cmd = &ir.CJump{}
+	_ ir.Cmd = &ir.Jump{}
 	_ ir.Cmd = &ir.Load{}
 	_ ir.Cmd = &ir.Store{}
 	_ ir.Cmd = &ir.UnaryExpr{}
