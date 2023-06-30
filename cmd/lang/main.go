@@ -13,6 +13,7 @@ import (
 	"davidrjenni.io/lang/compiler"
 	"davidrjenni.io/lang/ir"
 	"davidrjenni.io/lang/parser"
+	"davidrjenni.io/lang/types"
 )
 
 func main() {
@@ -33,6 +34,10 @@ func main() {
 		filename := os.Args[2]
 		b, err := parser.ParseFile(filename)
 		if err != nil {
+			die("%v\n", err)
+		}
+
+		if err := types.Check(b); err != nil {
 			die("%v\n", err)
 		}
 
