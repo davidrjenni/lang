@@ -5,7 +5,6 @@
 package types_test
 
 import (
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -15,12 +14,6 @@ import (
 
 func TestCheck(t *testing.T) {
 	filename := filepath.Join("test-fixtures", "input.l")
-	f, err := os.Open(filename)
-	if err != nil {
-		t.Fatalf("cannot parse file: %v", err)
-	}
-	defer f.Close()
-
 	n, err := parser.ParseFile(filename)
 	if err != nil {
 		t.Fatalf("cannot parse file: %v", err)
