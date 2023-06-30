@@ -7,6 +7,8 @@ package errors // import "davidrjenni.io/lang/internal/errors"
 import (
 	"bytes"
 	"fmt"
+
+	"davidrjenni.io/lang/lexer"
 )
 
 // Errors is a slice of errors.
@@ -14,8 +16,8 @@ type Errors []error
 
 // Append appends an error, starting with the given position and
 // formatted according to the format string and the arguments given.
-func (e *Errors) Append(format string, args ...interface{}) {
-	*e = append(*e, fmt.Errorf(format, args...))
+func (e *Errors) Append(pos lexer.Pos, format string, args ...interface{}) {
+	*e = append(*e, fmt.Errorf(pos.String()+": "+format, args...))
 }
 
 // Err returns itself or nil, if there are none.

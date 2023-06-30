@@ -30,7 +30,7 @@ func (c *checker) check(n ast.Node) {
 			return
 		}
 		if _, ok := t.(*Bool); !ok {
-			c.errorf("expr must be of type bool, got %s", t)
+			c.errorf(n.X.Pos(), "expr must be of type bool, got %s", t)
 		}
 	case *ast.Block:
 		for _, cmd := range n.Cmds {
@@ -72,7 +72,7 @@ func (c *checker) checkBinaryExpr(x *ast.BinaryExpr) (Type, bool) {
 		return nil, false
 	}
 	if !Equal(lhs, rhs) {
-		c.errorf("cannot apply %s to operands of types %s and %s", x.Op, lhs, rhs)
+		c.errorf(x.Pos(), "cannot apply %s to operands of types %s and %s", x.Op, lhs, rhs)
 		return nil, false
 	}
 
@@ -109,7 +109,7 @@ func (c *checker) checkBinaryExpr(x *ast.BinaryExpr) (Type, bool) {
 		panic(fmt.Sprintf("unexpected type %T", t))
 	}
 
-	c.errorf("cannot apply %s to operands of types %s and %s", x.Op, lhs, rhs)
+	c.errorf(x.Pos(), "cannot apply %s to operands of types %s and %s", x.Op, lhs, rhs)
 	return nil, false
 }
 
@@ -122,28 +122,28 @@ func (c *checker) checkUnaryExpr(x *ast.UnaryExpr) (Type, bool) {
 	switch t := t.(type) {
 	case *Bool:
 		if x.Op != lexer.Not {
-			c.errorf("cannot apply %s to expr of type %s", x.Op, t)
+			c.errorf(x.Pos(), "cannot apply %s to expr of type %s", x.Op, t)
 			return nil, false
 		}
 		return &Bool{}, true
 	case *I64:
 		if x.Op != lexer.Minus {
-			c.errorf("cannot apply %s to expr of type %s", x.Op, t)
+			c.errorf(x.Pos(), "cannot apply %s to expr of type %s", x.Op, t)
 			return nil, false
 		}
 		return &I64{}, true
 	case *F64:
 		if x.Op != lexer.Minus {
-			c.errorf("cannot apply %s to expr of type %s", x.Op, t)
+			c.errorf(x.Pos(), "cannot apply %s to expr of type %s", x.Op, t)
 			return nil, false
 		}
 		return &F64{}, true
 	default:
-		c.errorf("cannot apply %s to expr of type %s", x.Op, t)
+		c.errorf(x.Pos(), "cannot apply %s to expr of type %s", x.Op, t)
 		return nil, false
 	}
 }
 
-func (c *checker) errorf(format string, args ...interface{}) {
-	c.errs.Append(format, args...)
+func (c *checker) errorf(pos lexer.Pos, format string, args ...interface{}) {
+	c.errs.Append(pos, format, args...)
 }

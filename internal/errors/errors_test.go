@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"davidrjenni.io/lang/internal/errors"
+	"davidrjenni.io/lang/lexer"
 )
 
 func TestErrors(t *testing.T) {
@@ -18,20 +19,20 @@ func TestErrors(t *testing.T) {
 		t.Errorf("got: %v, expected nil", errs.Err())
 	}
 
-	errs.Append("error %d", 23)
-	errs.Append("error %d", 42)
+	errs.Append(lexer.Pos{Line: 1, Column: 1}, "error %d", 23)
+	errs.Append(lexer.Pos{Line: 1, Column: 2}, "error %d", 42)
 
 	if errs.Err().Error() != errs.Error() {
 		t.Errorf("got:\n%v\nexpected:\n%v", errs.Err(), errs)
 	}
 
-	const err = "error 23\nerror 42"
+	const err = "1:1: error 23\n1:2: error 42"
 	if errs.Error() != err {
 		t.Errorf("got:\n%v\nexpected:\n%v", errs.Error(), err)
 	}
 
 	for i := 0; i < 19; i++ {
-		errs.Append("error %d", i)
+		errs.Append(lexer.Pos{Line: uint32(i), Column: uint32(i)}, "error %d", i)
 	}
 
 	lastLine := "and 1 more error"
@@ -41,7 +42,7 @@ func TestErrors(t *testing.T) {
 		t.Errorf("got:\n%v\nexpected:\n%v", actualLastLine, lastLine)
 	}
 
-	errs.Append("error")
+	errs.Append(lexer.Pos{Line: 1, Column: 1}, "error")
 
 	lastLine = "and 2 more errors"
 	errMsg = errs.Error()

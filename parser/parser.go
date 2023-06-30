@@ -143,7 +143,7 @@ func (p *parser) parsePrimaryExpr() ast.Expr {
 		end := pos.Shift(len(lit))
 		return &ast.Bool{Val: false, StartPos: pos, EndPos: end}
 	default:
-		p.errs.Append("unexpected %s", p.lit)
+		p.errs.Append(p.pos, "unexpected %s", p.lit)
 		return nil
 	}
 }
@@ -153,11 +153,11 @@ func (p *parser) next() {
 		var err error
 		p.pos, p.tok, p.lit, err = p.l.Read()
 		if err != nil {
-			p.errs.Append("syntax error: %v", err)
+			p.errs.Append(p.pos, "syntax error: %v", err)
 			continue
 		}
 		if p.tok == lexer.Illegal {
-			p.errs.Append("syntax error: %s", p.lit)
+			p.errs.Append(p.pos, "syntax error: %s", p.lit)
 			continue
 		}
 		break
@@ -187,7 +187,7 @@ func (p *parser) expect(toks ...lexer.Tok) lexer.Pos {
 		return pos
 	}
 	if len(toks) == 1 {
-		p.errs.Append("unexpected %s, expected %s", p.lit, toks[0])
+		p.errs.Append(p.pos, "unexpected %s, expected %s", p.lit, toks[0])
 		return pos
 	}
 	var b bytes.Buffer
@@ -197,7 +197,7 @@ func (p *parser) expect(toks ...lexer.Tok) lexer.Pos {
 		}
 		b.WriteString(tok.String())
 	}
-	p.errs.Append("unexpected %s, expected one of %s", p.lit, b.String())
+	p.errs.Append(p.pos, "unexpected %s, expected one of %s", p.lit, b.String())
 	return pos
 }
 
