@@ -10,6 +10,7 @@ var (
 	_ ast.Node = &ast.Assert{}
 	_ ast.Node = &ast.Block{}
 	_ ast.Node = &ast.BinaryExpr{}
+	_ ast.Node = &ast.For{}
 	_ ast.Node = &ast.ParenExpr{}
 	_ ast.Node = &ast.UnaryExpr{}
 	_ ast.Node = &ast.Bool{}
@@ -19,6 +20,7 @@ var (
 
 	_ ast.Cmd = &ast.Assert{}
 	_ ast.Cmd = &ast.Block{}
+	_ ast.Cmd = &ast.For{}
 
 	_ ast.Expr = &ast.BinaryExpr{}
 	_ ast.Expr = &ast.ParenExpr{}

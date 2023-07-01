@@ -29,6 +29,12 @@ type (
 		StartPos lexer.Pos
 		EndPos   lexer.Pos
 	}
+
+	For struct {
+		X        Expr
+		Block    *Block
+		StartPos lexer.Pos
+	}
 )
 
 func (c *Assert) Pos() lexer.Pos { return c.StartPos }
@@ -37,11 +43,16 @@ func (c *Assert) End() lexer.Pos { return c.EndPos }
 func (c *Block) Pos() lexer.Pos { return c.StartPos }
 func (c *Block) End() lexer.Pos { return c.EndPos }
 
+func (c *For) Pos() lexer.Pos { return c.StartPos }
+func (c *For) End() lexer.Pos { return c.Block.End() }
+
 func (*Assert) node() {}
 func (*Block) node()  {}
+func (*For) node()    {}
 
 func (*Assert) cmd() {}
 func (*Block) cmd()  {}
+func (*For) cmd()    {}
 
 type (
 	Expr interface {

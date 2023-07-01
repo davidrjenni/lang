@@ -50,19 +50,30 @@ type parser struct {
 func (p *parser) parseBlock() *ast.Block {
 	var b ast.Block
 	b.StartPos = p.expect(lexer.LeftBrace)
-	for p.in(lexer.Assert) {
+	for p.in(lexer.Assert, lexer.For) {
 		b.Cmds = append(b.Cmds, p.parseCmd())
 	}
 	b.EndPos = p.expect(lexer.RightBrace)
 	return &b
 }
 
-// Cmd -> "assert" Expr ";" .
+// Cmd -> "assert" Expr ";" | "for" Expr Block .
 func (p *parser) parseCmd() ast.Cmd {
-	pos := p.expect(lexer.Assert)
-	x := p.parseExpr()
-	end := p.expect(lexer.Semicolon)
-	return &ast.Assert{X: x, StartPos: pos, EndPos: end}
+	switch p.tok {
+	case lexer.Assert:
+		pos := p.expect(lexer.Assert)
+		x := p.parseExpr()
+		end := p.expect(lexer.Semicolon)
+		return &ast.Assert{X: x, StartPos: pos, EndPos: end}
+	case lexer.For:
+		pos := p.expect(lexer.For)
+		x := p.parseExpr()
+		b := p.parseBlock()
+		return &ast.For{X: x, Block: b, StartPos: pos}
+	default:
+		p.errs.Append(p.pos, "unexpected %s", p.lit)
+		return nil
+	}
 }
 
 // Expr -> UnaryExpr { BinOp UnaryExpr } .

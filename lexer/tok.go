@@ -53,6 +53,7 @@ const (
 	String // string
 
 	Assert // assert
+	For    // for
 )
 
 // keywords map all keywords to their corresponding token.
@@ -69,4 +70,5 @@ var keywords = map[string]Tok{
 	"string": String,
 
 	"assert": Assert,
+	"for":    For,
 }

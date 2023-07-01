@@ -72,3 +72,25 @@ cjump .L5  // test-fixtures/input.l:6:2
 load ri64.1 <- i64(6)  // test-fixtures/input.l:6:2
 call AssertViolated  // test-fixtures/input.l:6:2
 .L5
+.L6
+load rbool.0 <- bool(true)  // test-fixtures/input.l:8:6
+cmp rbool.0 bool(false)  // test-fixtures/input.l:8:6
+cjump .L7  // test-fixtures/input.l:8:2
+load ri64.0 <- i64(0)  // test-fixtures/input.l:9:15
+load ri64.1 <- i64(1)  // test-fixtures/input.l:9:15
+sub ri64.0 ri64.1  // test-fixtures/input.l:9:15
+push ri64.0  // test-fixtures/input.l:9:10
+load ri64.0 <- i64(1)  // test-fixtures/input.l:9:10
+neg ri64.0  // test-fixtures/input.l:9:10
+load ri64.0 <- ri64.0  // test-fixtures/input.l:9:10
+pop ri64.1  // test-fixtures/input.l:9:10
+cmp ri64.0 ri64.1  // test-fixtures/input.l:9:10
+sete rbool.0  // test-fixtures/input.l:9:10
+load rbool.0 <- rbool.0  // test-fixtures/input.l:9:10
+cmp rbool.0 bool(true)  // test-fixtures/input.l:9:10
+cjump .L8  // test-fixtures/input.l:9:3
+load ri64.1 <- i64(9)  // test-fixtures/input.l:9:3
+call AssertViolated  // test-fixtures/input.l:9:3
+.L8
+jump .L6  // test-fixtures/input.l:8:2
+.L7

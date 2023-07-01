@@ -44,11 +44,12 @@ func _() {
 	_ = x[F64-33]
 	_ = x[String-34]
 	_ = x[Assert-35]
+	_ = x[For-36]
 }
 
-const _Tok_name = "EOFillegal()[]{},;+-·÷∧∨⟹<≤=≠>≥∈is¬i64 literalf64 literalstring literaltruefalsebooli64f64stringassert"
+const _Tok_name = "EOFillegal()[]{},;+-·÷∧∨⟹<≤=≠>≥∈is¬i64 literalf64 literalstring literaltruefalsebooli64f64stringassertfor"
 
-var _Tok_index = [...]uint8{0, 3, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 27, 30, 33, 34, 37, 38, 41, 42, 45, 48, 50, 52, 63, 74, 88, 92, 97, 101, 104, 107, 113, 119}
+var _Tok_index = [...]uint8{0, 3, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 27, 30, 33, 34, 37, 38, 41, 42, 45, 48, 50, 52, 63, 74, 88, 92, 97, 101, 104, 107, 113, 119, 122}
 
 func (i Tok) String() string {
 	if i < 0 || i >= Tok(len(_Tok_index)-1) {

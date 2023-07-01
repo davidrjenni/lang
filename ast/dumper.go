@@ -48,6 +48,15 @@ func (d *dumper) dumpCmd(cmd Cmd) {
 			d.println()
 		}
 		d.exit(")")
+	case *For:
+		d.enter("For(")
+		d.dumpPos(cmd)
+		d.print("X: ")
+		d.dumpExpr(cmd.X)
+		d.println()
+		d.print("Block: ")
+		d.dumpCmd(cmd.Block)
+		d.exit(")")
 	default:
 		panic(fmt.Sprintf("unexpected type %T", cmd))
 	}
