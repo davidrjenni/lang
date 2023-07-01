@@ -36,6 +36,7 @@ func (d *dumper) dumpCmd(cmd Cmd) {
 	case *Assert:
 		d.enter("Assert(")
 		d.dumpPos(cmd)
+		d.print("X: ")
 		d.dumpExpr(cmd.X)
 		d.exit(")")
 	case *Block:
