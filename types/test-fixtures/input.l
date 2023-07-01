@@ -3,4 +3,8 @@
 	for true => false {
 		assert 0 - 5 = -5;
 	}
+
+	if true {
+		assert true;
+	}
 }

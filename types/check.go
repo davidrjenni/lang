@@ -48,6 +48,15 @@ func (c *checker) check(n ast.Node) {
 			c.errorf(n.X.Pos(), "expr must be of type bool, got %s", t)
 		}
 		c.check(n.Block)
+	case *ast.If:
+		t, ok := c.checkExpr(n.X)
+		if !ok {
+			return
+		}
+		if _, ok := t.(*Bool); !ok {
+			c.errorf(n.X.Pos(), "expr must be of type bool, got %s", t)
+		}
+		c.check(n.Block)
 	default:
 		panic(fmt.Sprintf("unexpected type %T", n))
 	}

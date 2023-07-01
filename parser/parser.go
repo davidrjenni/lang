@@ -50,14 +50,14 @@ type parser struct {
 func (p *parser) parseBlock() *ast.Block {
 	var b ast.Block
 	b.StartPos = p.expect(lexer.LeftBrace)
-	for p.in(lexer.Assert, lexer.For) {
+	for p.in(lexer.Assert, lexer.For, lexer.If) {
 		b.Cmds = append(b.Cmds, p.parseCmd())
 	}
 	b.EndPos = p.expect(lexer.RightBrace)
 	return &b
 }
 
-// Cmd -> "assert" Expr ";" | "for" Expr Block .
+// Cmd -> "assert" Expr ";" | "for" Expr Block | "if" Expr Block .
 func (p *parser) parseCmd() ast.Cmd {
 	switch p.tok {
 	case lexer.Assert:
@@ -70,6 +70,11 @@ func (p *parser) parseCmd() ast.Cmd {
 		x := p.parseExpr()
 		b := p.parseBlock()
 		return &ast.For{X: x, Block: b, StartPos: pos}
+	case lexer.If:
+		pos := p.expect(lexer.If)
+		x := p.parseExpr()
+		b := p.parseBlock()
+		return &ast.If{X: x, Block: b, StartPos: pos}
 	default:
 		p.errs.Append(p.pos, "unexpected %s", p.lit)
 		return nil

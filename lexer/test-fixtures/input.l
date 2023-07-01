@@ -26,3 +26,4 @@ bool i64 f64 string
 
 assert
 for
+if

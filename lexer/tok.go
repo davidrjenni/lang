@@ -54,6 +54,7 @@ const (
 
 	Assert // assert
 	For    // for
+	If     // if
 )
 
 // keywords map all keywords to their corresponding token.
@@ -71,4 +72,5 @@ var keywords = map[string]Tok{
 
 	"assert": Assert,
 	"for":    For,
+	"if":     If,
 }

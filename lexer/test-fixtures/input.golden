@@ -59,4 +59,5 @@ input.l:25:1: illegal | "
 
 input.l:27:1: assert | assert
 input.l:28:1: for | for
-input.l:29:1: EOF | EOF
+input.l:29:1: if | if
+input.l:30:1: EOF | EOF

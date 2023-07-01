@@ -94,3 +94,13 @@ call AssertViolated  // test-fixtures/input.l:9:3
 .L8
 jump .L6  // test-fixtures/input.l:8:2
 .L7
+load rbool.0 <- bool(true)  // test-fixtures/input.l:12:5
+cmp rbool.0 bool(false)  // test-fixtures/input.l:12:5
+cjump .L9  // test-fixtures/input.l:12:2
+load rbool.0 <- bool(true)  // test-fixtures/input.l:13:10
+cmp rbool.0 bool(true)  // test-fixtures/input.l:13:10
+cjump .L10  // test-fixtures/input.l:13:3
+load ri64.1 <- i64(13)  // test-fixtures/input.l:13:3
+call AssertViolated  // test-fixtures/input.l:13:3
+.L10
+.L9

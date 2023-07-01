@@ -8,4 +8,8 @@
 	for true {
 		assert -1 = 0 - 1;
 	}
+
+	if true {
+		assert true;
+	}
 }

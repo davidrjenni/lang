@@ -10,17 +10,19 @@ var (
 	_ ast.Node = &ast.Assert{}
 	_ ast.Node = &ast.Block{}
 	_ ast.Node = &ast.BinaryExpr{}
-	_ ast.Node = &ast.For{}
-	_ ast.Node = &ast.ParenExpr{}
-	_ ast.Node = &ast.UnaryExpr{}
 	_ ast.Node = &ast.Bool{}
 	_ ast.Node = &ast.F64{}
+	_ ast.Node = &ast.For{}
 	_ ast.Node = &ast.I64{}
+	_ ast.Node = &ast.If{}
+	_ ast.Node = &ast.ParenExpr{}
 	_ ast.Node = &ast.String{}
+	_ ast.Node = &ast.UnaryExpr{}
 
 	_ ast.Cmd = &ast.Assert{}
 	_ ast.Cmd = &ast.Block{}
 	_ ast.Cmd = &ast.For{}
+	_ ast.Cmd = &ast.If{}
 
 	_ ast.Expr = &ast.BinaryExpr{}
 	_ ast.Expr = &ast.ParenExpr{}

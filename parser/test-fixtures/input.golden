@@ -1,5 +1,5 @@
 Block(
-	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:11:1)
+	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:15:1)
 	0: Assert(
 		Pos: (Start: test-fixtures/input.l:2:2, End: test-fixtures/input.l:2:37)
 		X: BinaryExpr(
@@ -110,6 +110,18 @@ Block(
 					Op: =
 					RHS: I64(Val: 1, Pos: test-fixtures/input.l:9:15, End: test-fixtures/input.l:9:16)
 				)
+			)
+			
+		)
+	)
+	6: If(
+		Pos: (Start: test-fixtures/input.l:12:2, End: test-fixtures/input.l:14:2)
+		X: Bool(Val: true, Pos: test-fixtures/input.l:12:5, End: test-fixtures/input.l:12:9)
+		Block: Block(
+			Pos: (Start: test-fixtures/input.l:12:10, End: test-fixtures/input.l:14:2)
+			0: Assert(
+				Pos: (Start: test-fixtures/input.l:13:3, End: test-fixtures/input.l:13:14)
+				X: Bool(Val: true, Pos: test-fixtures/input.l:13:10, End: test-fixtures/input.l:13:14)
 			)
 			
 		)

@@ -74,6 +74,14 @@ func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 			&Jump{Label: start, pos: cmd.Pos()},
 			end,
 		}
+	case *ast.If:
+		end := t.label()
+		return Seq{
+			t.boolCheck(cmd.X, false_),
+			&CJump{Label: end, pos: cmd.Pos()},
+			t.translateCmd(cmd.Block),
+			end,
+		}
 	default:
 		panic(fmt.Sprintf("unexpected type %T", cmd))
 	}
