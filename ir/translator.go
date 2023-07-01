@@ -31,7 +31,7 @@ var (
 )
 
 func Translate(b *ast.Block, info types.Info, passes ...Pass) Seq {
-	t := &translator{}
+	t := &translator{info: info}
 	s := t.translateCmd(b)
 	s = flatten(s)
 	for _, p := range passes {
@@ -41,6 +41,7 @@ func Translate(b *ast.Block, info types.Info, passes ...Pass) Seq {
 }
 
 type translator struct {
+	info   types.Info
 	labels int
 }
 
@@ -77,6 +78,51 @@ func (t *translator) boolCheck(x ast.Expr, expect Bool) Seq {
 
 func (t *translator) translateRVal(x ast.Expr) RVal {
 	switch x := x.(type) {
+	case *ast.BinaryExpr:
+		r1, r2 := i64Reg1, i64Reg2
+		if types.Equal(t.info.Types[x.LHS].Type, &types.Bool{}) {
+			r1, r2 = boolReg1, boolReg2
+		}
+
+		var seq Seq
+		rhs := t.translateRVal(x.RHS)
+		if seqx, ok := rhs.(*seqExpr); ok {
+			seq = append(seq, seqx.Seq...)
+			rhs = seqx.Dst
+		}
+
+		// Desugaring of a => b into ¬a ∨ b.
+		if x.Op == lexer.Implies {
+			x.LHS = &ast.UnaryExpr{X: x.LHS, Op: lexer.Not, StartPos: x.Pos()}
+		}
+
+		// Push RHS onto the stack.
+		r, pushed := rhs.(*Reg)
+		if pushed {
+			pr := i64Reg1
+			if r.Second {
+				pr = i64Reg2
+			}
+			seq = append(seq, &UnaryExpr{Reg: pr, Op: Push, pos: x.Pos()})
+		}
+
+		// Load LHS into the first register.
+		lhs := t.translateRVal(x.LHS)
+		seq = append(seq, &Load{Src: lhs, Dst: r1, pos: x.Pos()})
+
+		// Load RHS into the second register.
+		if pushed {
+			seq = append(seq, &UnaryExpr{Reg: i64Reg2, Op: Pop, pos: x.Pos()})
+		} else {
+			seq = append(seq, &Load{Src: rhs, Dst: r2, pos: x.Pos()})
+		}
+
+		seq = append(seq, &BinaryExpr{RHS: r1, Op: binOp(x.Op), LHS: r2, pos: x.Pos()})
+		if isCmp(x.Op) {
+			r1 = boolReg1
+			seq = append(seq, &UnaryExpr{Reg: r1, Op: cmpOp(x.Op), pos: x.Pos()})
+		}
+		return &seqExpr{Seq: seq, Dst: r1}
 	case *ast.Bool:
 		return Bool(x.Val)
 	case *ast.F64:

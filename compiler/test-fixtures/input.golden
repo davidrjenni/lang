@@ -40,6 +40,62 @@ main:
 	movq $3, %rbx  # test-fixtures/input.l:3:2
 	AssertViolated  # test-fixtures/input.l:3:2
 .L2:
+	movq $5, %rax  # test-fixtures/input.l:4:18
+	movq $5, %rbx  # test-fixtures/input.l:4:18
+	imulq %rbx, %rax  # test-fixtures/input.l:4:18
+	pushq %rax  # test-fixtures/input.l:4:14
+	movq $3, %rax  # test-fixtures/input.l:4:14
+	popq %rbx  # test-fixtures/input.l:4:14
+	addq %rbx, %rax  # test-fixtures/input.l:4:14
+	movq %rax, %rax  # test-fixtures/input.l:4:14
+	movq $1, %rbx  # test-fixtures/input.l:4:14
+	subq %rbx, %rax  # test-fixtures/input.l:4:14
+	pushq %rax  # test-fixtures/input.l:4:9
+	movq $27, %rax  # test-fixtures/input.l:4:9
+	popq %rbx  # test-fixtures/input.l:4:9
+	cmpq %rbx, %rax  # test-fixtures/input.l:4:9
+	sete %al  # test-fixtures/input.l:4:9
+	movb %al, %al  # test-fixtures/input.l:4:9
+	cmpb $1, %al  # test-fixtures/input.l:4:9
+	je .L3  # test-fixtures/input.l:4:2
+	movq $4, %rbx  # test-fixtures/input.l:4:2
+	AssertViolated  # test-fixtures/input.l:4:2
+.L3:
+	movb $0, %al  # test-fixtures/input.l:5:9
+	movb $1, %bl  # test-fixtures/input.l:5:9
+	cmpb %bl, %al  # test-fixtures/input.l:5:9
+	sete %al  # test-fixtures/input.l:5:9
+	movb %al, %al  # test-fixtures/input.l:5:9
+	movb $1, %bl  # test-fixtures/input.l:5:9
+	orb %bl, %al  # test-fixtures/input.l:5:9
+	movb %al, %al  # test-fixtures/input.l:5:9
+	cmpb $1, %al  # test-fixtures/input.l:5:9
+	je .L4  # test-fixtures/input.l:5:2
+	movq $5, %rbx  # test-fixtures/input.l:5:2
+	AssertViolated  # test-fixtures/input.l:5:2
+.L4:
+	movq $0, %rax  # test-fixtures/input.l:6:14
+	movq $1, %rbx  # test-fixtures/input.l:6:14
+	subq %rbx, %rax  # test-fixtures/input.l:6:14
+	pushq %rax  # test-fixtures/input.l:6:9
+	movq $1, %rax  # test-fixtures/input.l:6:9
+	negq %rax  # test-fixtures/input.l:6:9
+	movq %rax, %rax  # test-fixtures/input.l:6:9
+	popq %rbx  # test-fixtures/input.l:6:9
+	cmpq %rbx, %rax  # test-fixtures/input.l:6:9
+	sete %al  # test-fixtures/input.l:6:9
+	movb %al, %al  # test-fixtures/input.l:6:9
+	cmpb $1, %al  # test-fixtures/input.l:6:9
+	setne %al  # test-fixtures/input.l:6:9
+	movb %al, %al  # test-fixtures/input.l:6:9
+	movb $1, %bl  # test-fixtures/input.l:6:9
+	orb %bl, %al  # test-fixtures/input.l:6:9
+	movb %al, %al  # test-fixtures/input.l:6:9
+	cmpb $1, %al  # test-fixtures/input.l:6:9
+	je .L5  # test-fixtures/input.l:6:2
+	movq $6, %rbx  # test-fixtures/input.l:6:2
+	AssertViolated  # test-fixtures/input.l:6:2
+.L5:
 
 	movq $0, %rax
 	movq %rbp, %rsp

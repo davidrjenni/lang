@@ -176,6 +176,55 @@ const (
 	Setge // setge
 )
 
+var (
+	binOps = map[lexer.Tok]Op{
+		lexer.Plus:     Add,
+		lexer.Minus:    Sub,
+		lexer.Multiply: Mul,
+		lexer.Divide:   Div,
+
+		lexer.And:     And,
+		lexer.Or:      Or,
+		lexer.Implies: Or, // Assumes desugaring of a => b into ¬a ∨ b.
+
+		lexer.Less:      Cmp,
+		lexer.LessEq:    Cmp,
+		lexer.Equal:     Cmp,
+		lexer.NotEqual:  Cmp,
+		lexer.Greater:   Cmp,
+		lexer.GreaterEq: Cmp,
+	}
+
+	cmpOps = map[lexer.Tok]Op{
+		lexer.Less:      Setl,
+		lexer.LessEq:    Setle,
+		lexer.Equal:     Sete,
+		lexer.NotEqual:  Setne,
+		lexer.Greater:   Setg,
+		lexer.GreaterEq: Setge,
+	}
+)
+
+func binOp(op lexer.Tok) Op {
+	o, ok := binOps[op]
+	if !ok {
+		panic(fmt.Sprintf("unexpected op %s", op))
+	}
+	return o
+}
+
+func cmpOp(op lexer.Tok) Op {
+	o, ok := cmpOps[op]
+	if !ok {
+		panic(fmt.Sprintf("unexpected op %s", op))
+	}
+	return o
+}
+
+func isCmp(op lexer.Tok) bool {
+	return lexer.Less <= op && op <= lexer.GreaterEq
+}
+
 type RegType int
 
 const (
