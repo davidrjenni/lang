@@ -12,14 +12,17 @@ import (
 	"davidrjenni.io/lang/lexer"
 )
 
-func Check(n ast.Node) error {
-	c := &checker{}
+func Check(n ast.Node) (Info, error) {
+	c := &checker{
+		Info: Info{Types: make(map[ast.Expr]*Object)},
+	}
 	c.check(n)
-	return c.errs.Err()
+	return c.Info, c.errs.Err()
 }
 
 type checker struct {
 	errs errors.Errors
+	Info
 }
 
 func (c *checker) check(n ast.Node) {
@@ -41,7 +44,13 @@ func (c *checker) check(n ast.Node) {
 	}
 }
 
-func (c *checker) checkExpr(x ast.Expr) (Type, bool) {
+func (c *checker) checkExpr(x ast.Expr) (t Type, ok bool) {
+	defer func() {
+		if ok {
+			c.Types[x] = &Object{Type: t, Node: x}
+		}
+	}()
+
 	switch x := x.(type) {
 	case *ast.BinaryExpr:
 		return c.checkBinaryExpr(x)

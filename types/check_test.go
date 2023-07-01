@@ -19,7 +19,7 @@ func TestCheck(t *testing.T) {
 		t.Fatalf("cannot parse file: %v", err)
 	}
 
-	if err = types.Check(n); err != nil {
+	if _, err := types.Check(n); err != nil {
 		t.Fatalf("%v", err)
 	}
 }

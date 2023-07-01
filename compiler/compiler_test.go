@@ -26,11 +26,12 @@ func TestCompile(t *testing.T) {
 		t.Fatalf("cannot parse file: %v", err)
 	}
 
-	if err = types.Check(b); err != nil {
+	info, err := types.Check(b)
+	if err != nil {
 		t.Fatalf("%v", err)
 	}
 
-	n := ir.Translate(b)
+	n := ir.Translate(b, info)
 
 	var actual bytes.Buffer
 	compiler.Compile(&actual, n)

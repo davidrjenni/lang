@@ -9,6 +9,7 @@ import (
 
 	"davidrjenni.io/lang/ast"
 	"davidrjenni.io/lang/lexer"
+	"davidrjenni.io/lang/types"
 )
 
 const (
@@ -29,7 +30,7 @@ var (
 	f64Reg2  = &Reg{Type: F64Reg, Second: true}
 )
 
-func Translate(b *ast.Block, passes ...Pass) Seq {
+func Translate(b *ast.Block, info types.Info, passes ...Pass) Seq {
 	t := &translator{}
 	s := t.translateCmd(b)
 	s = flatten(s)

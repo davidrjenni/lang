@@ -37,7 +37,8 @@ func main() {
 			die("%v\n", err)
 		}
 
-		if err := types.Check(b); err != nil {
+		info, err := types.Check(b)
+		if err != nil {
 			die("%v\n", err)
 		}
 
@@ -47,7 +48,7 @@ func main() {
 		}
 		defer os.Remove(asmFile.Name())
 
-		n := ir.Translate(b, ir.Loads)
+		n := ir.Translate(b, info, ir.Loads)
 		compiler.Compile(asmFile, n)
 		if err := asmFile.Close(); err != nil {
 			die("%v\n", err)

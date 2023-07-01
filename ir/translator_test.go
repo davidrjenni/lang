@@ -25,7 +25,8 @@ func TestTranslate(t *testing.T) {
 		t.Fatalf("cannot parse file: %v", err)
 	}
 
-	if err = types.Check(b); err != nil {
+	info, err := types.Check(b)
+	if err != nil {
 		t.Fatalf("%v", err)
 	}
 
@@ -40,7 +41,7 @@ func TestTranslate(t *testing.T) {
 	}
 
 	for _, p := range passes {
-		seq := ir.Translate(b, p.pass)
+		seq := ir.Translate(b, info, p.pass)
 		cmpGolden(t, seq, p.filename, *update)
 	}
 }
