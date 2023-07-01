@@ -11,13 +11,13 @@ import (
 	"davidrjenni.io/lang/ir"
 )
 
-func Compile(out io.Writer, n ir.Node) {
+func Compile(out io.Writer, filename string, n ir.Node) {
 	c := &compiler{out: out}
 	fmt.Fprint(out, macros)
 	fmt.Fprint(out, main)
 	c.compile(n)
 	fmt.Fprint(out, epilogue)
-	fmt.Fprint(out, data)
+	fmt.Fprintf(out, data, filename)
 }
 
 type compiler struct {
@@ -110,6 +110,8 @@ const epilogue = `
 const macros = `
 .macro AssertViolated
     movq $___fmt_assert, %rdi
+    movq $___filename, %rsi
+    movq %rbx, %rdx
     movq $0, %rax
     call printf
     movq $1, %rdi
@@ -120,5 +122,6 @@ const macros = `
 
 const data = `
 	.section .data
-___fmt_assert: .string "Assertion violated\n"
+___fmt_assert: .string "%%s:%%d: assertion violated\n"
+___filename:   .string %q
 `

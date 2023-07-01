@@ -49,7 +49,7 @@ func main() {
 		defer os.Remove(asmFile.Name())
 
 		n := ir.Translate(b, info, ir.Loads)
-		compiler.Compile(asmFile, n)
+		compiler.Compile(asmFile, filename, n)
 		if err := asmFile.Close(); err != nil {
 			die("%v\n", err)
 		}

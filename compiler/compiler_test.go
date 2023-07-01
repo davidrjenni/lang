@@ -34,7 +34,7 @@ func TestCompile(t *testing.T) {
 	n := ir.Translate(b, info)
 
 	var actual bytes.Buffer
-	compiler.Compile(&actual, n)
+	compiler.Compile(&actual, filename, n)
 
 	golden := filepath.Join("test-fixtures", "input.golden")
 	if *update {

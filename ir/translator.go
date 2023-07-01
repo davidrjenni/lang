@@ -51,6 +51,7 @@ func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 		return Seq{
 			t.boolCheck(cmd.X, true_),
 			&CJump{Label: label, pos: cmd.Pos()},
+			&Load{Src: I64(cmd.Pos().Line), Dst: i64Reg2, pos: cmd.Pos()},
 			&Call{Label: assertViolated, pos: cmd.Pos()},
 			label,
 		}
