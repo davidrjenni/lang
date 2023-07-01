@@ -24,6 +24,8 @@ const (
 	Jump  // jmp
 	CJump // je
 
+	Neg // negq
+
 	Add // addq
 	Sub // subq
 	Mul // imulq
@@ -48,6 +50,8 @@ const (
 var ops = map[ir.Op]map[ir.RegType]Op{
 	ir.Push: {ir.I64Reg: Push},
 	ir.Pop:  {ir.I64Reg: Pop},
+
+	ir.Neg: {ir.I64Reg: Neg},
 
 	ir.Add: {ir.I64Reg: Add},
 	ir.Sub: {ir.I64Reg: Sub},

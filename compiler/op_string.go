@@ -14,26 +14,27 @@ func _() {
 	_ = x[Pop-3]
 	_ = x[Jump-4]
 	_ = x[CJump-5]
-	_ = x[Add-6]
-	_ = x[Sub-7]
-	_ = x[Mul-8]
-	_ = x[Div-9]
-	_ = x[And-10]
-	_ = x[Or-11]
-	_ = x[Cmpq-12]
-	_ = x[Cmpb-13]
-	_ = x[Setl-14]
-	_ = x[Setle-15]
-	_ = x[Sete-16]
-	_ = x[Setne-17]
-	_ = x[Setg-18]
-	_ = x[Setge-19]
-	_ = x[Call-20]
+	_ = x[Neg-6]
+	_ = x[Add-7]
+	_ = x[Sub-8]
+	_ = x[Mul-9]
+	_ = x[Div-10]
+	_ = x[And-11]
+	_ = x[Or-12]
+	_ = x[Cmpq-13]
+	_ = x[Cmpb-14]
+	_ = x[Setl-15]
+	_ = x[Setle-16]
+	_ = x[Sete-17]
+	_ = x[Setne-18]
+	_ = x[Setg-19]
+	_ = x[Setge-20]
+	_ = x[Call-21]
 }
 
-const _Op_name = "movqmovbpushqpopqjmpjeaddqsubqimulqidivandborbcmpqcmpbsetlsetlesetesetnesetgsetgecall"
+const _Op_name = "movqmovbpushqpopqjmpjenegqaddqsubqimulqidivandborbcmpqcmpbsetlsetlesetesetnesetgsetgecall"
 
-var _Op_index = [...]uint8{0, 4, 8, 13, 17, 20, 22, 26, 30, 35, 39, 43, 46, 50, 54, 58, 63, 67, 72, 76, 81, 85}
+var _Op_index = [...]uint8{0, 4, 8, 13, 17, 20, 22, 26, 30, 34, 39, 43, 47, 50, 54, 58, 62, 67, 71, 76, 80, 85, 89}
 
 func (i Op) String() string {
 	if i < 0 || i >= Op(len(_Op_index)-1) {

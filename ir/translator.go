@@ -87,6 +87,15 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 		return t.translateRVal(x.X)
 	case *ast.UnaryExpr:
 		switch x.Op {
+		case lexer.Minus:
+			val := t.translateRVal(x.X)
+			return &seqExpr{
+				Seq: Seq{
+					&Load{Src: val, Dst: i64Reg1, pos: x.Pos()},
+					&UnaryExpr{Op: Neg, Reg: i64Reg1, pos: x.Pos()},
+				},
+				Dst: i64Reg1,
+			}
 		case lexer.Not:
 			return &seqExpr{
 				Seq: Seq{
