@@ -12,6 +12,7 @@ var (
 	_ ast.Node = &ast.BinaryExpr{}
 	_ ast.Node = &ast.Bool{}
 	_ ast.Node = &ast.Break{}
+	_ ast.Node = &ast.Comment{}
 	_ ast.Node = &ast.Continue{}
 	_ ast.Node = &ast.F64{}
 	_ ast.Node = &ast.For{}

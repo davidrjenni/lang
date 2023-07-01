@@ -12,6 +12,17 @@ type Node interface {
 	node()
 }
 
+type Comment struct {
+	Text     string
+	StartPos lexer.Pos
+	EndPos   lexer.Pos
+}
+
+func (c *Comment) Pos() lexer.Pos { return c.StartPos }
+func (c *Comment) End() lexer.Pos { return c.EndPos }
+
+func (*Comment) node() {}
+
 type (
 	Cmd interface {
 		cmd()

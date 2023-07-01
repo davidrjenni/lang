@@ -32,7 +32,7 @@ func main() {
 		}
 
 		filename := os.Args[2]
-		b, err := parser.ParseFile(filename)
+		b, _, err := parser.ParseFile(filename)
 		if err != nil {
 			die("%v\n", err)
 		}

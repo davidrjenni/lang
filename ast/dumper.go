@@ -24,6 +24,8 @@ func (d *dumper) dump(n Node) {
 	switch n := n.(type) {
 	case Cmd:
 		d.dumpCmd(n)
+	case *Comment:
+		d.printf("Comment(Text: %q, Pos: %s, End: %s)", n.Text, n.Pos(), n.End())
 	case Expr:
 		d.dumpExpr(n)
 	default:

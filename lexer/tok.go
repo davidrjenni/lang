@@ -13,6 +13,7 @@ const (
 	// EOF marks the end of file.
 	EOF     Tok = iota // EOF
 	Illegal            // illegal
+	Comment            // comment
 
 	LeftParen    // (
 	RightParen   // )

@@ -19,9 +19,13 @@ var update = flag.Bool("update", false, "update golden files")
 
 func TestParse(t *testing.T) {
 	filename := filepath.Join("test-fixtures", "input.l")
-	n, err := parser.ParseFile(filename)
+	n, comments, err := parser.ParseFile(filename)
 	if err != nil {
 		t.Fatalf("cannot parse file: %v", err)
+	}
+
+	if len(comments) != 2 {
+		t.Fatalf("expected %d comments, got %d", 2, len(comments))
 	}
 
 	var actual bytes.Buffer

@@ -14,7 +14,7 @@ import (
 
 func TestCheck(t *testing.T) {
 	filename := filepath.Join("test-fixtures", "input.l")
-	n, err := parser.ParseFile(filename)
+	n, _, err := parser.ParseFile(filename)
 	if err != nil {
 		t.Fatalf("cannot parse file: %v", err)
 	}

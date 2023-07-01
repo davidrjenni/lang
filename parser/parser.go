@@ -16,29 +16,30 @@ import (
 	"davidrjenni.io/lang/lexer"
 )
 
-func ParseFile(filename string) (*ast.Block, error) {
+func ParseFile(filename string) (*ast.Block, []*ast.Comment, error) {
 	f, err := os.Open(filename)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	defer f.Close()
 	return Parse(f, filename)
 }
 
-func Parse(r io.Reader, filename string) (*ast.Block, error) {
+func Parse(r io.Reader, filename string) (*ast.Block, []*ast.Comment, error) {
 	l, err := lexer.New(r, filename)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	p := &parser{l: l}
 	p.next()
 	n := p.parseBlock()
-	return n, p.errs.Err()
+	return n, p.comments, p.errs.Err()
 }
 
 type parser struct {
-	l    *lexer.Lexer
-	errs errors.Errors
+	l        *lexer.Lexer
+	errs     errors.Errors
+	comments []*ast.Comment
 
 	// lookahead
 	pos lexer.Pos
@@ -182,6 +183,14 @@ func (p *parser) next() {
 		}
 		if p.tok == lexer.Illegal {
 			p.errs.Append(p.pos, "syntax error: %s", p.lit)
+			continue
+		}
+		if p.tok == lexer.Comment {
+			p.comments = append(p.comments, &ast.Comment{
+				Text:     p.lit,
+				StartPos: p.pos,
+				EndPos:   p.pos.Shift(len(p.lit)),
+			})
 			continue
 		}
 		break

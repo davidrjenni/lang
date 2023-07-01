@@ -4,11 +4,12 @@
 	assert --1 = 1;
 	assert ~~true;
 
+	// This is a line comment.
 	for true {}
 	for 2*3 < 5 {
 		assert -1 = 1;
 		break;
-		continue;
+		continue; // This is a line comment.
 	}
 
 	if true {

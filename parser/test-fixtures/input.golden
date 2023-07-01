@@ -1,5 +1,5 @@
 Block(
-	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:17:1)
+	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:18:1)
 	0: Assert(
 		Pos: (Start: test-fixtures/input.l:2:2, End: test-fixtures/input.l:2:37)
 		X: BinaryExpr(
@@ -76,54 +76,54 @@ Block(
 		)
 	)
 	4: For(
-		Pos: (Start: test-fixtures/input.l:7:2, End: test-fixtures/input.l:7:12)
-		X: Bool(Val: true, Pos: test-fixtures/input.l:7:6, End: test-fixtures/input.l:7:10)
+		Pos: (Start: test-fixtures/input.l:8:2, End: test-fixtures/input.l:8:12)
+		X: Bool(Val: true, Pos: test-fixtures/input.l:8:6, End: test-fixtures/input.l:8:10)
 		Block: Block(
-			Pos: (Start: test-fixtures/input.l:7:11, End: test-fixtures/input.l:7:12)
+			Pos: (Start: test-fixtures/input.l:8:11, End: test-fixtures/input.l:8:12)
 			
 		)
 	)
 	5: For(
-		Pos: (Start: test-fixtures/input.l:8:2, End: test-fixtures/input.l:12:2)
+		Pos: (Start: test-fixtures/input.l:9:2, End: test-fixtures/input.l:13:2)
 		X: BinaryExpr(
-			Pos: (Start: test-fixtures/input.l:8:6, End: test-fixtures/input.l:8:13)
+			Pos: (Start: test-fixtures/input.l:9:6, End: test-fixtures/input.l:9:13)
 			LHS: BinaryExpr(
-				Pos: (Start: test-fixtures/input.l:8:6, End: test-fixtures/input.l:8:9)
-				LHS: I64(Val: 2, Pos: test-fixtures/input.l:8:6, End: test-fixtures/input.l:8:7)
+				Pos: (Start: test-fixtures/input.l:9:6, End: test-fixtures/input.l:9:9)
+				LHS: I64(Val: 2, Pos: test-fixtures/input.l:9:6, End: test-fixtures/input.l:9:7)
 				Op: ·
-				RHS: I64(Val: 3, Pos: test-fixtures/input.l:8:8, End: test-fixtures/input.l:8:9)
+				RHS: I64(Val: 3, Pos: test-fixtures/input.l:9:8, End: test-fixtures/input.l:9:9)
 			)
 			Op: <
-			RHS: I64(Val: 5, Pos: test-fixtures/input.l:8:12, End: test-fixtures/input.l:8:13)
+			RHS: I64(Val: 5, Pos: test-fixtures/input.l:9:12, End: test-fixtures/input.l:9:13)
 		)
 		Block: Block(
-			Pos: (Start: test-fixtures/input.l:8:14, End: test-fixtures/input.l:12:2)
+			Pos: (Start: test-fixtures/input.l:9:14, End: test-fixtures/input.l:13:2)
 			0: Assert(
-				Pos: (Start: test-fixtures/input.l:9:3, End: test-fixtures/input.l:9:16)
+				Pos: (Start: test-fixtures/input.l:10:3, End: test-fixtures/input.l:10:16)
 				X: BinaryExpr(
-					Pos: (Start: test-fixtures/input.l:9:10, End: test-fixtures/input.l:9:16)
+					Pos: (Start: test-fixtures/input.l:10:10, End: test-fixtures/input.l:10:16)
 					LHS: UnaryExpr(
-						Pos: (Start: test-fixtures/input.l:9:10, End: test-fixtures/input.l:9:12)
+						Pos: (Start: test-fixtures/input.l:10:10, End: test-fixtures/input.l:10:12)
 						Op: -
-						X: I64(Val: 1, Pos: test-fixtures/input.l:9:11, End: test-fixtures/input.l:9:12)
+						X: I64(Val: 1, Pos: test-fixtures/input.l:10:11, End: test-fixtures/input.l:10:12)
 					)
 					Op: =
-					RHS: I64(Val: 1, Pos: test-fixtures/input.l:9:15, End: test-fixtures/input.l:9:16)
+					RHS: I64(Val: 1, Pos: test-fixtures/input.l:10:15, End: test-fixtures/input.l:10:16)
 				)
 			)
-			1: Break(Pos: test-fixtures/input.l:10:3, End: test-fixtures/input.l:10:8)
-			2: Continue(Pos: test-fixtures/input.l:11:3, End: test-fixtures/input.l:11:11)
+			1: Break(Pos: test-fixtures/input.l:11:3, End: test-fixtures/input.l:11:8)
+			2: Continue(Pos: test-fixtures/input.l:12:3, End: test-fixtures/input.l:12:11)
 			
 		)
 	)
 	6: If(
-		Pos: (Start: test-fixtures/input.l:14:2, End: test-fixtures/input.l:16:2)
-		X: Bool(Val: true, Pos: test-fixtures/input.l:14:5, End: test-fixtures/input.l:14:9)
+		Pos: (Start: test-fixtures/input.l:15:2, End: test-fixtures/input.l:17:2)
+		X: Bool(Val: true, Pos: test-fixtures/input.l:15:5, End: test-fixtures/input.l:15:9)
 		Block: Block(
-			Pos: (Start: test-fixtures/input.l:14:10, End: test-fixtures/input.l:16:2)
+			Pos: (Start: test-fixtures/input.l:15:10, End: test-fixtures/input.l:17:2)
 			0: Assert(
-				Pos: (Start: test-fixtures/input.l:15:3, End: test-fixtures/input.l:15:14)
-				X: Bool(Val: true, Pos: test-fixtures/input.l:15:10, End: test-fixtures/input.l:15:14)
+				Pos: (Start: test-fixtures/input.l:16:3, End: test-fixtures/input.l:16:14)
+				X: Bool(Val: true, Pos: test-fixtures/input.l:16:10, End: test-fixtures/input.l:16:14)
 			)
 			
 		)

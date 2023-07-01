@@ -20,7 +20,7 @@ var update = flag.Bool("update", false, "update golden files")
 
 func TestTranslate(t *testing.T) {
 	filename := filepath.Join("test-fixtures", "input.l")
-	b, err := parser.ParseFile(filename)
+	b, _, err := parser.ParseFile(filename)
 	if err != nil {
 		t.Fatalf("cannot parse file: %v", err)
 	}

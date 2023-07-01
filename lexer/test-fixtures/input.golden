@@ -62,4 +62,5 @@ input.l:28:1: break | break
 input.l:29:1: continue | continue
 input.l:30:1: for | for
 input.l:31:1: if | if
-input.l:32:1: EOF | EOF
+input.l:32:1: comment | // This is a line comment.
+input.l:33:1: EOF | EOF

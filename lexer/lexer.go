@@ -92,7 +92,12 @@ func (l *Lexer) Read() (pos Pos, tok Tok, lit string, err error) {
 		tok = Minus
 	case '*', '·':
 		tok = Multiply
-	case '/', '÷':
+	case '/':
+		if tok = Divide; l.ch == '/' {
+			lit, err = l.scanLineComment()
+			return pos, Comment, lit, err
+		}
+	case '÷':
 		tok = Divide
 	case '&', '∧':
 		tok = And
@@ -160,6 +165,20 @@ func (l *Lexer) next() error {
 		l.pos.Column = 0
 	}
 	return nil
+}
+
+func (l *Lexer) scanLineComment() (string, error) {
+	buf := []rune{'/'}
+	for l.ch != '\n' && l.ch != eof {
+		buf = append(buf, l.ch)
+		if err := l.next(); err != nil {
+			return "", err
+		}
+	}
+	if err := l.next(); err != nil {
+		return "", err
+	}
+	return string(buf), nil
 }
 
 func (l *Lexer) scanKeyword() (Tok, string, error) {
