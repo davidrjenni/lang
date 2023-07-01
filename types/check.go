@@ -14,14 +14,16 @@ import (
 
 func Check(n ast.Node) (Info, error) {
 	c := &checker{
-		Info: Info{Types: make(map[ast.Expr]*Object)},
+		scope: &scope{},
+		Info:  Info{Types: make(map[ast.Expr]*Object)},
 	}
 	c.check(n)
 	return c.Info, c.errs.Err()
 }
 
 type checker struct {
-	errs errors.Errors
+	errs  errors.Errors
+	scope *scope
 	Info
 }
 
@@ -39,6 +41,14 @@ func (c *checker) check(n ast.Node) {
 		for _, cmd := range n.Cmds {
 			c.check(cmd)
 		}
+	case *ast.Break:
+		if !c.scope.inFor {
+			c.errorf(n.Pos(), "break must be in for loop")
+		}
+	case *ast.Continue:
+		if !c.scope.inFor {
+			c.errorf(n.Pos(), "continue must be in for loop")
+		}
 	case *ast.For:
 		t, ok := c.checkExpr(n.X)
 		if !ok {
@@ -47,7 +57,10 @@ func (c *checker) check(n ast.Node) {
 		if _, ok := t.(*Bool); !ok {
 			c.errorf(n.X.Pos(), "expr must be of type bool, got %s", t)
 		}
+		c.scope = c.scope.enter()
+		c.scope.inFor = true
 		c.check(n.Block)
+		c.scope = c.scope.parent
 	case *ast.If:
 		t, ok := c.checkExpr(n.X)
 		if !ok {
@@ -56,7 +69,9 @@ func (c *checker) check(n ast.Node) {
 		if _, ok := t.(*Bool); !ok {
 			c.errorf(n.X.Pos(), "expr must be of type bool, got %s", t)
 		}
+		c.scope = c.scope.enter()
 		c.check(n.Block)
+		c.scope = c.scope.parent
 	default:
 		panic(fmt.Sprintf("unexpected type %T", n))
 	}

@@ -41,8 +41,10 @@ func Translate(b *ast.Block, info types.Info, passes ...Pass) Seq {
 }
 
 type translator struct {
-	info   types.Info
-	labels int
+	info      types.Info
+	labels    int
+	forStarts []Label
+	forEnds   []Label
 }
 
 func (t *translator) translateCmd(cmd ast.Cmd) Seq {
@@ -63,10 +65,20 @@ func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 			seq = append(seq, n)
 		}
 		return seq
+	case *ast.Break:
+		return Seq{
+			&Jump{Label: t.forEnds[len(t.forEnds)-1], pos: cmd.Pos()},
+		}
+	case *ast.Continue:
+		return Seq{
+			&Jump{Label: t.forStarts[len(t.forStarts)-1], pos: cmd.Pos()},
+		}
 	case *ast.For:
 		start := t.label()
 		end := t.label()
-		return Seq{
+		t.forStarts = append(t.forStarts, start)
+		t.forEnds = append(t.forEnds, end)
+		seq := Seq{
 			start,
 			t.boolCheck(cmd.X, false_),
 			&CJump{Label: end, pos: cmd.Pos()},
@@ -74,6 +86,10 @@ func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 			&Jump{Label: start, pos: cmd.Pos()},
 			end,
 		}
+		i := len(t.forStarts) - 1
+		t.forStarts = t.forStarts[:i]
+		t.forEnds = t.forEnds[:i]
+		return seq
 	case *ast.If:
 		end := t.label()
 		return Seq{

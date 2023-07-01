@@ -48,6 +48,10 @@ func (d *dumper) dumpCmd(cmd Cmd) {
 			d.println()
 		}
 		d.exit(")")
+	case *Break:
+		d.printf("Break(Pos: %s, End: %s)", cmd.Pos(), cmd.End())
+	case *Continue:
+		d.printf("Continue(Pos: %s, End: %s)", cmd.Pos(), cmd.End())
 	case *For:
 		d.enter("For(")
 		d.dumpPos(cmd)

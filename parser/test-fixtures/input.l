@@ -7,6 +7,8 @@
 	for true {}
 	for 2*3 < 5 {
 		assert -1 = 1;
+		break;
+		continue;
 	}
 
 	if true {

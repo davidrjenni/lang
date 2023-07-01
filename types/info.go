@@ -14,3 +14,15 @@ type Object struct {
 type Info struct {
 	Types map[ast.Expr]*Object
 }
+
+type scope struct {
+	inFor  bool
+	parent *scope
+}
+
+func (s *scope) enter() *scope {
+	return &scope{
+		inFor:  s.inFor,
+		parent: s,
+	}
+}

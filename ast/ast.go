@@ -30,6 +30,16 @@ type (
 		EndPos   lexer.Pos
 	}
 
+	Break struct {
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
+	}
+
+	Continue struct {
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
+	}
+
 	For struct {
 		X        Expr
 		Block    *Block
@@ -49,21 +59,31 @@ func (c *Assert) End() lexer.Pos { return c.EndPos }
 func (c *Block) Pos() lexer.Pos { return c.StartPos }
 func (c *Block) End() lexer.Pos { return c.EndPos }
 
+func (c *Break) Pos() lexer.Pos { return c.StartPos }
+func (c *Break) End() lexer.Pos { return c.EndPos }
+
+func (c *Continue) Pos() lexer.Pos { return c.StartPos }
+func (c *Continue) End() lexer.Pos { return c.EndPos }
+
 func (c *For) Pos() lexer.Pos { return c.StartPos }
 func (c *For) End() lexer.Pos { return c.Block.End() }
 
 func (c *If) Pos() lexer.Pos { return c.StartPos }
 func (c *If) End() lexer.Pos { return c.Block.End() }
 
-func (*Assert) node() {}
-func (*Block) node()  {}
-func (*For) node()    {}
-func (*If) node()     {}
+func (*Assert) node()   {}
+func (*Block) node()    {}
+func (*Break) node()    {}
+func (*Continue) node() {}
+func (*For) node()      {}
+func (*If) node()       {}
 
-func (*Assert) cmd() {}
-func (*Block) cmd()  {}
-func (*For) cmd()    {}
-func (*If) cmd()     {}
+func (*Assert) cmd()   {}
+func (*Block) cmd()    {}
+func (*Break) cmd()    {}
+func (*Continue) cmd() {}
+func (*For) cmd()      {}
+func (*If) cmd()       {}
 
 type (
 	Expr interface {

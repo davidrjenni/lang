@@ -12,4 +12,20 @@
 	if true {
 		assert true;
 	}
+
+	for true {
+		if true {
+			break;
+		}
+	}
+
+	for true {
+		if true {
+			for true {
+				break;
+				assert true;
+			}
+			continue;
+		}
+	}
 }

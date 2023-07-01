@@ -104,3 +104,38 @@ load ri64.1 <- i64(13)  // test-fixtures/input.l:13:3
 call AssertViolated  // test-fixtures/input.l:13:3
 .L10
 .L9
+.L11
+load rbool.0 <- bool(true)  // test-fixtures/input.l:16:6
+cmp rbool.0 bool(false)  // test-fixtures/input.l:16:6
+cjump .L12  // test-fixtures/input.l:16:2
+load rbool.0 <- bool(true)  // test-fixtures/input.l:17:6
+cmp rbool.0 bool(false)  // test-fixtures/input.l:17:6
+cjump .L13  // test-fixtures/input.l:17:3
+jump .L12  // test-fixtures/input.l:18:4
+.L13
+jump .L11  // test-fixtures/input.l:16:2
+.L12
+.L14
+load rbool.0 <- bool(true)  // test-fixtures/input.l:22:6
+cmp rbool.0 bool(false)  // test-fixtures/input.l:22:6
+cjump .L15  // test-fixtures/input.l:22:2
+load rbool.0 <- bool(true)  // test-fixtures/input.l:23:6
+cmp rbool.0 bool(false)  // test-fixtures/input.l:23:6
+cjump .L16  // test-fixtures/input.l:23:3
+.L17
+load rbool.0 <- bool(true)  // test-fixtures/input.l:24:8
+cmp rbool.0 bool(false)  // test-fixtures/input.l:24:8
+cjump .L18  // test-fixtures/input.l:24:4
+jump .L18  // test-fixtures/input.l:25:5
+load rbool.0 <- bool(true)  // test-fixtures/input.l:26:12
+cmp rbool.0 bool(true)  // test-fixtures/input.l:26:12
+cjump .L19  // test-fixtures/input.l:26:5
+load ri64.1 <- i64(26)  // test-fixtures/input.l:26:5
+call AssertViolated  // test-fixtures/input.l:26:5
+.L19
+jump .L17  // test-fixtures/input.l:24:4
+.L18
+jump .L14  // test-fixtures/input.l:28:4
+.L16
+jump .L14  // test-fixtures/input.l:22:2
+.L15

@@ -11,6 +11,8 @@ var (
 	_ ast.Node = &ast.Block{}
 	_ ast.Node = &ast.BinaryExpr{}
 	_ ast.Node = &ast.Bool{}
+	_ ast.Node = &ast.Break{}
+	_ ast.Node = &ast.Continue{}
 	_ ast.Node = &ast.F64{}
 	_ ast.Node = &ast.For{}
 	_ ast.Node = &ast.I64{}
@@ -21,6 +23,8 @@ var (
 
 	_ ast.Cmd = &ast.Assert{}
 	_ ast.Cmd = &ast.Block{}
+	_ ast.Cmd = &ast.Break{}
+	_ ast.Cmd = &ast.Continue{}
 	_ ast.Cmd = &ast.For{}
 	_ ast.Cmd = &ast.If{}
 

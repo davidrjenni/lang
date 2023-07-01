@@ -52,9 +52,11 @@ const (
 	F64    // f64
 	String // string
 
-	Assert // assert
-	For    // for
-	If     // if
+	Assert   // assert
+	Break    // break
+	Continue // continue
+	For      // for
+	If       // if
 )
 
 // keywords map all keywords to their corresponding token.
@@ -70,7 +72,9 @@ var keywords = map[string]Tok{
 	"f64":    F64,
 	"string": String,
 
-	"assert": Assert,
-	"for":    For,
-	"if":     If,
+	"assert":   Assert,
+	"break":    Break,
+	"continue": Continue,
+	"for":      For,
+	"if":       If,
 }

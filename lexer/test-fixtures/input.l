@@ -25,5 +25,7 @@ bool i64 f64 string
 "
 
 assert
+break
+continue
 for
 if

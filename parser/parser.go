@@ -50,14 +50,14 @@ type parser struct {
 func (p *parser) parseBlock() *ast.Block {
 	var b ast.Block
 	b.StartPos = p.expect(lexer.LeftBrace)
-	for p.in(lexer.Assert, lexer.For, lexer.If) {
+	for p.in(lexer.Assert, lexer.Break, lexer.Continue, lexer.For, lexer.If) {
 		b.Cmds = append(b.Cmds, p.parseCmd())
 	}
 	b.EndPos = p.expect(lexer.RightBrace)
 	return &b
 }
 
-// Cmd -> "assert" Expr ";" | "for" Expr Block | "if" Expr Block .
+// Cmd -> "assert" Expr ";" | "break" ";" | "continue" ";" | "for" Expr Block | "if" Expr Block .
 func (p *parser) parseCmd() ast.Cmd {
 	switch p.tok {
 	case lexer.Assert:
@@ -65,6 +65,14 @@ func (p *parser) parseCmd() ast.Cmd {
 		x := p.parseExpr()
 		end := p.expect(lexer.Semicolon)
 		return &ast.Assert{X: x, StartPos: pos, EndPos: end}
+	case lexer.Break:
+		pos := p.expect(lexer.Break)
+		end := p.expect(lexer.Semicolon)
+		return &ast.Break{StartPos: pos, EndPos: end}
+	case lexer.Continue:
+		pos := p.expect(lexer.Continue)
+		end := p.expect(lexer.Semicolon)
+		return &ast.Continue{StartPos: pos, EndPos: end}
 	case lexer.For:
 		pos := p.expect(lexer.For)
 		x := p.parseExpr()
