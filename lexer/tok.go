@@ -56,6 +56,7 @@ const (
 	Assert   // assert
 	Break    // break
 	Continue // continue
+	Else     // else
 	For      // for
 	If       // if
 )
@@ -76,6 +77,7 @@ var keywords = map[string]Tok{
 	"assert":   Assert,
 	"break":    Break,
 	"continue": Continue,
+	"else":     Else,
 	"for":      For,
 	"if":       If,
 }

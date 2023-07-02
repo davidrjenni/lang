@@ -1,5 +1,5 @@
 Block(
-	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:18:1)
+	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:34:1)
 	0: Assert(
 		Pos: (Start: test-fixtures/input.l:2:2, End: test-fixtures/input.l:2:37)
 		X: BinaryExpr(
@@ -126,6 +126,82 @@ Block(
 				X: Bool(Val: true, Pos: test-fixtures/input.l:16:10, End: test-fixtures/input.l:16:14)
 			)
 			
+		)
+	)
+	7: If(
+		Pos: (Start: test-fixtures/input.l:19:2, End: test-fixtures/input.l:23:2)
+		X: Bool(Val: false, Pos: test-fixtures/input.l:19:5, End: test-fixtures/input.l:19:10)
+		Block: Block(
+			Pos: (Start: test-fixtures/input.l:19:11, End: test-fixtures/input.l:21:2)
+			0: Assert(
+				Pos: (Start: test-fixtures/input.l:20:3, End: test-fixtures/input.l:20:15)
+				X: Bool(Val: false, Pos: test-fixtures/input.l:20:10, End: test-fixtures/input.l:20:15)
+			)
+			
+		)
+		Else: Else(
+			Pos: (Start: test-fixtures/input.l:21:4, End: test-fixtures/input.l:23:2)
+			Cmd: Block(
+				Pos: (Start: test-fixtures/input.l:21:9, End: test-fixtures/input.l:23:2)
+				0: Assert(
+					Pos: (Start: test-fixtures/input.l:22:3, End: test-fixtures/input.l:22:14)
+					X: Bool(Val: true, Pos: test-fixtures/input.l:22:10, End: test-fixtures/input.l:22:14)
+				)
+				
+			)
+		)
+	)
+	8: If(
+		Pos: (Start: test-fixtures/input.l:25:2, End: test-fixtures/input.l:33:2)
+		X: Bool(Val: false, Pos: test-fixtures/input.l:25:5, End: test-fixtures/input.l:25:10)
+		Block: Block(
+			Pos: (Start: test-fixtures/input.l:25:11, End: test-fixtures/input.l:27:2)
+			0: Assert(
+				Pos: (Start: test-fixtures/input.l:26:3, End: test-fixtures/input.l:26:15)
+				X: Bool(Val: false, Pos: test-fixtures/input.l:26:10, End: test-fixtures/input.l:26:15)
+			)
+			
+		)
+		Else: Else(
+			Pos: (Start: test-fixtures/input.l:27:4, End: test-fixtures/input.l:33:2)
+			Cmd: If(
+				Pos: (Start: test-fixtures/input.l:27:9, End: test-fixtures/input.l:33:2)
+				X: Bool(Val: false, Pos: test-fixtures/input.l:27:12, End: test-fixtures/input.l:27:17)
+				Block: Block(
+					Pos: (Start: test-fixtures/input.l:27:18, End: test-fixtures/input.l:29:2)
+					0: Assert(
+						Pos: (Start: test-fixtures/input.l:28:3, End: test-fixtures/input.l:28:14)
+						X: Bool(Val: true, Pos: test-fixtures/input.l:28:10, End: test-fixtures/input.l:28:14)
+					)
+					
+				)
+				Else: Else(
+					Pos: (Start: test-fixtures/input.l:29:4, End: test-fixtures/input.l:33:2)
+					Cmd: If(
+						Pos: (Start: test-fixtures/input.l:29:9, End: test-fixtures/input.l:33:2)
+						X: Bool(Val: false, Pos: test-fixtures/input.l:29:12, End: test-fixtures/input.l:29:17)
+						Block: Block(
+							Pos: (Start: test-fixtures/input.l:29:18, End: test-fixtures/input.l:31:2)
+							0: Assert(
+								Pos: (Start: test-fixtures/input.l:30:3, End: test-fixtures/input.l:30:14)
+								X: Bool(Val: true, Pos: test-fixtures/input.l:30:10, End: test-fixtures/input.l:30:14)
+							)
+							
+						)
+						Else: Else(
+							Pos: (Start: test-fixtures/input.l:31:4, End: test-fixtures/input.l:33:2)
+							Cmd: Block(
+								Pos: (Start: test-fixtures/input.l:31:9, End: test-fixtures/input.l:33:2)
+								0: Assert(
+									Pos: (Start: test-fixtures/input.l:32:3, End: test-fixtures/input.l:32:14)
+									X: Bool(Val: true, Pos: test-fixtures/input.l:32:10, End: test-fixtures/input.l:32:14)
+								)
+								
+							)
+						)
+					)
+				)
+			)
 		)
 	)
 	

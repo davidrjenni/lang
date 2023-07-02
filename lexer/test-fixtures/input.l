@@ -27,6 +27,7 @@ bool i64 f64 string
 assert
 break
 continue
+else
 for
 if
 // This is a line comment.

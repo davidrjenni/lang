@@ -47,13 +47,14 @@ func _() {
 	_ = x[Assert-36]
 	_ = x[Break-37]
 	_ = x[Continue-38]
-	_ = x[For-39]
-	_ = x[If-40]
+	_ = x[Else-39]
+	_ = x[For-40]
+	_ = x[If-41]
 }
 
-const _Tok_name = "EOFillegalcomment()[]{},;+-·÷∧∨⟹<≤=≠>≥∈is¬i64 literalf64 literalstring literaltruefalsebooli64f64stringassertbreakcontinueforif"
+const _Tok_name = "EOFillegalcomment()[]{},;+-·÷∧∨⟹<≤=≠>≥∈is¬i64 literalf64 literalstring literaltruefalsebooli64f64stringassertbreakcontinueelseforif"
 
-var _Tok_index = [...]uint8{0, 3, 10, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 31, 34, 37, 40, 41, 44, 45, 48, 49, 52, 55, 57, 59, 70, 81, 95, 99, 104, 108, 111, 114, 120, 126, 131, 139, 142, 144}
+var _Tok_index = [...]uint8{0, 3, 10, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 31, 34, 37, 40, 41, 44, 45, 48, 49, 52, 55, 57, 59, 70, 81, 95, 99, 104, 108, 111, 114, 120, 126, 131, 139, 143, 146, 148}
 
 func (i Tok) String() string {
 	if i < 0 || i >= Tok(len(_Tok_index)-1) {

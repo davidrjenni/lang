@@ -14,6 +14,7 @@ var (
 	_ ast.Node = &ast.Break{}
 	_ ast.Node = &ast.Comment{}
 	_ ast.Node = &ast.Continue{}
+	_ ast.Node = &ast.Else{}
 	_ ast.Node = &ast.F64{}
 	_ ast.Node = &ast.For{}
 	_ ast.Node = &ast.I64{}

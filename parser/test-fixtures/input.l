@@ -15,4 +15,20 @@
 	if true {
 		assert true;
 	}
+
+	if false {
+		assert false;
+	} else {
+		assert true;
+	}
+
+	if false {
+		assert false;
+	} else if false {
+		assert true;
+	} else if false {
+		assert true;
+	} else {
+		assert true;
+	}
 }

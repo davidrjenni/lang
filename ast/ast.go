@@ -23,6 +23,16 @@ func (c *Comment) End() lexer.Pos { return c.EndPos }
 
 func (*Comment) node() {}
 
+type Else struct {
+	Cmd      Cmd
+	StartPos lexer.Pos
+}
+
+func (e *Else) Pos() lexer.Pos { return e.StartPos }
+func (e *Else) End() lexer.Pos { return e.Cmd.End() }
+
+func (*Else) node() {}
+
 type (
 	Cmd interface {
 		cmd()
@@ -60,6 +70,7 @@ type (
 	If struct {
 		X        Expr
 		Block    *Block
+		Else     *Else
 		StartPos lexer.Pos
 	}
 )
@@ -80,7 +91,12 @@ func (c *For) Pos() lexer.Pos { return c.StartPos }
 func (c *For) End() lexer.Pos { return c.Block.End() }
 
 func (c *If) Pos() lexer.Pos { return c.StartPos }
-func (c *If) End() lexer.Pos { return c.Block.End() }
+func (c *If) End() lexer.Pos {
+	if c.Else != nil {
+		return c.Else.End()
+	}
+	return c.Block.End()
+}
 
 func (*Assert) node()   {}
 func (*Block) node()    {}

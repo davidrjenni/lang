@@ -58,7 +58,8 @@ func (p *parser) parseBlock() *ast.Block {
 	return &b
 }
 
-// Cmd -> "assert" Expr ";" | "break" ";" | "continue" ";" | "for" Expr Block | "if" Expr Block .
+// Cmd -> "assert" Expr ";" | "break" ";" | "continue" ";" | "for" Expr Block | If .
+// If  -> "if" Expr Block [ "else" ( If | Block ) ] .
 func (p *parser) parseCmd() ast.Cmd {
 	switch p.tok {
 	case lexer.Assert:
@@ -83,7 +84,24 @@ func (p *parser) parseCmd() ast.Cmd {
 		pos := p.expect(lexer.If)
 		x := p.parseExpr()
 		b := p.parseBlock()
-		return &ast.If{X: x, Block: b, StartPos: pos}
+
+		var e *ast.Else
+		if p.tok == lexer.Else {
+			pos := p.expect(lexer.Else)
+			var cmd ast.Cmd
+			switch p.tok {
+			case lexer.LeftBrace:
+				cmd = p.parseBlock()
+			case lexer.If:
+				cmd = p.parseCmd()
+			default:
+				p.errs.Append(p.pos, "unexpected %s, expected %s or %s", p.lit, lexer.LeftBrace, lexer.If)
+			}
+			if cmd != nil {
+				e = &ast.Else{Cmd: cmd, StartPos: pos}
+			}
+		}
+		return &ast.If{X: x, Block: b, Else: e, StartPos: pos}
 	default:
 		p.errs.Append(p.pos, "unexpected %s", p.lit)
 		return nil
