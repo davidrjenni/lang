@@ -83,6 +83,15 @@ func (d *dumper) dumpCmd(cmd Cmd) {
 			d.dump(cmd.Else)
 		}
 		d.exit(")")
+	case *VarDecl:
+		d.enter("Var(")
+		d.dumpPos(cmd)
+		d.print("Ident: ")
+		d.dumpExpr(cmd.Ident)
+		d.println()
+		d.print("X: ")
+		d.dumpExpr(cmd.X)
+		d.exit(")")
 	default:
 		panic(fmt.Sprintf("unexpected type %T", cmd))
 	}

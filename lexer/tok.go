@@ -25,6 +25,7 @@ const (
 	RightBrace   // }
 
 	Comma     // ,
+	Define    // ≔
 	Semicolon // ;
 
 	Plus      // +
@@ -61,6 +62,8 @@ const (
 	Else     // else
 	For      // for
 	If       // if
+
+	Let // let
 )
 
 // keywords map all keywords to their corresponding token.
@@ -82,4 +85,6 @@ var keywords = map[string]Tok{
 	"else":     Else,
 	"for":      For,
 	"if":       If,
+
+	"let": Let,
 }

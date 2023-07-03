@@ -31,4 +31,6 @@
 	} else {
 		assert true;
 	}
+
+	let x := 123;
 }

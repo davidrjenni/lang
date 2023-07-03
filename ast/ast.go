@@ -12,26 +12,26 @@ type Node interface {
 	node()
 }
 
-type Comment struct {
-	Text     string
-	StartPos lexer.Pos
-	EndPos   lexer.Pos
-}
+type (
+	Decl interface {
+		decl()
+		Node
+	}
 
-func (c *Comment) Pos() lexer.Pos { return c.StartPos }
-func (c *Comment) End() lexer.Pos { return c.EndPos }
+	VarDecl struct {
+		Ident    *Ident
+		X        Expr
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
+	}
+)
 
-func (*Comment) node() {}
+func (d *VarDecl) Pos() lexer.Pos { return d.StartPos }
+func (d *VarDecl) End() lexer.Pos { return d.EndPos }
 
-type Else struct {
-	Cmd      Cmd
-	StartPos lexer.Pos
-}
+func (*VarDecl) node() {}
 
-func (e *Else) Pos() lexer.Pos { return e.StartPos }
-func (e *Else) End() lexer.Pos { return e.Cmd.End() }
-
-func (*Else) node() {}
+func (*VarDecl) decl() {}
 
 type (
 	Cmd interface {
@@ -111,6 +111,7 @@ func (*Break) cmd()    {}
 func (*Continue) cmd() {}
 func (*For) cmd()      {}
 func (*If) cmd()       {}
+func (*VarDecl) cmd()  {}
 
 type (
 	Expr interface {
@@ -221,3 +222,24 @@ func (*Bool) lit()   {}
 func (*F64) lit()    {}
 func (*I64) lit()    {}
 func (*String) lit() {}
+
+type Comment struct {
+	Text     string
+	StartPos lexer.Pos
+	EndPos   lexer.Pos
+}
+
+func (c *Comment) Pos() lexer.Pos { return c.StartPos }
+func (c *Comment) End() lexer.Pos { return c.EndPos }
+
+func (*Comment) node() {}
+
+type Else struct {
+	Cmd      Cmd
+	StartPos lexer.Pos
+}
+
+func (e *Else) Pos() lexer.Pos { return e.StartPos }
+func (e *Else) End() lexer.Pos { return e.Cmd.End() }
+
+func (*Else) node() {}

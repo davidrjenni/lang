@@ -1,5 +1,5 @@
 Block(
-	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:34:1)
+	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:36:1)
 	0: Assert(
 		Pos: (Start: test-fixtures/input.l:2:2, End: test-fixtures/input.l:2:37)
 		X: BinaryExpr(
@@ -203,6 +203,11 @@ Block(
 				)
 			)
 		)
+	)
+	9: Var(
+		Pos: (Start: test-fixtures/input.l:35:2, End: test-fixtures/input.l:35:14)
+		Ident: Ident(Name: "x", Pos: test-fixtures/input.l:35:6, End: test-fixtures/input.l:35:7)
+		X: I64(Val: 123, Pos: test-fixtures/input.l:35:11, End: test-fixtures/input.l:35:14)
 	)
 	
 )

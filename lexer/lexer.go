@@ -83,6 +83,15 @@ func (l *Lexer) Read() (pos Pos, tok Tok, lit string, err error) {
 		tok = RightBrace
 	case ',':
 		tok = Comma
+	case '≔':
+		tok = Define
+	case ':':
+		if l.ch == '=' {
+			tok, lit = Define, ":="
+			if err := l.next(); err != nil {
+				return pos, tok, lit, err
+			}
+		}
 	case ';':
 		tok = Semicolon
 

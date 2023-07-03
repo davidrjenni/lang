@@ -70,4 +70,7 @@ input.l:36:1: identifier | F123
 input.l:37:1: identifier | _fOO123
 input.l:38:1: i64 literal | 123
 input.l:38:4: identifier | foo
-input.l:39:1: EOF | EOF
+input.l:39:1: let | let
+input.l:40:1: ≔ | :=
+input.l:41:1: ≔ | ≔
+input.l:42:1: EOF | EOF

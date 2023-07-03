@@ -12,17 +12,29 @@ type Object struct {
 }
 
 type Info struct {
+	Uses  map[*ast.Ident]*Object
 	Types map[ast.Expr]*Object
 }
 
 type scope struct {
-	inFor  bool
 	parent *scope
+
+	objects map[string]*Object
+	inFor   bool
 }
 
 func (s *scope) enter() *scope {
 	return &scope{
-		inFor:  s.inFor,
-		parent: s,
+		parent:  s,
+		objects: make(map[string]*Object),
+		inFor:   s.inFor,
 	}
+}
+
+func (s *scope) lookup(name string) (*Object, bool) {
+	obj, ok := s.objects[name]
+	if !ok && s.parent != nil {
+		return s.parent.lookup(name)
+	}
+	return obj, ok
 }

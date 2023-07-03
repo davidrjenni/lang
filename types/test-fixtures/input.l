@@ -16,4 +16,9 @@
 			}
 		}
 	}
+
+	let a := 123;
+	let b := 12.34;
+	let c := "abc";
+	let d := false;
 }

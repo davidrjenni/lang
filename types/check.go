@@ -14,8 +14,11 @@ import (
 
 func Check(n ast.Node) (Info, error) {
 	c := &checker{
-		scope: &scope{},
-		Info:  Info{Types: make(map[ast.Expr]*Object)},
+		scope: &scope{objects: make(map[string]*Object)},
+		Info: Info{
+			Uses:  make(map[*ast.Ident]*Object),
+			Types: make(map[ast.Expr]*Object),
+		},
 	}
 	c.check(n)
 	return c.Info, c.errs.Err()
@@ -72,6 +75,10 @@ func (c *checker) check(n ast.Node) {
 		c.scope = c.scope.enter()
 		c.check(n.Block)
 		c.scope = c.scope.parent
+	case *ast.VarDecl:
+		if t, ok := c.checkExpr(n.X); ok {
+			c.insert(n.Ident, t)
+		}
 	default:
 		panic(fmt.Sprintf("unexpected type %T", n))
 	}
@@ -184,6 +191,16 @@ func (c *checker) checkUnaryExpr(x *ast.UnaryExpr) (Type, bool) {
 		c.errorf(x.Pos(), "cannot apply %s to expr of type %s", x.Op, t)
 		return nil, false
 	}
+}
+
+func (c *checker) insert(id *ast.Ident, t Type) {
+	if obj, ok := c.scope.lookup(id.Name); ok {
+		c.errorf(id.Pos(), "%s already defined at %s", id.Name, obj.Node.Pos())
+		return
+	}
+	obj := &Object{Node: id, Type: t}
+	c.Uses[id] = obj
+	c.scope.objects[id.Name] = obj
 }
 
 func (c *checker) errorf(pos lexer.Pos, format string, args ...interface{}) {
