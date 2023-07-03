@@ -15,6 +15,8 @@ const (
 	Illegal            // illegal
 	Comment            // comment
 
+	Identifier // identifier
+
 	LeftParen    // (
 	RightParen   // )
 	LeftBracket  // [

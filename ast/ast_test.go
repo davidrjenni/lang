@@ -18,6 +18,7 @@ var (
 	_ ast.Node = &ast.F64{}
 	_ ast.Node = &ast.For{}
 	_ ast.Node = &ast.I64{}
+	_ ast.Node = &ast.Ident{}
 	_ ast.Node = &ast.If{}
 	_ ast.Node = &ast.ParenExpr{}
 	_ ast.Node = &ast.String{}
@@ -36,6 +37,7 @@ var (
 	_ ast.Expr = &ast.Bool{}
 	_ ast.Expr = &ast.F64{}
 	_ ast.Expr = &ast.I64{}
+	_ ast.Expr = &ast.Ident{}
 	_ ast.Expr = &ast.String{}
 
 	_ ast.Lit = &ast.Bool{}

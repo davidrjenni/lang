@@ -1,5 +1,5 @@
 input.l:1:2: illegal | @
-input.l:2:1: illegal | asdf
+input.l:2:1: identifier | asdf
 input.l:3:1: true | true
 input.l:3:6: false | false
 input.l:4:1: + | +
@@ -64,4 +64,10 @@ input.l:30:1: else | else
 input.l:31:1: for | for
 input.l:32:1: if | if
 input.l:33:1: comment | // This is a line comment.
-input.l:34:1: EOF | EOF
+input.l:34:1: identifier | foo_bar
+input.l:35:1: identifier | f123
+input.l:36:1: identifier | F123
+input.l:37:1: identifier | _fOO123
+input.l:38:1: i64 literal | 123
+input.l:38:4: identifier | foo
+input.l:39:1: EOF | EOF

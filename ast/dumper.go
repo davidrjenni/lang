@@ -101,6 +101,8 @@ func (d *dumper) dumpExpr(x Expr) {
 		d.print("RHS: ")
 		d.dump(x.RHS)
 		d.exit(")")
+	case *Ident:
+		d.printf("Ident(Name: %q, Pos: %s, End: %s)", x.Name, x.Pos(), x.End())
 	case Lit:
 		d.dumpLit(x)
 	case *ParenExpr:

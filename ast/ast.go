@@ -124,6 +124,11 @@ type (
 		RHS Expr
 	}
 
+	Ident struct {
+		Name     string
+		StartPos lexer.Pos
+	}
+
 	ParenExpr struct {
 		X        Expr
 		StartPos lexer.Pos
@@ -140,6 +145,9 @@ type (
 func (x *BinaryExpr) Pos() lexer.Pos { return x.LHS.Pos() }
 func (x *BinaryExpr) End() lexer.Pos { return x.RHS.End() }
 
+func (x *Ident) Pos() lexer.Pos { return x.StartPos }
+func (x *Ident) End() lexer.Pos { return x.StartPos.Shift(len(x.Name)) }
+
 func (x *ParenExpr) Pos() lexer.Pos { return x.StartPos }
 func (x *ParenExpr) End() lexer.Pos { return x.EndPos }
 
@@ -147,10 +155,12 @@ func (x *UnaryExpr) Pos() lexer.Pos { return x.StartPos }
 func (x *UnaryExpr) End() lexer.Pos { return x.X.End() }
 
 func (*BinaryExpr) node() {}
+func (*Ident) node()      {}
 func (*ParenExpr) node()  {}
 func (*UnaryExpr) node()  {}
 
 func (*BinaryExpr) expr() {}
+func (*Ident) expr()      {}
 func (*ParenExpr) expr()  {}
 func (*UnaryExpr) expr()  {}
 

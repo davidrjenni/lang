@@ -51,8 +51,8 @@ func (l *Lexer) Read() (pos Pos, tok Tok, lit string, err error) {
 	pos, lit = l.pos, string(l.ch)
 	ch := l.ch
 
-	if unicode.IsLetter(l.ch) {
-		tok, lit, err = l.scanKeyword()
+	if unicode.IsLetter(l.ch) || l.ch == '_' {
+		tok, lit, err = l.scanIdentOrKeyword()
 		return pos, tok, lit, err
 	}
 	if unicode.IsDigit(l.ch) {
@@ -181,9 +181,9 @@ func (l *Lexer) scanLineComment() (string, error) {
 	return string(buf), nil
 }
 
-func (l *Lexer) scanKeyword() (Tok, string, error) {
+func (l *Lexer) scanIdentOrKeyword() (Tok, string, error) {
 	var buf []rune
-	for unicode.IsLetter(l.ch) || unicode.IsDigit(l.ch) {
+	for unicode.IsLetter(l.ch) || unicode.IsDigit(l.ch) || l.ch == '_' {
 		buf = append(buf, l.ch)
 		if err := l.next(); err != nil {
 			return Illegal, "", err
@@ -194,7 +194,7 @@ func (l *Lexer) scanKeyword() (Tok, string, error) {
 	if t, ok := keywords[lit]; ok {
 		return t, lit, nil
 	}
-	return Illegal, lit, nil
+	return Identifier, lit, nil
 }
 
 func (l *Lexer) scanNumber() (Tok, string, error) {

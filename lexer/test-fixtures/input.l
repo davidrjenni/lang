@@ -31,3 +31,8 @@ else
 for
 if
 // This is a line comment.
+foo_bar
+f123
+F123
+_fOO123
+123foo
