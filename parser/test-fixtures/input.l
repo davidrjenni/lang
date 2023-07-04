@@ -33,4 +33,7 @@
 	}
 
 	let x := 123;
+	if x < 123 {
+		assert true;
+	}
 }

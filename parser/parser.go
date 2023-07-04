@@ -151,7 +151,7 @@ func (p *parser) parseUnaryExpr() ast.Expr {
 	}
 }
 
-// PrimaryExpr -> "(" Expr ")" | F64Lit | I64Lit | StringLit | "true" | "false" .
+// PrimaryExpr -> "(" Expr ")" | F64Lit | I64Lit | Identifier | StringLit | "true" | "false" .
 func (p *parser) parsePrimaryExpr() ast.Expr {
 	switch p.tok {
 	case lexer.F64Lit:
@@ -172,6 +172,8 @@ func (p *parser) parsePrimaryExpr() ast.Expr {
 			panic(fmt.Sprintf("cannot convert i64: %v", err))
 		}
 		return &ast.I64{Val: val, StartPos: pos, EndPos: end}
+	case lexer.Identifier:
+		return p.parseIdent()
 	case lexer.LeftParen:
 		pos := p.expect(lexer.LeftParen)
 		x := p.parseExpr()

@@ -75,6 +75,11 @@ func (c *checker) check(n ast.Node) {
 		c.scope = c.scope.enter()
 		c.check(n.Block)
 		c.scope = c.scope.parent
+		if n.Else != nil {
+			c.scope = c.scope.enter()
+			c.check(n.Else.Cmd)
+			c.scope = c.scope.parent
+		}
 	case *ast.VarDecl:
 		if t, ok := c.checkExpr(n.X); ok {
 			c.insert(n.Ident, t)
@@ -98,6 +103,13 @@ func (c *checker) checkExpr(x ast.Expr) (t Type, ok bool) {
 		return &Bool{}, true
 	case *ast.I64:
 		return &I64{}, true
+	case *ast.Ident:
+		if obj, ok := c.scope.lookup(x.Name); ok {
+			c.Uses[x] = obj
+			return obj.Type, true
+		}
+		c.errorf(x.Pos(), "undefined identifer %s", x.Name)
+		return nil, false
 	case *ast.F64:
 		return &F64{}, true
 	case *ast.ParenExpr:

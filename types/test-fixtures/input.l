@@ -21,4 +21,16 @@
 	let b := 12.34;
 	let c := "abc";
 	let d := false;
+
+	if a = 123 {
+		let e := 456;
+		if e = 123 {
+			assert true;
+		}
+		if c # "def" {
+			assert true;
+		} else {
+			let f := b - 12.04;
+		}
+	}
 }
