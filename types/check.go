@@ -12,7 +12,7 @@ import (
 	"davidrjenni.io/lang/lexer"
 )
 
-func Check(n ast.Node) (Info, error) {
+func Check(b *ast.Block) (Info, error) {
 	c := &checker{
 		scope: &scope{objects: make(map[string]*Object)},
 		Info: Info{
@@ -20,7 +20,7 @@ func Check(n ast.Node) (Info, error) {
 			Types: make(map[ast.Expr]*Object),
 		},
 	}
-	c.check(n)
+	c.checkCmd(b)
 	return c.Info, c.errs.Err()
 }
 
@@ -30,7 +30,7 @@ type checker struct {
 	Info
 }
 
-func (c *checker) check(n ast.Node) {
+func (c *checker) checkCmd(n ast.Cmd) {
 	switch n := n.(type) {
 	case *ast.Assert:
 		t, ok := c.checkExpr(n.X)
@@ -42,7 +42,7 @@ func (c *checker) check(n ast.Node) {
 		}
 	case *ast.Block:
 		for _, cmd := range n.Cmds {
-			c.check(cmd)
+			c.checkCmd(cmd)
 		}
 	case *ast.Break:
 		if !c.scope.inFor {
@@ -62,7 +62,7 @@ func (c *checker) check(n ast.Node) {
 		}
 		c.scope = c.scope.enter()
 		c.scope.inFor = true
-		c.check(n.Block)
+		c.checkCmd(n.Block)
 		c.scope = c.scope.parent
 	case *ast.If:
 		t, ok := c.checkExpr(n.X)
@@ -73,11 +73,11 @@ func (c *checker) check(n ast.Node) {
 			c.errorf(n.X.Pos(), "expr must be of type bool, got %s", t)
 		}
 		c.scope = c.scope.enter()
-		c.check(n.Block)
+		c.checkCmd(n.Block)
 		c.scope = c.scope.parent
 		if n.Else != nil {
 			c.scope = c.scope.enter()
-			c.check(n.Else.Cmd)
+			c.checkCmd(n.Else.Cmd)
 			c.scope = c.scope.parent
 		}
 	case *ast.VarDecl:
