@@ -20,7 +20,7 @@ var (
 	_ ir.Node = &ir.Reg{}
 	_ ir.Node = ir.Seq{}
 	_ ir.Node = &ir.Store{}
-	_ ir.Node = &ir.UnaryExpr{}
+	_ ir.Node = &ir.UnaryInstr{}
 
 	_ ir.Cmd = &ir.BinaryInstr{}
 	_ ir.Cmd = &ir.Call{}
@@ -28,7 +28,7 @@ var (
 	_ ir.Cmd = &ir.Jump{}
 	_ ir.Cmd = &ir.Load{}
 	_ ir.Cmd = &ir.Store{}
-	_ ir.Cmd = &ir.UnaryExpr{}
+	_ ir.Cmd = &ir.UnaryInstr{}
 
 	_ ir.RVal = ir.Bool(false)
 	_ ir.RVal = ir.F64(0)

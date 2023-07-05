@@ -48,7 +48,7 @@ func (d *dumper) dump(n Node) {
 		for _, s := range n {
 			d.dump(s)
 		}
-	case *UnaryExpr:
+	case *UnaryInstr:
 		d.printf("%s %s  // %s", n.Op, lval(n.Reg), n.Pos())
 	default:
 		panic(fmt.Sprintf("unexpected type %T", n))

@@ -42,7 +42,7 @@ func (c *compiler) compile(n ir.Node) {
 		for _, s := range n {
 			c.compile(s)
 		}
-	case *ir.UnaryExpr:
+	case *ir.UnaryInstr:
 		c.printf("%s %s  # %s", op(n.Op, n.Reg.Type), reg(n.Reg), n.Pos())
 	default:
 		panic(fmt.Sprintf("unexpected type %T", n))

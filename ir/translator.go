@@ -147,7 +147,7 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 			if r.Second {
 				pr = i64Reg2
 			}
-			seq = append(seq, &UnaryExpr{Reg: pr, Op: Push, pos: x.Pos()})
+			seq = append(seq, &UnaryInstr{Reg: pr, Op: Push, pos: x.Pos()})
 		}
 
 		// Load LHS into the first register.
@@ -156,7 +156,7 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 
 		// Load RHS into the second register.
 		if pushed {
-			seq = append(seq, &UnaryExpr{Reg: i64Reg2, Op: Pop, pos: x.Pos()})
+			seq = append(seq, &UnaryInstr{Reg: i64Reg2, Op: Pop, pos: x.Pos()})
 		} else {
 			seq = append(seq, &Load{Src: rhs, Dst: r2, pos: x.Pos()})
 		}
@@ -164,7 +164,7 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 		seq = append(seq, &BinaryInstr{RHS: r1, Op: binOp(x.Op), LHS: r2, pos: x.Pos()})
 		if isCmp(x.Op) {
 			r1 = boolReg1
-			seq = append(seq, &UnaryExpr{Reg: r1, Op: cmpOp(x.Op), pos: x.Pos()})
+			seq = append(seq, &UnaryInstr{Reg: r1, Op: cmpOp(x.Op), pos: x.Pos()})
 		}
 		return &seqExpr{Seq: seq, Dst: r1}
 	case *ast.Bool:
@@ -182,7 +182,7 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 			return &seqExpr{
 				Seq: Seq{
 					&Load{Src: val, Dst: i64Reg1, pos: x.Pos()},
-					&UnaryExpr{Op: Neg, Reg: i64Reg1, pos: x.Pos()},
+					&UnaryInstr{Op: Neg, Reg: i64Reg1, pos: x.Pos()},
 				},
 				Dst: i64Reg1,
 			}
@@ -190,7 +190,7 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 			return &seqExpr{
 				Seq: Seq{
 					t.boolCheck(x.X, true_),
-					&UnaryExpr{Op: Setne, Reg: boolReg1, pos: x.Pos()},
+					&UnaryInstr{Op: Setne, Reg: boolReg1, pos: x.Pos()},
 				},
 				Dst: boolReg1,
 			}

@@ -67,7 +67,7 @@ type (
 		pos lexer.Pos
 	}
 
-	UnaryExpr struct {
+	UnaryInstr struct {
 		Reg *Reg
 		Op  Op
 		pos lexer.Pos
@@ -80,7 +80,7 @@ func (c *CJump) Pos() lexer.Pos       { return c.pos }
 func (c *Jump) Pos() lexer.Pos        { return c.pos }
 func (c *Load) Pos() lexer.Pos        { return c.pos }
 func (c *Store) Pos() lexer.Pos       { return c.pos }
-func (c *UnaryExpr) Pos() lexer.Pos   { return c.pos }
+func (c *UnaryInstr) Pos() lexer.Pos  { return c.pos }
 
 func (*BinaryInstr) node() {}
 func (*Call) node()        {}
@@ -88,7 +88,7 @@ func (*CJump) node()       {}
 func (*Jump) node()        {}
 func (*Load) node()        {}
 func (*Store) node()       {}
-func (*UnaryExpr) node()   {}
+func (*UnaryInstr) node()  {}
 
 func (*BinaryInstr) cmd() {}
 func (*Call) cmd()        {}
@@ -96,7 +96,7 @@ func (*CJump) cmd()       {}
 func (*Jump) cmd()        {}
 func (*Load) cmd()        {}
 func (*Store) cmd()       {}
-func (*UnaryExpr) cmd()   {}
+func (*UnaryInstr) cmd()  {}
 
 type (
 	RVal interface {
