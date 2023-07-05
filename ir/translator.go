@@ -116,7 +116,7 @@ func (t *translator) boolCheck(x ast.Expr, expect Bool) Seq {
 	check := t.translateRVal(x)
 	return Seq{
 		&Load{Src: check, Dst: boolReg1, pos: x.Pos()},
-		&BinaryExpr{RHS: boolReg1, Op: Cmp, LHS: expect, pos: x.Pos()},
+		&BinaryInstr{RHS: boolReg1, Op: Cmp, LHS: expect, pos: x.Pos()},
 	}
 }
 
@@ -161,7 +161,7 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 			seq = append(seq, &Load{Src: rhs, Dst: r2, pos: x.Pos()})
 		}
 
-		seq = append(seq, &BinaryExpr{RHS: r1, Op: binOp(x.Op), LHS: r2, pos: x.Pos()})
+		seq = append(seq, &BinaryInstr{RHS: r1, Op: binOp(x.Op), LHS: r2, pos: x.Pos()})
 		if isCmp(x.Op) {
 			r1 = boolReg1
 			seq = append(seq, &UnaryExpr{Reg: r1, Op: cmpOp(x.Op), pos: x.Pos()})

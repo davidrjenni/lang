@@ -11,11 +11,11 @@ var Loads = Pass(loads)
 func flatten(seq Seq) (tseq Seq) {
 	for _, n := range seq {
 		switch n := n.(type) {
-		case *BinaryExpr:
+		case *BinaryInstr:
 			if seqx, ok := n.LHS.(*seqExpr); ok {
 				s := flatten(seqx.Seq)
 				tseq = append(tseq, s...)
-				tseq = append(tseq, &BinaryExpr{
+				tseq = append(tseq, &BinaryInstr{
 					RHS: n.RHS,
 					Op:  n.Op,
 					LHS: seqx.Dst,

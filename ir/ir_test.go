@@ -7,7 +7,7 @@ package ir_test
 import "davidrjenni.io/lang/ir"
 
 var (
-	_ ir.Node = &ir.BinaryExpr{}
+	_ ir.Node = &ir.BinaryInstr{}
 	_ ir.Node = ir.Bool(false)
 	_ ir.Node = &ir.Call{}
 	_ ir.Node = &ir.CJump{}
@@ -22,7 +22,7 @@ var (
 	_ ir.Node = &ir.Store{}
 	_ ir.Node = &ir.UnaryExpr{}
 
-	_ ir.Cmd = &ir.BinaryExpr{}
+	_ ir.Cmd = &ir.BinaryInstr{}
 	_ ir.Cmd = &ir.Call{}
 	_ ir.Cmd = &ir.CJump{}
 	_ ir.Cmd = &ir.Jump{}

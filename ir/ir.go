@@ -33,7 +33,7 @@ type (
 		Node
 	}
 
-	BinaryExpr struct {
+	BinaryInstr struct {
 		RHS *Reg
 		Op  Op
 		LHS RVal
@@ -74,29 +74,29 @@ type (
 	}
 )
 
-func (c *BinaryExpr) Pos() lexer.Pos { return c.pos }
-func (c *Call) Pos() lexer.Pos       { return c.pos }
-func (c *CJump) Pos() lexer.Pos      { return c.pos }
-func (c *Jump) Pos() lexer.Pos       { return c.pos }
-func (c *Load) Pos() lexer.Pos       { return c.pos }
-func (c *Store) Pos() lexer.Pos      { return c.pos }
-func (c *UnaryExpr) Pos() lexer.Pos  { return c.pos }
+func (c *BinaryInstr) Pos() lexer.Pos { return c.pos }
+func (c *Call) Pos() lexer.Pos        { return c.pos }
+func (c *CJump) Pos() lexer.Pos       { return c.pos }
+func (c *Jump) Pos() lexer.Pos        { return c.pos }
+func (c *Load) Pos() lexer.Pos        { return c.pos }
+func (c *Store) Pos() lexer.Pos       { return c.pos }
+func (c *UnaryExpr) Pos() lexer.Pos   { return c.pos }
 
-func (*BinaryExpr) node() {}
-func (*Call) node()       {}
-func (*CJump) node()      {}
-func (*Jump) node()       {}
-func (*Load) node()       {}
-func (*Store) node()      {}
-func (*UnaryExpr) node()  {}
+func (*BinaryInstr) node() {}
+func (*Call) node()        {}
+func (*CJump) node()       {}
+func (*Jump) node()        {}
+func (*Load) node()        {}
+func (*Store) node()       {}
+func (*UnaryExpr) node()   {}
 
-func (*BinaryExpr) cmd() {}
-func (*Call) cmd()       {}
-func (*CJump) cmd()      {}
-func (*Jump) cmd()       {}
-func (*Load) cmd()       {}
-func (*Store) cmd()      {}
-func (*UnaryExpr) cmd()  {}
+func (*BinaryInstr) cmd() {}
+func (*Call) cmd()        {}
+func (*CJump) cmd()       {}
+func (*Jump) cmd()        {}
+func (*Load) cmd()        {}
+func (*Store) cmd()       {}
+func (*UnaryExpr) cmd()   {}
 
 type (
 	RVal interface {

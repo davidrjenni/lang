@@ -20,7 +20,7 @@ type dumper struct {
 
 func (d *dumper) dump(n Node) {
 	switch n := n.(type) {
-	case *BinaryExpr:
+	case *BinaryInstr:
 		seqx, ok := n.LHS.(*seqExpr)
 		lhs := n.LHS
 		if ok {

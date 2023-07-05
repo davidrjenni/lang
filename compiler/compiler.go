@@ -26,7 +26,7 @@ type compiler struct {
 
 func (c *compiler) compile(n ir.Node) {
 	switch n := n.(type) {
-	case *ir.BinaryExpr:
+	case *ir.BinaryInstr:
 		c.printf("%s %s, %s  # %s", op(n.Op, n.RHS.Type), rval(n.LHS), reg(n.RHS), n.Pos())
 	case *ir.Call:
 		c.printf("%s  # %s", n.Label, n.Pos())
