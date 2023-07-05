@@ -102,8 +102,7 @@ main:
 
 const epilogue = `
 	movq $0, %rax
-	movq %rbp, %rsp
-	popq %rbp
+	leave
 	ret
 `
 

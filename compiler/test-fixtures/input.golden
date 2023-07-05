@@ -98,8 +98,7 @@ main:
 .L5:
 
 	movq $0, %rax
-	movq %rbp, %rsp
-	popq %rbp
+	leave
 	ret
 
 	.section .data
