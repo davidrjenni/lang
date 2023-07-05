@@ -30,14 +30,14 @@ var (
 	f64Reg2  = &Reg{Type: F64Reg, Second: true}
 )
 
-func Translate(b *ast.Block, info types.Info, passes ...Pass) Seq {
+func Translate(b *ast.Block, info types.Info, passes ...Pass) *Frame {
 	t := &translator{info: info}
 	s := t.translateCmd(b)
 	s = flatten(s)
 	for _, p := range passes {
 		s = p(s)
 	}
-	return s
+	return &Frame{Name: Label("main"), Seq: s}
 }
 
 type translator struct {

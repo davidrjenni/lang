@@ -15,7 +15,6 @@
 main:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $8, %rsp
 	movb $1, %al  # test-fixtures/input.l:2:12
 	cmpb $1, %al  # test-fixtures/input.l:2:12
 	setne %al  # test-fixtures/input.l:2:11
@@ -96,7 +95,6 @@ main:
 	movq $6, %rbx  # test-fixtures/input.l:6:2
 	AssertViolated  # test-fixtures/input.l:6:2
 .L5:
-
 	movq $0, %rax
 	leave
 	ret

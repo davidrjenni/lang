@@ -45,6 +45,9 @@ const (
 	Setge // setge
 
 	Call // call
+
+	Leave // leave
+	Ret   // ret
 )
 
 var ops = map[ir.Op]map[ir.RegType]Op{

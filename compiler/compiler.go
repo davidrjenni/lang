@@ -11,17 +11,33 @@ import (
 	"davidrjenni.io/lang/ir"
 )
 
-func Compile(out io.Writer, filename string, n ir.Node) {
+func Compile(out io.Writer, filename string, f *ir.Frame) {
 	c := &compiler{out: out}
 	fmt.Fprint(out, macros)
 	fmt.Fprint(out, main)
-	c.compile(n)
-	fmt.Fprint(out, epilogue)
+	c.compileFrame(f)
 	fmt.Fprintf(out, data, filename)
 }
 
 type compiler struct {
 	out io.Writer
+}
+
+func (c *compiler) compileFrame(f *ir.Frame) {
+	fmt.Fprintf(c.out, "%s:\n", f.Name)
+	c.printf("%s %%rbp", Push)
+	c.printf("%s %%rsp, %%rbp", Movq)
+	if f.Stack > 0 {
+		c.printf("%s $%d, %%rsp", Sub, f.Stack)
+	}
+
+	for _, s := range f.Seq {
+		c.compile(s)
+	}
+
+	c.printf("%s $%d, %%rax", Movq, 0)
+	c.printf("%s", Leave)
+	c.printf("%s", Ret)
 }
 
 func (c *compiler) compile(n ir.Node) {
@@ -38,10 +54,6 @@ func (c *compiler) compile(n ir.Node) {
 		fmt.Fprintf(c.out, "%s:\n", n)
 	case *ir.Load:
 		c.printf("%s %s, %s  # %s", mov(n.Dst.Type), rval(n.Src), reg(n.Dst), n.Pos())
-	case ir.Seq:
-		for _, s := range n {
-			c.compile(s)
-		}
 	case *ir.UnaryInstr:
 		c.printf("%s %s  # %s", op(n.Op, n.Reg.Type), reg(n.Reg), n.Pos())
 	default:
@@ -94,16 +106,6 @@ func (c *compiler) printf(f string, args ...interface{}) {
 const main = `
 	.section .text
 	.global main
-main:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $8, %rsp
-`
-
-const epilogue = `
-	movq $0, %rax
-	leave
-	ret
 `
 
 const macros = `

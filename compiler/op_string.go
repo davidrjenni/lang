@@ -30,11 +30,13 @@ func _() {
 	_ = x[Setg-19]
 	_ = x[Setge-20]
 	_ = x[Call-21]
+	_ = x[Leave-22]
+	_ = x[Ret-23]
 }
 
-const _Op_name = "movqmovbpushqpopqjmpjenegqaddqsubqimulqidivandborbcmpqcmpbsetlsetlesetesetnesetgsetgecall"
+const _Op_name = "movqmovbpushqpopqjmpjenegqaddqsubqimulqidivandborbcmpqcmpbsetlsetlesetesetnesetgsetgecallleaveret"
 
-var _Op_index = [...]uint8{0, 4, 8, 13, 17, 20, 22, 26, 30, 34, 39, 43, 47, 50, 54, 58, 62, 67, 71, 76, 80, 85, 89}
+var _Op_index = [...]uint8{0, 4, 8, 13, 17, 20, 22, 26, 30, 34, 39, 43, 47, 50, 54, 58, 62, 67, 71, 76, 80, 85, 89, 94, 97}
 
 func (i Op) String() string {
 	if i < 0 || i >= Op(len(_Op_index)-1) {

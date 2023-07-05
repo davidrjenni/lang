@@ -41,8 +41,8 @@ func TestTranslate(t *testing.T) {
 	}
 
 	for _, p := range passes {
-		seq := ir.Translate(b, info, p.pass)
-		cmpGolden(t, seq, p.filename, *update)
+		f := ir.Translate(b, info, p.pass)
+		cmpGolden(t, f.Seq, p.filename, *update)
 	}
 }
 
