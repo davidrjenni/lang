@@ -7,6 +7,7 @@ package types // import "davidrjenni.io/lang/types"
 import "fmt"
 
 type Type interface {
+	Size() int
 	String() string
 	typ()
 }
@@ -36,6 +37,11 @@ type (
 	I64    struct{}
 	String struct{}
 )
+
+func (*Bool) Size() int   { return 1 }
+func (*F64) Size() int    { return 8 }
+func (*I64) Size() int    { return 8 }
+func (*String) Size() int { return 8 }
 
 func (*Bool) String() string   { return "bool" }
 func (*F64) String() string    { return "f64" }
