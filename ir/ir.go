@@ -18,13 +18,20 @@ type (
 		node()
 	}
 
+	Frame struct {
+		Name  Label
+		Seq   Seq
+		Stack int
+	}
+
 	Label string
 
 	Seq []Node
 )
 
-func (Label) node() {}
-func (Seq) node()   {}
+func (*Frame) node() {}
+func (Label) node()  {}
+func (Seq) node()    {}
 
 type (
 	Cmd interface {

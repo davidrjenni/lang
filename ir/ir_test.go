@@ -11,6 +11,7 @@ var (
 	_ ir.Node = ir.Bool(false)
 	_ ir.Node = &ir.Call{}
 	_ ir.Node = &ir.CJump{}
+	_ ir.Node = &ir.Frame{}
 	_ ir.Node = ir.F64(0)
 	_ ir.Node = ir.I64(0)
 	_ ir.Node = &ir.Jump{}
