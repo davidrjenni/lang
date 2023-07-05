@@ -54,6 +54,8 @@ func (c *compiler) compile(n ir.Node) {
 		fmt.Fprintf(c.out, "%s:\n", n)
 	case *ir.Load:
 		c.printf("%s %s, %s  # %s", mov(n.Dst.Type), rval(n.Src), reg(n.Dst), n.Pos())
+	case *ir.Store:
+		c.printf("%s %s, %d(%%rbp)  # %s", mov(n.Size), rval(n.Src), n.Dst.Off, n.Pos())
 	case *ir.UnaryInstr:
 		c.printf("%s %s  # %s", op(n.Op, n.Reg.Type), reg(n.Reg), n.Pos())
 	default:
@@ -92,6 +94,8 @@ func rval(v ir.RVal) string {
 		return "$0"
 	case ir.I64:
 		return fmt.Sprintf("$%d", v)
+	case *ir.Mem:
+		return fmt.Sprintf("%d(%%rbp)", v.Off)
 	case *ir.Reg:
 		return reg(v)
 	default:

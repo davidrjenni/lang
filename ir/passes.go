@@ -38,6 +38,18 @@ func flatten(seq Seq) (tseq Seq) {
 			s := flatten(n)
 			tseq = append(tseq, s...)
 			continue
+		case *Store:
+			if seqx, ok := n.Src.(*seqExpr); ok {
+				s := flatten(seqx.Seq)
+				tseq = append(tseq, s...)
+				tseq = append(tseq, &Store{
+					Src:  seqx.Dst,
+					Dst:  n.Dst,
+					Size: n.Size,
+					pos:  n.Pos(),
+				})
+				continue
+			}
 		}
 		tseq = append(tseq, n)
 	}

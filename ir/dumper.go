@@ -48,6 +48,14 @@ func (d *dumper) dump(n Node) {
 		for _, s := range n {
 			d.dump(s)
 		}
+	case *Store:
+		seqx, ok := n.Src.(*seqExpr)
+		src := n.Src
+		if ok {
+			d.dump(seqx.Seq)
+			src = seqx.Dst
+		}
+		d.printf("store.%s %s <- %s  // %s", n.Size, lval(n.Dst), rval(src), n.Pos())
 	case *UnaryInstr:
 		d.printf("%s %s  // %s", n.Op, lval(n.Reg), n.Pos())
 	default:
@@ -73,7 +81,7 @@ func rval(n RVal) string {
 func lval(n LVal) string {
 	switch n := n.(type) {
 	case *Mem:
-		return fmt.Sprintf("m%d", n.Off)
+		return fmt.Sprintf("m[%d]", n.Off)
 	case *Reg:
 		i := 0
 		if n.Second {

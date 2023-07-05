@@ -199,3 +199,36 @@ call AssertViolated  // test-fixtures/input.l:45:3
 .L32
 .L29
 .L26
+load ri64.0 <- i64(2)  // test-fixtures/input.l:48:11
+load ri64.1 <- i64(3)  // test-fixtures/input.l:48:11
+mul ri64.0 ri64.1  // test-fixtures/input.l:48:11
+store.i64 m[-8] <- ri64.0  // test-fixtures/input.l:48:2
+load ri64.0 <- m[-8]  // test-fixtures/input.l:49:11
+load ri64.1 <- i64(3)  // test-fixtures/input.l:49:11
+mul ri64.0 ri64.1  // test-fixtures/input.l:49:11
+store.i64 m[-16] <- ri64.0  // test-fixtures/input.l:49:2
+load ri64.0 <- m[-8]  // test-fixtures/input.l:50:9
+load ri64.1 <- i64(6)  // test-fixtures/input.l:50:9
+cmp ri64.0 ri64.1  // test-fixtures/input.l:50:9
+sete rbool.0  // test-fixtures/input.l:50:9
+load rbool.0 <- rbool.0  // test-fixtures/input.l:50:9
+cmp rbool.0 bool(true)  // test-fixtures/input.l:50:9
+cjump .L34  // test-fixtures/input.l:50:2
+load ri64.1 <- i64(50)  // test-fixtures/input.l:50:2
+call AssertViolated  // test-fixtures/input.l:50:2
+.L34
+load ri64.0 <- m[-16]  // test-fixtures/input.l:52:18
+load ri64.1 <- i64(18)  // test-fixtures/input.l:52:18
+cmp ri64.0 ri64.1  // test-fixtures/input.l:52:18
+sete rbool.0  // test-fixtures/input.l:52:18
+push ri64.0  // test-fixtures/input.l:52:11
+load rbool.0 <- bool(true)  // test-fixtures/input.l:52:11
+pop ri64.1  // test-fixtures/input.l:52:11
+and rbool.0 rbool.1  // test-fixtures/input.l:52:11
+store.bool m[-17] <- rbool.0  // test-fixtures/input.l:52:2
+load rbool.0 <- m[-17]  // test-fixtures/input.l:53:9
+cmp rbool.0 bool(true)  // test-fixtures/input.l:53:9
+cjump .L35  // test-fixtures/input.l:53:2
+load ri64.1 <- i64(53)  // test-fixtures/input.l:53:2
+call AssertViolated  // test-fixtures/input.l:53:2
+.L35

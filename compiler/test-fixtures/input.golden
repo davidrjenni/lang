@@ -15,6 +15,7 @@
 main:
 	pushq %rbp
 	movq %rsp, %rbp
+	subq $17, %rsp
 	movb $1, %al  # test-fixtures/input.l:2:12
 	cmpb $1, %al  # test-fixtures/input.l:2:12
 	setne %al  # test-fixtures/input.l:2:11
@@ -95,6 +96,39 @@ main:
 	movq $6, %rbx  # test-fixtures/input.l:6:2
 	AssertViolated  # test-fixtures/input.l:6:2
 .L5:
+	movq $2, %rax  # test-fixtures/input.l:7:11
+	movq $3, %rbx  # test-fixtures/input.l:7:11
+	imulq %rbx, %rax  # test-fixtures/input.l:7:11
+	movq %rax, -8(%rbp)  # test-fixtures/input.l:7:2
+	movq -8(%rbp), %rax  # test-fixtures/input.l:8:11
+	movq $3, %rbx  # test-fixtures/input.l:8:11
+	imulq %rbx, %rax  # test-fixtures/input.l:8:11
+	movq %rax, -16(%rbp)  # test-fixtures/input.l:8:2
+	movq -8(%rbp), %rax  # test-fixtures/input.l:9:9
+	movq $6, %rbx  # test-fixtures/input.l:9:9
+	cmpq %rbx, %rax  # test-fixtures/input.l:9:9
+	sete %al  # test-fixtures/input.l:9:9
+	movb %al, %al  # test-fixtures/input.l:9:9
+	cmpb $1, %al  # test-fixtures/input.l:9:9
+	je .L6  # test-fixtures/input.l:9:2
+	movq $9, %rbx  # test-fixtures/input.l:9:2
+	AssertViolated  # test-fixtures/input.l:9:2
+.L6:
+	movq -8(%rbp), %rax  # test-fixtures/input.l:10:18
+	movq $6, %rbx  # test-fixtures/input.l:10:18
+	cmpq %rbx, %rax  # test-fixtures/input.l:10:18
+	sete %al  # test-fixtures/input.l:10:18
+	pushq %rax  # test-fixtures/input.l:10:11
+	movb $1, %al  # test-fixtures/input.l:10:11
+	popq %rbx  # test-fixtures/input.l:10:11
+	andb %bl, %al  # test-fixtures/input.l:10:11
+	movb %al, -17(%rbp)  # test-fixtures/input.l:10:2
+	movb -17(%rbp), %al  # test-fixtures/input.l:11:9
+	cmpb $1, %al  # test-fixtures/input.l:11:9
+	je .L7  # test-fixtures/input.l:11:2
+	movq $11, %rbx  # test-fixtures/input.l:11:2
+	AssertViolated  # test-fixtures/input.l:11:2
+.L7:
 	movq $0, %rax
 	leave
 	ret

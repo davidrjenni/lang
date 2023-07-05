@@ -69,9 +69,10 @@ type (
 	}
 
 	Store struct {
-		Src RVal
-		Dst *Mem
-		pos lexer.Pos
+		Src  RVal
+		Dst  *Mem
+		Size RegType
+		pos  lexer.Pos
 	}
 
 	UnaryInstr struct {
@@ -239,3 +240,14 @@ const (
 	F64Reg                 // f64
 	I64Reg                 // i64
 )
+
+func regType(sz int) RegType {
+	switch sz {
+	case 1:
+		return BoolReg
+	case 8:
+		return I64Reg
+	default:
+		panic(fmt.Sprintf("unexpected size %d", sz))
+	}
+}

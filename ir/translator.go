@@ -31,17 +31,25 @@ var (
 )
 
 func Translate(b *ast.Block, info types.Info, passes ...Pass) *Frame {
-	t := &translator{info: info}
+	t := &translator{
+		info: info,
+		vars: make(map[string]int),
+	}
+
 	s := t.translateCmd(b)
 	s = flatten(s)
 	for _, p := range passes {
 		s = p(s)
 	}
-	return &Frame{Name: Label("main"), Seq: s}
+	return &Frame{Name: Label("main"), Seq: s, Stack: -t.stack}
 }
 
 type translator struct {
-	info      types.Info
+	info types.Info
+
+	stack int
+	vars  map[string]int
+
 	labels    int
 	forStarts []Label
 	forEnds   []Label
@@ -107,6 +115,12 @@ func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 			end = endElse
 		}
 		return append(seq, end)
+	case *ast.VarDecl:
+		src := t.translateRVal(cmd.X)
+		sz := t.info.Uses[cmd.Ident].Type.Size()
+		t.stack -= sz
+		t.vars[cmd.Ident.Name] = t.stack
+		return Seq{&Store{Src: src, Dst: &Mem{Off: t.stack}, Size: regType(sz), pos: cmd.Pos()}}
 	default:
 		panic(fmt.Sprintf("unexpected type %T", cmd))
 	}
@@ -173,6 +187,8 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 		return F64(x.Val)
 	case *ast.I64:
 		return I64(x.Val)
+	case *ast.Ident:
+		return &Mem{Off: t.vars[x.Name]}
 	case *ast.ParenExpr:
 		return t.translateRVal(x.X)
 	case *ast.UnaryExpr:

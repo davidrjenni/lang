@@ -44,4 +44,11 @@
 	} else {
 		assert true;
 	}
+
+	let x := 2 * 3;
+	let y := x * 3;
+	assert x = 6;
+
+	let z := true & y = 18;
+	assert z;
 }
