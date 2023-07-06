@@ -226,6 +226,13 @@ type (
 		EndPos   lexer.Pos
 	}
 
+	FuncLit struct {
+		Params   []*Field
+		Result   Type
+		Block    *Block
+		StartPos lexer.Pos
+	}
+
 	I64 struct {
 		Val      int64
 		StartPos lexer.Pos
@@ -245,26 +252,42 @@ func (l *Bool) End() lexer.Pos { return l.EndPos }
 func (l *F64) Pos() lexer.Pos { return l.StartPos }
 func (l *F64) End() lexer.Pos { return l.EndPos }
 
+func (l *FuncLit) Pos() lexer.Pos { return l.StartPos }
+func (l *FuncLit) End() lexer.Pos { return l.Block.End() }
+
 func (l *I64) Pos() lexer.Pos { return l.StartPos }
 func (l *I64) End() lexer.Pos { return l.EndPos }
 
 func (l *String) Pos() lexer.Pos { return l.StartPos }
 func (l *String) End() lexer.Pos { return l.EndPos }
 
-func (*Bool) node()   {}
-func (*F64) node()    {}
-func (*I64) node()    {}
-func (*String) node() {}
+func (*Bool) node()    {}
+func (*F64) node()     {}
+func (*FuncLit) node() {}
+func (*I64) node()     {}
+func (*String) node()  {}
 
-func (*Bool) expr()   {}
-func (*F64) expr()    {}
-func (*I64) expr()    {}
-func (*String) expr() {}
+func (*Bool) expr()    {}
+func (*F64) expr()     {}
+func (*FuncLit) expr() {}
+func (*I64) expr()     {}
+func (*String) expr()  {}
 
-func (*Bool) lit()   {}
-func (*F64) lit()    {}
-func (*I64) lit()    {}
-func (*String) lit() {}
+func (*Bool) lit()    {}
+func (*F64) lit()     {}
+func (*FuncLit) lit() {}
+func (*I64) lit()     {}
+func (*String) lit()  {}
+
+type Field struct {
+	Ident *Ident
+	Type  Type
+}
+
+func (f *Field) Pos() lexer.Pos { return f.Ident.Pos() }
+func (f *Field) End() lexer.Pos { return f.Type.End() }
+
+func (*Field) node() {}
 
 type Comment struct {
 	Text     string

@@ -17,8 +17,10 @@ var (
 	_ ast.Node = &ast.Continue{}
 	_ ast.Node = &ast.Else{}
 	_ ast.Node = &ast.F64{}
+	_ ast.Node = &ast.Field{}
 	_ ast.Node = &ast.For{}
 	_ ast.Node = &ast.Func{}
+	_ ast.Node = &ast.FuncLit{}
 	_ ast.Node = &ast.I64{}
 	_ ast.Node = &ast.Ident{}
 	_ ast.Node = &ast.If{}
@@ -47,12 +49,14 @@ var (
 	_ ast.Expr = &ast.UnaryExpr{}
 	_ ast.Expr = &ast.Bool{}
 	_ ast.Expr = &ast.F64{}
+	_ ast.Expr = &ast.FuncLit{}
 	_ ast.Expr = &ast.I64{}
 	_ ast.Expr = &ast.Ident{}
 	_ ast.Expr = &ast.String{}
 
 	_ ast.Lit = &ast.Bool{}
 	_ ast.Lit = &ast.F64{}
+	_ ast.Lit = &ast.FuncLit{}
 	_ ast.Lit = &ast.I64{}
 	_ ast.Lit = &ast.String{}
 )

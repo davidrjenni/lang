@@ -46,8 +46,10 @@ func (d *dumper) dumpType(t Type) {
 	case *Func:
 		d.enter("Func(")
 		d.dumpPos(t)
-		d.print("Params: ")
+		d.enter("Params: (")
 		d.dumpTypes(t.Params)
+		d.exit(")")
+		d.println()
 		d.print("Result: ")
 		d.dumpType(t.Result)
 		d.exit(")")
@@ -174,12 +176,39 @@ func (d *dumper) dumpLit(l Lit) {
 		d.printf("Bool(Val: %v, Pos: %s, End: %s)", l.Val, l.Pos(), l.End())
 	case *F64:
 		d.printf("F64(Val: %v, Pos: %s, End: %s)", l.Val, l.Pos(), l.End())
+	case *FuncLit:
+		d.enter("FuncLit(")
+		d.dumpPos(l)
+		d.enter("Params: (")
+		d.dumpFields(l.Params)
+		d.exit(")")
+		d.println()
+		d.print("Result: ")
+		d.dumpType(l.Result)
+		d.println()
+		d.dumpCmd(l.Block)
+		d.exit(")")
 	case *I64:
 		d.printf("I64(Val: %v, Pos: %s, End: %s)", l.Val, l.Pos(), l.End())
 	case *String:
 		d.printf("String(Val: %q, Pos: %s, End: %s)", l.Val, l.Pos(), l.End())
 	default:
 		panic(fmt.Sprintf("unexpected type %T", l))
+	}
+}
+
+func (d *dumper) dumpFields(fs []*Field) {
+	for i, f := range fs {
+		d.printf("%d: ", i)
+		d.enter("Field(")
+		d.dumpPos(f)
+		d.print("Ident: ")
+		d.dumpExpr(f.Ident)
+		d.println()
+		d.print("Type: ")
+		d.dumpType(f.Type)
+		d.exit(")")
+		d.println()
 	}
 }
 
