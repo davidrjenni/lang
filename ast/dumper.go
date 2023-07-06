@@ -26,12 +26,6 @@ func (d *dumper) dump(n Node) {
 		d.dumpCmd(n)
 	case *Comment:
 		d.printf("Comment(Text: %q, Pos: %s, End: %s)", n.Text, n.Pos(), n.End())
-	case *Else:
-		d.enter("Else(")
-		d.dumpPos(n)
-		d.print("Cmd: ")
-		d.dumpCmd(n.Cmd)
-		d.exit(")")
 	case Expr:
 		d.dumpExpr(n)
 	default:
@@ -89,7 +83,11 @@ func (d *dumper) dumpCmd(cmd Cmd) {
 		if cmd.Else != nil {
 			d.println()
 			d.print("Else: ")
-			d.dump(cmd.Else)
+			d.enter("Else(")
+			d.dumpPos(cmd.Else)
+			d.print("Cmd: ")
+			d.dumpCmd(cmd.Else.Cmd)
+			d.exit(")")
 		}
 		d.exit(")")
 	case *VarDecl:
