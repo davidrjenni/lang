@@ -42,3 +42,4 @@ let
 <-
 ←
 set
+func

@@ -57,6 +57,8 @@ const (
 	F64    // f64
 	String // string
 
+	Func // func
+
 	Assert   // assert
 	Break    // break
 	Continue // continue
@@ -80,6 +82,8 @@ var keywords = map[string]Tok{
 	"i64":    I64,
 	"f64":    F64,
 	"string": String,
+
+	"func": Func,
 
 	"assert":   Assert,
 	"break":    Break,

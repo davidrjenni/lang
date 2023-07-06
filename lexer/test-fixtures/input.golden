@@ -76,4 +76,5 @@ input.l:41:1: ≔ | ≔
 input.l:42:1: ← | <-
 input.l:43:1: ← | ←
 input.l:44:1: set | set
-input.l:45:1: EOF | EOF
+input.l:45:1: func | func
+input.l:46:1: EOF | EOF

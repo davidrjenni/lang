@@ -47,19 +47,20 @@ func _() {
 	_ = x[I64-36]
 	_ = x[F64-37]
 	_ = x[String-38]
-	_ = x[Assert-39]
-	_ = x[Break-40]
-	_ = x[Continue-41]
-	_ = x[Else-42]
-	_ = x[For-43]
-	_ = x[If-44]
-	_ = x[Set-45]
-	_ = x[Let-46]
+	_ = x[Func-39]
+	_ = x[Assert-40]
+	_ = x[Break-41]
+	_ = x[Continue-42]
+	_ = x[Else-43]
+	_ = x[For-44]
+	_ = x[If-45]
+	_ = x[Set-46]
+	_ = x[Let-47]
 }
 
-const _Tok_name = "EOFillegalcommentidentifier()[]{}←,≔;+-·÷∧∨⟹<≤=≠>≥∈is¬i64 literalf64 literalstring literaltruefalsebooli64f64stringassertbreakcontinueelseforifsetlet"
+const _Tok_name = "EOFillegalcommentidentifier()[]{}←,≔;+-·÷∧∨⟹<≤=≠>≥∈is¬i64 literalf64 literalstring literaltruefalsebooli64f64stringfuncassertbreakcontinueelseforifsetlet"
 
-var _Tok_index = [...]uint8{0, 3, 10, 17, 27, 28, 29, 30, 31, 32, 33, 36, 37, 40, 41, 42, 43, 45, 47, 50, 53, 56, 57, 60, 61, 64, 65, 68, 71, 73, 75, 86, 97, 111, 115, 120, 124, 127, 130, 136, 142, 147, 155, 159, 162, 164, 167, 170}
+var _Tok_index = [...]uint8{0, 3, 10, 17, 27, 28, 29, 30, 31, 32, 33, 36, 37, 40, 41, 42, 43, 45, 47, 50, 53, 56, 57, 60, 61, 64, 65, 68, 71, 73, 75, 86, 97, 111, 115, 120, 124, 127, 130, 136, 140, 146, 151, 159, 163, 166, 168, 171, 174}
 
 func (i Tok) String() string {
 	if i < 0 || i >= Tok(len(_Tok_index)-1) {
