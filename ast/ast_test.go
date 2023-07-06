@@ -18,15 +18,20 @@ var (
 	_ ast.Node = &ast.Else{}
 	_ ast.Node = &ast.F64{}
 	_ ast.Node = &ast.For{}
+	_ ast.Node = &ast.Func{}
 	_ ast.Node = &ast.I64{}
 	_ ast.Node = &ast.Ident{}
 	_ ast.Node = &ast.If{}
 	_ ast.Node = &ast.ParenExpr{}
+	_ ast.Node = &ast.Scalar{}
 	_ ast.Node = &ast.String{}
 	_ ast.Node = &ast.UnaryExpr{}
 	_ ast.Node = &ast.VarDecl{}
 
 	_ ast.Decl = &ast.VarDecl{}
+
+	_ ast.Type = &ast.Func{}
+	_ ast.Type = &ast.Scalar{}
 
 	_ ast.Cmd = &ast.Assert{}
 	_ ast.Cmd = &ast.Assign{}

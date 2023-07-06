@@ -33,6 +33,34 @@ func (d *dumper) dump(n Node) {
 	}
 }
 
+func (d *dumper) dumpTypes(ts []Type) {
+	for i, t := range ts {
+		d.printf("%d: ", i)
+		d.dumpType(t)
+		d.println()
+	}
+}
+
+func (d *dumper) dumpType(t Type) {
+	switch t := t.(type) {
+	case *Func:
+		d.enter("Func(")
+		d.dumpPos(t)
+		d.print("Params: ")
+		d.dumpTypes(t.Params)
+		d.print("Result: ")
+		d.dumpType(t.Result)
+		d.exit(")")
+	case *Scalar:
+		d.enter("Scalar(")
+		d.dumpPos(t)
+		d.printf("Name: %s", t.Name)
+		d.exit(")")
+	default:
+		panic(fmt.Sprintf("unexpected type %T", t))
+	}
+}
+
 func (d *dumper) dumpCmd(cmd Cmd) {
 	switch cmd := cmd.(type) {
 	case *Assert:

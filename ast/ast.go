@@ -34,6 +34,37 @@ func (*VarDecl) node() {}
 func (*VarDecl) decl() {}
 
 type (
+	Type interface {
+		typ()
+		Node
+	}
+
+	Func struct {
+		Params   []Type
+		Result   Type
+		StartPos lexer.Pos
+	}
+
+	Scalar struct {
+		Name     string
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
+	}
+)
+
+func (t *Func) Pos() lexer.Pos { return t.StartPos }
+func (t *Func) End() lexer.Pos { return t.Result.End() }
+
+func (t *Scalar) Pos() lexer.Pos { return t.StartPos }
+func (t *Scalar) End() lexer.Pos { return t.EndPos }
+
+func (*Func) node()   {}
+func (*Scalar) node() {}
+
+func (*Func) typ()   {}
+func (*Scalar) typ() {}
+
+type (
 	Cmd interface {
 		cmd()
 		Node
