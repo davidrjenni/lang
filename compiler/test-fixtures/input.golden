@@ -129,6 +129,16 @@ main:
 	movq $11, %rbx  # test-fixtures/input.l:11:2
 	AssertViolated  # test-fixtures/input.l:11:2
 .L7:
+	movb $0, -17(%rbp)  # test-fixtures/input.l:12:2
+	movb -17(%rbp), %al  # test-fixtures/input.l:13:10
+	cmpb $1, %al  # test-fixtures/input.l:13:10
+	setne %al  # test-fixtures/input.l:13:9
+	movb %al, %al  # test-fixtures/input.l:13:9
+	cmpb $1, %al  # test-fixtures/input.l:13:9
+	je .L8  # test-fixtures/input.l:13:2
+	movq $13, %rbx  # test-fixtures/input.l:13:2
+	AssertViolated  # test-fixtures/input.l:13:2
+.L8:
 	movq $0, %rax
 	leave
 	ret

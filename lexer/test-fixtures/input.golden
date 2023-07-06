@@ -73,4 +73,7 @@ input.l:38:4: identifier | foo
 input.l:39:1: let | let
 input.l:40:1: ≔ | :=
 input.l:41:1: ≔ | ≔
-input.l:42:1: EOF | EOF
+input.l:42:1: ← | <-
+input.l:43:1: ← | ←
+input.l:44:1: set | set
+input.l:45:1: EOF | EOF

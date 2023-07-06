@@ -36,4 +36,5 @@
 	if x < 123 {
 		assert true;
 	}
+	set x <- 456;
 }

@@ -9,4 +9,6 @@
 	assert x = 6;
 	let z := true & x = 6;
 	assert z;
+	set z <- false;
+	assert ~z;
 }

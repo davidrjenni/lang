@@ -81,6 +81,8 @@ func (l *Lexer) Read() (pos Pos, tok Tok, lit string, err error) {
 		tok = LeftBrace
 	case '}':
 		tok = RightBrace
+	case '←':
+		tok = Assign
 	case ',':
 		tok = Comma
 	case '≔':
@@ -115,8 +117,15 @@ func (l *Lexer) Read() (pos Pos, tok Tok, lit string, err error) {
 	case '⟹':
 		tok = Implies
 	case '<':
-		if tok = Less; l.ch == '=' {
+		tok = Less
+		switch l.ch {
+		case '=':
 			tok, lit = LessEq, "<="
+			if err := l.next(); err != nil {
+				return pos, tok, lit, err
+			}
+		case '-':
+			tok, lit = Assign, "<-"
 			if err := l.next(); err != nil {
 				return pos, tok, lit, err
 			}

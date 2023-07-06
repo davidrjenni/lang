@@ -66,6 +66,11 @@ func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 			&Call{Label: assertViolated, pos: cmd.Pos()},
 			label,
 		}
+	case *ast.Assign:
+		src := t.translateRVal(cmd.X)
+		sz := t.info.Uses[cmd.Ident].Type.Size()
+		off := t.vars[cmd.Ident.Name]
+		return Seq{&Store{Src: src, Dst: &Mem{Off: off}, Size: regType(sz), pos: cmd.Pos()}}
 	case *ast.Block:
 		var seq Seq
 		for _, c := range cmd.Cmds {

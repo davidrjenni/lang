@@ -51,4 +51,7 @@
 
 	let z := true & y = 18;
 	assert z;
+
+	set x <- y * 2;
+	assert x = 36;
 }

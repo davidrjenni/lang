@@ -47,6 +47,15 @@ func (d *dumper) dumpCmd(cmd Cmd) {
 		d.print("X: ")
 		d.dumpExpr(cmd.X)
 		d.exit(")")
+	case *Assign:
+		d.enter("Assign(")
+		d.dumpPos(cmd)
+		d.print("Ident: ")
+		d.dumpExpr(cmd.Ident)
+		d.println()
+		d.print("X: ")
+		d.dumpExpr(cmd.X)
+		d.exit(")")
 	case *Block:
 		d.enter("Block(")
 		d.dumpPos(cmd)

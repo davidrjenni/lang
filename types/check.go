@@ -40,6 +40,20 @@ func (c *checker) checkCmd(n ast.Cmd) {
 		if _, ok := t.(*Bool); !ok {
 			c.errorf(n.X.Pos(), "expr must be of type bool, got %s", t)
 		}
+	case *ast.Assign:
+		lhs, ok := c.scope.lookup(n.Ident.Name)
+		if !ok {
+			c.errorf(n.Pos(), "undefined identifer %s", n.Ident.Name)
+			return
+		}
+		rhs, ok := c.checkExpr(n.X)
+		if !ok {
+			return
+		}
+		if !Equal(lhs.Type, rhs) {
+			c.errorf(n.Pos(), "cannot assign expr of type %s to variable of type %s", rhs, lhs.Type)
+		}
+		c.Uses[n.Ident] = lhs
 	case *ast.Block:
 		for _, cmd := range n.Cmds {
 			c.checkCmd(cmd)

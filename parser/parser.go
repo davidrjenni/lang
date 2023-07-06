@@ -51,14 +51,14 @@ type parser struct {
 func (p *parser) parseBlock() *ast.Block {
 	var b ast.Block
 	b.StartPos = p.expect(lexer.LeftBrace)
-	for p.in(lexer.Assert, lexer.Break, lexer.Continue, lexer.For, lexer.If, lexer.Let) {
+	for p.in(lexer.Assert, lexer.Break, lexer.Continue, lexer.For, lexer.If, lexer.Let, lexer.Set) {
 		b.Cmds = append(b.Cmds, p.parseCmd())
 	}
 	b.EndPos = p.expect(lexer.RightBrace)
 	return &b
 }
 
-// Cmd -> "assert" Expr ";" | "break" ";" | "continue" ";" | "for" Expr Block | If | "let" Ident ":=" Expr ";" .
+// Cmd -> "assert" Expr ";" | "break" ";" | "continue" ";" | "for" Expr Block | If | "let" Ident ":=" Expr ";" | "set" Ident "<-" Expr ";" .
 // If  -> "if" Expr Block [ "else" ( If | Block ) ] .
 func (p *parser) parseCmd() ast.Cmd {
 	switch p.tok {
@@ -109,6 +109,13 @@ func (p *parser) parseCmd() ast.Cmd {
 		x := p.parseExpr()
 		end := p.expect(lexer.Semicolon)
 		return &ast.VarDecl{Ident: ident, X: x, StartPos: pos, EndPos: end}
+	case lexer.Set:
+		pos := p.expect(lexer.Set)
+		ident := p.parseIdent()
+		p.expect(lexer.Assign)
+		x := p.parseExpr()
+		end := p.expect(lexer.Semicolon)
+		return &ast.Assign{Ident: ident, X: x, StartPos: pos, EndPos: end}
 	default:
 		p.errs.Append(p.pos, "unexpected %s", p.lit)
 		return nil

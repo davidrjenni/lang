@@ -45,6 +45,13 @@ type (
 		EndPos   lexer.Pos
 	}
 
+	Assign struct {
+		Ident    *Ident
+		X        Expr
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
+	}
+
 	Block struct {
 		Cmds     []Cmd
 		StartPos lexer.Pos
@@ -78,6 +85,9 @@ type (
 func (c *Assert) Pos() lexer.Pos { return c.StartPos }
 func (c *Assert) End() lexer.Pos { return c.EndPos }
 
+func (c *Assign) Pos() lexer.Pos { return c.StartPos }
+func (c *Assign) End() lexer.Pos { return c.EndPos }
+
 func (c *Block) Pos() lexer.Pos { return c.StartPos }
 func (c *Block) End() lexer.Pos { return c.EndPos }
 
@@ -99,6 +109,7 @@ func (c *If) End() lexer.Pos {
 }
 
 func (*Assert) node()   {}
+func (*Assign) node()   {}
 func (*Block) node()    {}
 func (*Break) node()    {}
 func (*Continue) node() {}
@@ -106,6 +117,7 @@ func (*For) node()      {}
 func (*If) node()       {}
 
 func (*Assert) cmd()   {}
+func (*Assign) cmd()   {}
 func (*Block) cmd()    {}
 func (*Break) cmd()    {}
 func (*Continue) cmd() {}

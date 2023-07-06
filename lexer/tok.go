@@ -24,6 +24,7 @@ const (
 	LeftBrace    // {
 	RightBrace   // }
 
+	Assign    // ←
 	Comma     // ,
 	Define    // ≔
 	Semicolon // ;
@@ -62,6 +63,7 @@ const (
 	Else     // else
 	For      // for
 	If       // if
+	Set      // set
 
 	Let // let
 )
@@ -85,6 +87,7 @@ var keywords = map[string]Tok{
 	"else":     Else,
 	"for":      For,
 	"if":       If,
+	"set":      Set,
 
 	"let": Let,
 }

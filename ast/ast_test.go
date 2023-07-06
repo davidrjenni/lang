@@ -8,6 +8,7 @@ import "davidrjenni.io/lang/ast"
 
 var (
 	_ ast.Node = &ast.Assert{}
+	_ ast.Node = &ast.Assign{}
 	_ ast.Node = &ast.Block{}
 	_ ast.Node = &ast.BinaryExpr{}
 	_ ast.Node = &ast.Bool{}
@@ -28,6 +29,7 @@ var (
 	_ ast.Decl = &ast.VarDecl{}
 
 	_ ast.Cmd = &ast.Assert{}
+	_ ast.Cmd = &ast.Assign{}
 	_ ast.Cmd = &ast.Block{}
 	_ ast.Cmd = &ast.Break{}
 	_ ast.Cmd = &ast.Continue{}
