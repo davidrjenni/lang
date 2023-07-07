@@ -25,6 +25,7 @@ var (
 	_ ast.Node = &ast.Ident{}
 	_ ast.Node = &ast.If{}
 	_ ast.Node = &ast.ParenExpr{}
+	_ ast.Node = &ast.Return{}
 	_ ast.Node = &ast.Scalar{}
 	_ ast.Node = &ast.String{}
 	_ ast.Node = &ast.UnaryExpr{}
@@ -42,6 +43,7 @@ var (
 	_ ast.Cmd = &ast.Continue{}
 	_ ast.Cmd = &ast.For{}
 	_ ast.Cmd = &ast.If{}
+	_ ast.Cmd = &ast.Return{}
 	_ ast.Cmd = &ast.VarDecl{}
 
 	_ ast.Expr = &ast.BinaryExpr{}

@@ -111,6 +111,12 @@ type (
 		Else     *Else
 		StartPos lexer.Pos
 	}
+
+	Return struct {
+		X        Expr
+		StartPos lexer.Pos
+		EndPos   lexer.Pos
+	}
 )
 
 func (c *Assert) Pos() lexer.Pos { return c.StartPos }
@@ -139,6 +145,9 @@ func (c *If) End() lexer.Pos {
 	return c.Block.End()
 }
 
+func (c *Return) Pos() lexer.Pos { return c.StartPos }
+func (c *Return) End() lexer.Pos { return c.EndPos }
+
 func (*Assert) node()   {}
 func (*Assign) node()   {}
 func (*Block) node()    {}
@@ -146,6 +155,7 @@ func (*Break) node()    {}
 func (*Continue) node() {}
 func (*For) node()      {}
 func (*If) node()       {}
+func (*Return) node()   {}
 
 func (*Assert) cmd()   {}
 func (*Assign) cmd()   {}
@@ -154,6 +164,7 @@ func (*Break) cmd()    {}
 func (*Continue) cmd() {}
 func (*For) cmd()      {}
 func (*If) cmd()       {}
+func (*Return) cmd()   {}
 func (*VarDecl) cmd()  {}
 
 type (

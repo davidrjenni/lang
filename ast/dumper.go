@@ -120,6 +120,12 @@ func (d *dumper) dumpCmd(cmd Cmd) {
 			d.exit(")")
 		}
 		d.exit(")")
+	case *Return:
+		d.enter("Return(")
+		d.dumpPos(cmd)
+		d.print("X: ")
+		d.dumpExpr(cmd.X)
+		d.exit(")")
 	case *VarDecl:
 		d.enter("Var(")
 		d.dumpPos(cmd)
