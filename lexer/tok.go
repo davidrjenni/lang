@@ -65,6 +65,7 @@ const (
 	Else     // else
 	For      // for
 	If       // if
+	Return   // return
 	Set      // set
 
 	Let // let
@@ -91,6 +92,7 @@ var keywords = map[string]Tok{
 	"else":     Else,
 	"for":      For,
 	"if":       If,
+	"return":   Return,
 	"set":      Set,
 
 	"let": Let,
