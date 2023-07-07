@@ -47,6 +47,55 @@ type parser struct {
 	tok lexer.Tok
 }
 
+// Types -> Type { "," Type } .
+func (p *parser) parseTypes() (ts []ast.Type) {
+	ts = append(ts, p.parseType())
+	for p.got(lexer.Comma) {
+		ts = append(ts, p.parseType())
+	}
+	return ts
+}
+
+// Type -> "bool" | "f64" | Func | "i64" | "string" .
+// Func -> "func" "(" [ Types ] ")" Type .
+func (p *parser) parseType() ast.Type {
+	switch p.tok {
+	case lexer.Bool:
+		lit := p.lit
+		pos := p.expect(lexer.Bool)
+		end := pos.Shift(len(lit))
+		return &ast.Scalar{Name: lit, StartPos: pos, EndPos: end}
+	case lexer.F64:
+		lit := p.lit
+		pos := p.expect(lexer.F64)
+		end := pos.Shift(len(lit))
+		return &ast.Scalar{Name: lit, StartPos: pos, EndPos: end}
+	case lexer.Func:
+		pos := p.expect(lexer.Func)
+		p.expect(lexer.LeftParen)
+		var params []ast.Type
+		if p.tok != lexer.RightParen {
+			params = p.parseTypes()
+		}
+		p.expect(lexer.RightParen)
+		result := p.parseType()
+		return &ast.Func{Params: params, Result: result, StartPos: pos}
+	case lexer.I64:
+		lit := p.lit
+		pos := p.expect(lexer.I64)
+		end := pos.Shift(len(lit))
+		return &ast.Scalar{Name: lit, StartPos: pos, EndPos: end}
+	case lexer.String:
+		lit := p.lit
+		pos := p.expect(lexer.String)
+		end := pos.Shift(len(lit))
+		return &ast.Scalar{Name: lit, StartPos: pos, EndPos: end}
+	default:
+		p.errs.Append(p.pos, "unexpected %s", p.lit)
+		return nil
+	}
+}
+
 // Block -> "{" Cmd { Cmd } "}" .
 func (p *parser) parseBlock() *ast.Block {
 	var b ast.Block
@@ -158,7 +207,9 @@ func (p *parser) parseUnaryExpr() ast.Expr {
 	}
 }
 
-// PrimaryExpr -> "(" Expr ")" | F64Lit | I64Lit | Identifier | StringLit | "true" | "false" .
+// PrimaryExpr -> "(" Expr ")" | F64Lit | FuncLit | I64Lit | Identifier | StringLit | "true" | "false" .
+// FuncLit     -> "func" "(" [ Fields ] ")" Type Block .
+// Fields      -> Ident Type { "," Ident Type } .
 func (p *parser) parsePrimaryExpr() ast.Expr {
 	switch p.tok {
 	case lexer.LeftParen:
@@ -175,6 +226,17 @@ func (p *parser) parsePrimaryExpr() ast.Expr {
 			panic(fmt.Sprintf("cannot convert f64: %v", err))
 		}
 		return &ast.F64{Val: val, StartPos: pos, EndPos: end}
+	case lexer.Func:
+		pos := p.expect(lexer.Func)
+		p.expect(lexer.LeftParen)
+		var params []*ast.Field
+		if p.tok != lexer.RightParen {
+			params = p.parseFields()
+		}
+		p.expect(lexer.RightParen)
+		result := p.parseType()
+		b := p.parseBlock()
+		return &ast.FuncLit{Params: params, Result: result, Block: b, StartPos: pos}
 	case lexer.I64Lit:
 		lit := p.lit
 		pos := p.expect(lexer.I64Lit)
@@ -211,6 +273,18 @@ func (p *parser) parseIdent() *ast.Ident {
 	name := p.lit
 	pos := p.expect(lexer.Identifier)
 	return &ast.Ident{Name: name, StartPos: pos}
+}
+
+func (p *parser) parseFields() (fs []*ast.Field) {
+	id := p.parseIdent()
+	typ := p.parseType()
+	fs = append(fs, &ast.Field{Ident: id, Type: typ})
+	for p.got(lexer.Comma) {
+		id = p.parseIdent()
+		typ = p.parseType()
+		fs = append(fs, &ast.Field{Ident: id, Type: typ})
+	}
+	return fs
 }
 
 func (p *parser) next() {

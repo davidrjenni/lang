@@ -37,4 +37,8 @@
 		assert true;
 	}
 	set x <- 456;
+
+	let f := func() i64 { };
+	let g := func(a i64, b bool) i64 { };
+	let h := func(a i64, b bool) func(bool) func(func(string) bool) f64 { };
 }

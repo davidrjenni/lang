@@ -1,5 +1,5 @@
 Block(
-	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:40:1)
+	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:44:1)
 	0: Assert(
 		Pos: (Start: test-fixtures/input.l:2:2, End: test-fixtures/input.l:2:37)
 		X: BinaryExpr(
@@ -230,6 +230,122 @@ Block(
 		Pos: (Start: test-fixtures/input.l:39:2, End: test-fixtures/input.l:39:14)
 		Ident: Ident(Name: "x", Pos: test-fixtures/input.l:39:6, End: test-fixtures/input.l:39:7)
 		X: I64(Val: 456, Pos: test-fixtures/input.l:39:11, End: test-fixtures/input.l:39:14)
+	)
+	12: Var(
+		Pos: (Start: test-fixtures/input.l:41:2, End: test-fixtures/input.l:41:25)
+		Ident: Ident(Name: "f", Pos: test-fixtures/input.l:41:6, End: test-fixtures/input.l:41:7)
+		X: FuncLit(
+			Pos: (Start: test-fixtures/input.l:41:11, End: test-fixtures/input.l:41:24)
+			Params: (
+				
+			)
+			Result: Scalar(
+				Pos: (Start: test-fixtures/input.l:41:18, End: test-fixtures/input.l:41:21)
+				Name: i64
+			)
+			Block(
+				Pos: (Start: test-fixtures/input.l:41:22, End: test-fixtures/input.l:41:24)
+				
+			)
+		)
+	)
+	13: Var(
+		Pos: (Start: test-fixtures/input.l:42:2, End: test-fixtures/input.l:42:38)
+		Ident: Ident(Name: "g", Pos: test-fixtures/input.l:42:6, End: test-fixtures/input.l:42:7)
+		X: FuncLit(
+			Pos: (Start: test-fixtures/input.l:42:11, End: test-fixtures/input.l:42:37)
+			Params: (
+				0: Field(
+					Pos: (Start: test-fixtures/input.l:42:16, End: test-fixtures/input.l:42:21)
+					Ident: Ident(Name: "a", Pos: test-fixtures/input.l:42:16, End: test-fixtures/input.l:42:17)
+					Type: Scalar(
+						Pos: (Start: test-fixtures/input.l:42:18, End: test-fixtures/input.l:42:21)
+						Name: i64
+					)
+				)
+				1: Field(
+					Pos: (Start: test-fixtures/input.l:42:23, End: test-fixtures/input.l:42:29)
+					Ident: Ident(Name: "b", Pos: test-fixtures/input.l:42:23, End: test-fixtures/input.l:42:24)
+					Type: Scalar(
+						Pos: (Start: test-fixtures/input.l:42:25, End: test-fixtures/input.l:42:29)
+						Name: bool
+					)
+				)
+				
+			)
+			Result: Scalar(
+				Pos: (Start: test-fixtures/input.l:42:31, End: test-fixtures/input.l:42:34)
+				Name: i64
+			)
+			Block(
+				Pos: (Start: test-fixtures/input.l:42:35, End: test-fixtures/input.l:42:37)
+				
+			)
+		)
+	)
+	14: Var(
+		Pos: (Start: test-fixtures/input.l:43:2, End: test-fixtures/input.l:43:73)
+		Ident: Ident(Name: "h", Pos: test-fixtures/input.l:43:6, End: test-fixtures/input.l:43:7)
+		X: FuncLit(
+			Pos: (Start: test-fixtures/input.l:43:11, End: test-fixtures/input.l:43:72)
+			Params: (
+				0: Field(
+					Pos: (Start: test-fixtures/input.l:43:16, End: test-fixtures/input.l:43:21)
+					Ident: Ident(Name: "a", Pos: test-fixtures/input.l:43:16, End: test-fixtures/input.l:43:17)
+					Type: Scalar(
+						Pos: (Start: test-fixtures/input.l:43:18, End: test-fixtures/input.l:43:21)
+						Name: i64
+					)
+				)
+				1: Field(
+					Pos: (Start: test-fixtures/input.l:43:23, End: test-fixtures/input.l:43:29)
+					Ident: Ident(Name: "b", Pos: test-fixtures/input.l:43:23, End: test-fixtures/input.l:43:24)
+					Type: Scalar(
+						Pos: (Start: test-fixtures/input.l:43:25, End: test-fixtures/input.l:43:29)
+						Name: bool
+					)
+				)
+				
+			)
+			Result: Func(
+				Pos: (Start: test-fixtures/input.l:43:31, End: test-fixtures/input.l:43:69)
+				Params: (
+					0: Scalar(
+						Pos: (Start: test-fixtures/input.l:43:36, End: test-fixtures/input.l:43:40)
+						Name: bool
+					)
+					
+				)
+				Result: Func(
+					Pos: (Start: test-fixtures/input.l:43:42, End: test-fixtures/input.l:43:69)
+					Params: (
+						0: Func(
+							Pos: (Start: test-fixtures/input.l:43:47, End: test-fixtures/input.l:43:64)
+							Params: (
+								0: Scalar(
+									Pos: (Start: test-fixtures/input.l:43:52, End: test-fixtures/input.l:43:58)
+									Name: string
+								)
+								
+							)
+							Result: Scalar(
+								Pos: (Start: test-fixtures/input.l:43:60, End: test-fixtures/input.l:43:64)
+								Name: bool
+							)
+						)
+						
+					)
+					Result: Scalar(
+						Pos: (Start: test-fixtures/input.l:43:66, End: test-fixtures/input.l:43:69)
+						Name: f64
+					)
+				)
+			)
+			Block(
+				Pos: (Start: test-fixtures/input.l:43:70, End: test-fixtures/input.l:43:72)
+				
+			)
+		)
 	)
 	
 )
