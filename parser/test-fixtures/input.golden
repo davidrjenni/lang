@@ -1,5 +1,5 @@
 Block(
-	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:44:1)
+	Pos: (Start: test-fixtures/input.l:1:1, End: test-fixtures/input.l:45:1)
 	0: Assert(
 		Pos: (Start: test-fixtures/input.l:2:2, End: test-fixtures/input.l:2:37)
 		X: BinaryExpr(
@@ -346,6 +346,10 @@ Block(
 				
 			)
 		)
+	)
+	15: Return(
+		Pos: (Start: test-fixtures/input.l:44:2, End: test-fixtures/input.l:44:11)
+		X: I64(Val: 42, Pos: test-fixtures/input.l:44:9, End: test-fixtures/input.l:44:11)
 	)
 	
 )

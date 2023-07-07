@@ -100,14 +100,14 @@ func (p *parser) parseType() ast.Type {
 func (p *parser) parseBlock() *ast.Block {
 	var b ast.Block
 	b.StartPos = p.expect(lexer.LeftBrace)
-	for p.in(lexer.Assert, lexer.Break, lexer.Continue, lexer.For, lexer.If, lexer.Let, lexer.Set) {
+	for p.in(cmdToks...) {
 		b.Cmds = append(b.Cmds, p.parseCmd())
 	}
 	b.EndPos = p.expect(lexer.RightBrace)
 	return &b
 }
 
-// Cmd -> "assert" Expr ";" | "break" ";" | "continue" ";" | "for" Expr Block | If | "let" Ident ":=" Expr ";" | "set" Ident "<-" Expr ";" .
+// Cmd -> "assert" Expr ";" | "break" ";" | "continue" ";" | "for" Expr Block | If | "let" Ident ":=" Expr ";" | "return" Expr ";" | "set" Ident "<-" Expr ";" .
 // If  -> "if" Expr Block [ "else" ( If | Block ) ] .
 func (p *parser) parseCmd() ast.Cmd {
 	switch p.tok {
@@ -158,6 +158,11 @@ func (p *parser) parseCmd() ast.Cmd {
 		x := p.parseExpr()
 		end := p.expect(lexer.Semicolon)
 		return &ast.VarDecl{Ident: ident, X: x, StartPos: pos, EndPos: end}
+	case lexer.Return:
+		pos := p.expect(lexer.Return)
+		x := p.parseExpr()
+		end := p.expect(lexer.Semicolon)
+		return &ast.Return{X: x, StartPos: pos, EndPos: end}
 	case lexer.Set:
 		pos := p.expect(lexer.Set)
 		ident := p.parseIdent()
@@ -348,13 +353,26 @@ func (p *parser) expect(toks ...lexer.Tok) lexer.Pos {
 	return pos
 }
 
-var relOps = []lexer.Tok{
-	lexer.Less,
-	lexer.LessEq,
-	lexer.Equal,
-	lexer.NotEqual,
-	lexer.GreaterEq,
-	lexer.Greater,
-	lexer.In,
-	lexer.Is,
-}
+var (
+	relOps = []lexer.Tok{
+		lexer.Less,
+		lexer.LessEq,
+		lexer.Equal,
+		lexer.NotEqual,
+		lexer.GreaterEq,
+		lexer.Greater,
+		lexer.In,
+		lexer.Is,
+	}
+
+	cmdToks = []lexer.Tok{
+		lexer.Assert,
+		lexer.Break,
+		lexer.Continue,
+		lexer.For,
+		lexer.If,
+		lexer.Let,
+		lexer.Return,
+		lexer.Set,
+	}
+)
