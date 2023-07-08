@@ -9,9 +9,9 @@ import (
 	"io"
 )
 
-func Dump(out io.Writer, n Node) {
+func Dump(out io.Writer, f *Frame) {
 	d := &dumper{out: out}
-	d.dump(n)
+	d.dump(f)
 }
 
 type dumper struct {
@@ -32,6 +32,10 @@ func (d *dumper) dump(n Node) {
 		d.printf("call %s  // %s", n.Label, n.Pos())
 	case *CJump:
 		d.printf("cjump %s  // %s", n.Label, n.Pos())
+	case *Frame:
+		d.dump(n.Name)
+		d.dump(n.Seq)
+		d.printf("\n")
 	case *Jump:
 		d.printf("jump %s  // %s", n.Label, n.Pos())
 	case Label:

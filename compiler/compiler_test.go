@@ -31,10 +31,12 @@ func TestCompile(t *testing.T) {
 		t.Fatalf("%v", err)
 	}
 
-	n := ir.Translate(b, info)
+	frames := ir.Translate(b, info)
 
 	var actual bytes.Buffer
-	compiler.Compile(&actual, filename, n)
+	for _, f := range frames {
+		compiler.Compile(&actual, filename, f)
+	}
 
 	golden := filepath.Join("test-fixtures", "input.golden")
 	if *update {

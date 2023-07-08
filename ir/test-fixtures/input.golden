@@ -1,3 +1,4 @@
+main
 load rbool.0 <- bool(true)  // test-fixtures/input.l:2:12
 cmp rbool.0 bool(true)  // test-fixtures/input.l:2:12
 setne rbool.0  // test-fixtures/input.l:2:11
@@ -246,3 +247,5 @@ cjump .L36  // test-fixtures/input.l:56:2
 load ri64.1 <- i64(56)  // test-fixtures/input.l:56:2
 call AssertViolated  // test-fixtures/input.l:56:2
 .L36
+
+

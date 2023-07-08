@@ -31,14 +31,13 @@ var (
 	f64Reg2  = &Reg{Type: F64Reg, Second: true}
 )
 
-func Translate(b *ast.Block, info types.Info, passes ...Pass) *Frame {
+func Translate(b *ast.Block, info types.Info, passes ...Pass) []*Frame {
 	t := &translator{
 		info:   info,
 		passes: passes,
 	}
 	t.translateFrame(b, Label("main"))
-
-	return t.frames[0]
+	return t.frames
 }
 
 type translator struct {
@@ -75,7 +74,8 @@ func (t *translator) translateFrame(b *ast.Block, label Label) {
 	i := len(t.frameStates) - 1
 	t.frameStates = t.frameStates[:i]
 
-	t.frames = append(t.frames, &Frame{Name: label, Seq: s, Stack: -fs.stack})
+	frame := &Frame{Name: label, Seq: s, Stack: -fs.stack}
+	t.frames = append(t.frames, frame)
 }
 
 func (t *translator) translateCmd(cmd ast.Cmd) Seq {

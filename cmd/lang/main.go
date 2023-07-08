@@ -48,8 +48,11 @@ func main() {
 		}
 		defer os.Remove(asmFile.Name())
 
-		n := ir.Translate(b, info, ir.Loads)
-		compiler.Compile(asmFile, filename, n)
+		frames := ir.Translate(b, info, ir.Loads)
+		for _, f := range frames {
+			compiler.Compile(asmFile, filename, f)
+		}
+
 		if err := asmFile.Close(); err != nil {
 			die("%v\n", err)
 		}

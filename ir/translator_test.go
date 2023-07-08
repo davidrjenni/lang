@@ -41,14 +41,16 @@ func TestTranslate(t *testing.T) {
 	}
 
 	for _, p := range passes {
-		f := ir.Translate(b, info, p.pass)
-		cmpGolden(t, f.Seq, p.filename, *update)
+		frames := ir.Translate(b, info, p.pass)
+		cmpGolden(t, frames, p.filename, *update)
 	}
 }
 
-func cmpGolden(t *testing.T, seq ir.Seq, filename string, update bool) {
+func cmpGolden(t *testing.T, frames []*ir.Frame, filename string, update bool) {
 	var actual bytes.Buffer
-	ir.Dump(&actual, seq)
+	for _, f := range frames {
+		ir.Dump(&actual, f)
+	}
 
 	golden := filepath.Join("test-fixtures", filename)
 	if update {
