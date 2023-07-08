@@ -59,77 +59,112 @@ type translator struct {
 func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 	switch cmd := cmd.(type) {
 	case *ast.Assert:
-		label := t.label()
-		return Seq{
-			t.boolCheck(cmd.X, true_),
-			&CJump{Label: label, pos: cmd.Pos()},
-			&Load{Src: I64(cmd.Pos().Line), Dst: i64Reg2, pos: cmd.Pos()},
-			&Call{Label: assertViolated, pos: cmd.Pos()},
-			label,
-		}
+		return t.translateAssert(cmd)
 	case *ast.Assign:
-		src := t.translateRVal(cmd.X)
-		sz := t.info.Uses[cmd.Ident].Type.Size()
-		off := t.vars[cmd.Ident.Name]
-		return Seq{&Store{Src: src, Dst: &Mem{Off: off}, Size: regType(sz), pos: cmd.Pos()}}
+		return t.translateAssign(cmd)
 	case *ast.Block:
-		var seq Seq
-		for _, c := range cmd.Cmds {
-			n := t.translateCmd(c)
-			seq = append(seq, n)
-		}
-		return seq
+		return t.translateBlock(cmd)
 	case *ast.Break:
-		return Seq{
-			&Jump{Label: t.forEnds[len(t.forEnds)-1], pos: cmd.Pos()},
-		}
+		return t.translateBreak(cmd)
 	case *ast.Continue:
-		return Seq{
-			&Jump{Label: t.forStarts[len(t.forStarts)-1], pos: cmd.Pos()},
-		}
+		return t.translateContinue(cmd)
 	case *ast.For:
-		start := t.label()
-		end := t.label()
-		t.forStarts = append(t.forStarts, start)
-		t.forEnds = append(t.forEnds, end)
-		seq := Seq{
-			start,
-			t.boolCheck(cmd.X, false_),
-			&CJump{Label: end, pos: cmd.Pos()},
-			t.translateCmd(cmd.Block),
-			&Jump{Label: start, pos: cmd.Pos()},
-			end,
-		}
-		i := len(t.forStarts) - 1
-		t.forStarts = t.forStarts[:i]
-		t.forEnds = t.forEnds[:i]
-		return seq
+		return t.translateFor(cmd)
 	case *ast.If:
-		end := t.label()
-		seq := Seq{
-			t.boolCheck(cmd.X, false_),
-			&CJump{Label: end, pos: cmd.Pos()},
-			t.translateCmd(cmd.Block),
-		}
-		if cmd.Else != nil {
-			endElse := t.label()
-			seq = append(seq, Seq{
-				&Jump{Label: endElse, pos: cmd.Pos()},
-				end,
-				t.translateCmd(cmd.Else.Cmd),
-			})
-			end = endElse
-		}
-		return append(seq, end)
+		return t.translateIf(cmd)
 	case *ast.VarDecl:
-		src := t.translateRVal(cmd.X)
-		sz := t.info.Uses[cmd.Ident].Type.Size()
-		t.stack -= sz
-		t.vars[cmd.Ident.Name] = t.stack
-		return Seq{&Store{Src: src, Dst: &Mem{Off: t.stack}, Size: regType(sz), pos: cmd.Pos()}}
+		return t.translateVarDecl(cmd)
 	default:
 		panic(fmt.Sprintf("unexpected type %T", cmd))
 	}
+}
+
+func (t *translator) translateAssert(a *ast.Assert) Seq {
+	label := t.label()
+	return Seq{
+		t.boolCheck(a.X, true_),
+		&CJump{Label: label, pos: a.Pos()},
+		&Load{Src: I64(a.Pos().Line), Dst: i64Reg2, pos: a.Pos()},
+		&Call{Label: assertViolated, pos: a.Pos()},
+		label,
+	}
+}
+
+func (t *translator) translateAssign(a *ast.Assign) Seq {
+	src := t.translateRVal(a.X)
+	sz := t.info.Uses[a.Ident].Type.Size()
+	off := t.vars[a.Ident.Name]
+	mem := &Mem{Off: off}
+	store := &Store{Src: src, Dst: mem, Size: regType(sz), pos: a.Pos()}
+	return Seq{store}
+}
+
+func (t *translator) translateBlock(b *ast.Block) (s Seq) {
+	for _, c := range b.Cmds {
+		n := t.translateCmd(c)
+		s = append(s, n)
+	}
+	return s
+}
+
+func (t *translator) translateBreak(b *ast.Break) Seq {
+	return Seq{
+		&Jump{Label: t.forEnds[len(t.forEnds)-1], pos: b.Pos()},
+	}
+}
+
+func (t *translator) translateContinue(c *ast.Continue) Seq {
+	return Seq{
+		&Jump{Label: t.forStarts[len(t.forStarts)-1], pos: c.Pos()},
+	}
+}
+
+func (t *translator) translateFor(f *ast.For) Seq {
+	start := t.label()
+	end := t.label()
+	t.forStarts = append(t.forStarts, start)
+	t.forEnds = append(t.forEnds, end)
+	seq := Seq{
+		start,
+		t.boolCheck(f.X, false_),
+		&CJump{Label: end, pos: f.Pos()},
+		t.translateCmd(f.Block),
+		&Jump{Label: start, pos: f.Pos()},
+		end,
+	}
+	i := len(t.forStarts) - 1
+	t.forStarts = t.forStarts[:i]
+	t.forEnds = t.forEnds[:i]
+	return seq
+}
+
+func (t *translator) translateIf(i *ast.If) Seq {
+	end := t.label()
+	seq := Seq{
+		t.boolCheck(i.X, false_),
+		&CJump{Label: end, pos: i.Pos()},
+		t.translateCmd(i.Block),
+	}
+	if i.Else != nil {
+		endElse := t.label()
+		seq = append(seq, Seq{
+			&Jump{Label: endElse, pos: i.Pos()},
+			end,
+			t.translateCmd(i.Else.Cmd),
+		})
+		end = endElse
+	}
+	return append(seq, end)
+}
+
+func (t *translator) translateVarDecl(d *ast.VarDecl) Seq {
+	src := t.translateRVal(d.X)
+	sz := t.info.Uses[d.Ident].Type.Size()
+	t.stack -= sz
+	t.vars[d.Ident.Name] = t.stack
+	mem := &Mem{Off: t.stack}
+	store := &Store{Src: src, Dst: mem, Size: regType(sz), pos: d.Pos()}
+	return Seq{store}
 }
 
 func (t *translator) boolCheck(x ast.Expr, expect Bool) Seq {
