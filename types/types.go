@@ -4,7 +4,10 @@
 
 package types // import "davidrjenni.io/lang/types"
 
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+)
 
 type Type interface {
 	Size() int
@@ -20,6 +23,20 @@ func Equal(t, u Type) bool {
 	case *F64:
 		_, ok := u.(*F64)
 		return ok
+	case *Func:
+		f, ok := u.(*Func)
+		if !ok {
+			return false
+		}
+		if len(t.Params) != len(f.Params) {
+			return false
+		}
+		for i, p := range t.Params {
+			if !Equal(p, f.Params[i]) {
+				return false
+			}
+		}
+		return Equal(t.Result, f.Result)
 	case *I64:
 		_, ok := u.(*I64)
 		return ok
@@ -31,6 +48,24 @@ func Equal(t, u Type) bool {
 	}
 }
 
+type Func struct {
+	Params []Type
+	Result Type
+}
+
+func (f *Func) String() string {
+	b := bytes.NewBufferString("func(")
+	for i, p := range f.Params {
+		if i > 0 {
+			b.WriteString(", ")
+		}
+		b.WriteString(p.String())
+	}
+	b.WriteString(") ")
+	b.WriteString(f.Result.String())
+	return b.String()
+}
+
 type (
 	Bool   struct{}
 	F64    struct{}
@@ -40,6 +75,7 @@ type (
 
 func (*Bool) Size() int   { return 1 }
 func (*F64) Size() int    { return 8 }
+func (*Func) Size() int   { return 8 }
 func (*I64) Size() int    { return 8 }
 func (*String) Size() int { return 8 }
 
@@ -50,5 +86,6 @@ func (*String) String() string { return "string" }
 
 func (*Bool) typ()   {}
 func (*F64) typ()    {}
+func (*Func) typ()   {}
 func (*I64) typ()    {}
 func (*String) typ() {}

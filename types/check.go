@@ -94,6 +94,19 @@ func (c *checker) checkCmd(n ast.Cmd) {
 			c.checkCmd(n.Else.Cmd)
 			c.scope = c.scope.parent
 		}
+	case *ast.Return:
+		if c.scope.func_ == nil {
+			c.errorf(n.Pos(), "unexpected return cmd outside of func scope")
+			return
+		}
+		t, ok := c.checkExpr(n.X)
+		if !ok {
+			return
+		}
+		if !Equal(t, c.scope.func_.Result) {
+			c.errorf(n.Pos(), "cannot return expr of type %s, expected expr of type %s", t, c.scope.func_.Result)
+			return
+		}
 	case *ast.VarDecl:
 		if t, ok := c.checkExpr(n.X); ok {
 			c.insert(n.Ident, t)
@@ -126,6 +139,8 @@ func (c *checker) checkExpr(x ast.Expr) (t Type, ok bool) {
 		return nil, false
 	case *ast.F64:
 		return &F64{}, true
+	case *ast.FuncLit:
+		return c.checkFuncLit(x)
 	case *ast.ParenExpr:
 		return c.checkExpr(x.X)
 	case *ast.String:
@@ -188,6 +203,34 @@ func (c *checker) checkBinaryExpr(x *ast.BinaryExpr) (Type, bool) {
 	return nil, false
 }
 
+func (c *checker) checkFuncLit(f *ast.FuncLit) (Type, bool) {
+	defer func() {
+		c.scope = c.scope.parent
+	}()
+	c.scope = c.scope.enter()
+
+	params := make([]Type, 0, len(f.Params))
+	for _, p := range f.Params {
+		t, ok := c.checkType(p.Type)
+		if !ok {
+			return nil, false
+		}
+		params = append(params, t)
+		c.insert(p.Ident, t)
+	}
+
+	result, ok := c.checkType(f.Result)
+	if !ok {
+		return nil, false
+	}
+
+	t := &Func{Params: params, Result: result}
+	c.scope.func_ = t
+
+	c.checkCmd(f.Block)
+	return t, true
+}
+
 func (c *checker) checkUnaryExpr(x *ast.UnaryExpr) (Type, bool) {
 	t, ok := c.checkExpr(x.X)
 	if !ok {
@@ -216,6 +259,32 @@ func (c *checker) checkUnaryExpr(x *ast.UnaryExpr) (Type, bool) {
 	default:
 		c.errorf(x.Pos(), "cannot apply %s to expr of type %s", x.Op, t)
 		return nil, false
+	}
+}
+
+func (c *checker) checkType(t ast.Type) (Type, bool) {
+	switch t := t.(type) {
+	case *ast.Func:
+		result, ok := c.checkType(t.Result)
+		if !ok {
+			return nil, false
+		}
+		return &Func{Result: result}, true
+	case *ast.Scalar:
+		switch t.Name {
+		case "bool":
+			return &Bool{}, true
+		case "f64":
+			return &F64{}, true
+		case "i64":
+			return &I64{}, true
+		case "string":
+			return &String{}, true
+		default:
+			panic(fmt.Sprintf("unexpected type %s", t.Name))
+		}
+	default:
+		panic(fmt.Sprintf("unexpected type %T", t))
 	}
 }
 

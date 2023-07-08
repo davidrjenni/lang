@@ -20,6 +20,7 @@ type scope struct {
 	parent *scope
 
 	objects map[string]*Object
+	func_   *Func
 	inFor   bool
 }
 
@@ -27,6 +28,7 @@ func (s *scope) enter() *scope {
 	return &scope{
 		parent:  s,
 		objects: make(map[string]*Object),
+		func_:   s.func_,
 		inFor:   s.inFor,
 	}
 }

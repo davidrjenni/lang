@@ -35,4 +35,11 @@
 	}
 
 	set c <- "def";
+
+	let f := func(i i64) func() bool {
+		set i <- i * 2;
+		return func() bool {
+			return i = 42;
+		};
+	};
 }

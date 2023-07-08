@@ -35,6 +35,13 @@ func TestEqual(t *testing.T) {
 		{t: &types.String{}, u: &types.Bool{}, expected: false},
 		{t: &types.String{}, u: &types.I64{}, expected: false},
 		{t: &types.String{}, u: &types.F64{}, expected: false},
+
+		{t: &types.Func{Result: &types.Bool{}}, u: &types.Func{Result: &types.Bool{}}, expected: true},
+		{t: &types.Func{Result: &types.Bool{}}, u: &types.Func{Result: &types.String{}}, expected: false},
+		{t: &types.Func{Result: &types.Bool{}}, u: &types.Func{Params: []types.Type{&types.String{}}, Result: &types.Bool{}}, expected: false},
+		{t: &types.Func{Params: []types.Type{&types.I64{}}, Result: &types.Bool{}}, u: &types.Func{Params: []types.Type{&types.String{}}, Result: &types.Bool{}}, expected: false},
+		{t: &types.Func{Result: &types.Bool{}}, u: &types.Bool{}, expected: false},
+		{t: &types.Bool{}, u: &types.Func{Result: &types.Bool{}}, expected: false},
 	}
 
 	for i, test := range tests {
