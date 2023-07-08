@@ -38,12 +38,12 @@ Block(
 			Pos: (Start: test-fixtures/input.l:3:9, End: test-fixtures/input.l:3:30)
 			LHS: BinaryExpr(
 				Pos: (Start: test-fixtures/input.l:3:9, End: test-fixtures/input.l:3:22)
-				LHS: F64(Val: 5, Pos: test-fixtures/input.l:3:9, End: test-fixtures/input.l:3:12)
+				LHS: F64(Val: 5.0, Pos: test-fixtures/input.l:3:9, End: test-fixtures/input.l:3:12)
 				Op: ·
-				RHS: F64(Val: 5, Pos: test-fixtures/input.l:3:13, End: test-fixtures/input.l:3:22)
+				RHS: F64(Val: 5.000_000, Pos: test-fixtures/input.l:3:13, End: test-fixtures/input.l:3:22)
 			)
 			Op: =
-			RHS: F64(Val: 25, Pos: test-fixtures/input.l:3:25, End: test-fixtures/input.l:3:30)
+			RHS: F64(Val: 25.00, Pos: test-fixtures/input.l:3:25, End: test-fixtures/input.l:3:30)
 		)
 	)
 	2: Assert(
@@ -227,9 +227,9 @@ Block(
 		)
 	)
 	11: Assign(
-		Pos: (Start: test-fixtures/input.l:39:2, End: test-fixtures/input.l:39:14)
+		Pos: (Start: test-fixtures/input.l:39:2, End: test-fixtures/input.l:39:18)
 		Ident: Ident(Name: "x", Pos: test-fixtures/input.l:39:6, End: test-fixtures/input.l:39:7)
-		X: I64(Val: 456, Pos: test-fixtures/input.l:39:11, End: test-fixtures/input.l:39:14)
+		X: I64(Val: 456_000, Pos: test-fixtures/input.l:39:11, End: test-fixtures/input.l:39:18)
 	)
 	12: Var(
 		Pos: (Start: test-fixtures/input.l:41:2, End: test-fixtures/input.l:41:25)

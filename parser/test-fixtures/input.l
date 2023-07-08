@@ -36,7 +36,7 @@
 	if x < 123 {
 		assert true;
 	}
-	set x <- 456;
+	set x <- 456_000;
 
 	let f := func() i64 { };
 	let g := func(a i64, b bool) i64 { };

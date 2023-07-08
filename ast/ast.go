@@ -226,13 +226,13 @@ type (
 	}
 
 	Bool struct {
-		Val      bool
+		Val      string
 		StartPos lexer.Pos
 		EndPos   lexer.Pos
 	}
 
 	F64 struct {
-		Val      float64
+		Val      string
 		StartPos lexer.Pos
 		EndPos   lexer.Pos
 	}
@@ -245,7 +245,7 @@ type (
 	}
 
 	I64 struct {
-		Val      int64
+		Val      string
 		StartPos lexer.Pos
 		EndPos   lexer.Pos
 	}

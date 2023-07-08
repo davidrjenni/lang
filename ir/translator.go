@@ -6,6 +6,7 @@ package ir // import "davidrjenni.io/lang/ir"
 
 import (
 	"fmt"
+	"strconv"
 
 	"davidrjenni.io/lang/ast"
 	"davidrjenni.io/lang/lexer"
@@ -187,11 +188,19 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 		}
 		return &seqExpr{Seq: seq, Dst: r1}
 	case *ast.Bool:
-		return Bool(x.Val)
+		return Bool(x.Val == "true")
 	case *ast.F64:
-		return F64(x.Val)
+		val, err := strconv.ParseFloat(x.Val, 64)
+		if err != nil {
+			panic(fmt.Sprintf("cannot convert f64: %v", err))
+		}
+		return F64(val)
 	case *ast.I64:
-		return I64(x.Val)
+		val, err := strconv.ParseInt(x.Val, 10, 0)
+		if err != nil {
+			panic(fmt.Sprintf("cannot convert i64: %v", err))
+		}
+		return I64(val)
 	case *ast.Ident:
 		return &Mem{Off: t.vars[x.Name]}
 	case *ast.ParenExpr:

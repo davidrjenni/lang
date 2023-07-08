@@ -6,10 +6,8 @@ package parser // import "davidrjenni.io/lang/parser"
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"os"
-	"strconv"
 
 	"davidrjenni.io/lang/ast"
 	"davidrjenni.io/lang/internal/errors"
@@ -295,11 +293,7 @@ func (p *parser) parseF64Lit() *ast.F64 {
 	lit := p.lit
 	pos := p.expect(lexer.F64Lit)
 	end := pos.Shift(len(lit))
-	val, err := strconv.ParseFloat(lit, 64)
-	if err != nil {
-		panic(fmt.Sprintf("cannot convert f64: %v", err))
-	}
-	return &ast.F64{Val: val, StartPos: pos, EndPos: end}
+	return &ast.F64{Val: lit, StartPos: pos, EndPos: end}
 }
 
 // FuncLit -> "func" "(" [ Fields ] ")" Type Block .
@@ -320,11 +314,7 @@ func (p *parser) parseI64Lit() *ast.I64 {
 	lit := p.lit
 	pos := p.expect(lexer.I64Lit)
 	end := pos.Shift(len(lit))
-	val, err := strconv.ParseInt(lit, 10, 0)
-	if err != nil {
-		panic(fmt.Sprintf("cannot convert i64: %v", err))
-	}
-	return &ast.I64{Val: val, StartPos: pos, EndPos: end}
+	return &ast.I64{Val: lit, StartPos: pos, EndPos: end}
 }
 
 func (p *parser) parseIdent() *ast.Ident {
@@ -345,7 +335,7 @@ func (p *parser) parseTrue() *ast.Bool {
 	lit := p.lit
 	pos := p.expect(lexer.True)
 	end := pos.Shift(len(lit))
-	return &ast.Bool{Val: true, StartPos: pos, EndPos: end}
+	return &ast.Bool{Val: lit, StartPos: pos, EndPos: end}
 }
 
 // False -> "false" .
@@ -353,7 +343,7 @@ func (p *parser) parseFalse() *ast.Bool {
 	lit := p.lit
 	pos := p.expect(lexer.False)
 	end := pos.Shift(len(lit))
-	return &ast.Bool{Val: false, StartPos: pos, EndPos: end}
+	return &ast.Bool{Val: lit, StartPos: pos, EndPos: end}
 }
 
 // ------- Others -------
