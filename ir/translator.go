@@ -33,27 +33,49 @@ var (
 
 func Translate(b *ast.Block, info types.Info, passes ...Pass) *Frame {
 	t := &translator{
-		info: info,
-		vars: make(map[string]int),
+		info:   info,
+		passes: passes,
 	}
+	t.translateFrame(b, Label("main"))
 
-	s := t.translateCmd(b)
-	s = flatten(s)
-	for _, p := range passes {
-		s = p(s)
-	}
-	return &Frame{Name: Label("main"), Seq: s, Stack: -t.stack}
+	return t.frames[0]
 }
 
 type translator struct {
-	info types.Info
+	info   types.Info
+	passes []Pass
 
-	stack int
-	vars  map[string]int
+	labels      int
+	frameStates []*frameState
 
-	labels    int
+	frames []*Frame
+}
+
+// frameState represents the per-frame translator state.
+type frameState struct {
+	stack     int
+	vars      map[string]int
 	forStarts []Label
 	forEnds   []Label
+}
+
+func (t *translator) translateFrame(b *ast.Block, label Label) {
+	fs := &frameState{
+		vars: make(map[string]int),
+	}
+
+	t.frameStates = append(t.frameStates, fs)
+
+	s := t.translateCmd(b)
+	s = flatten(s)
+	for _, p := range t.passes {
+		s = p(s)
+	}
+
+	i := len(t.frameStates) - 1
+	t.frameStates = t.frameStates[:i]
+
+	t.frames = append(t.frames, &Frame{Name: label, Seq: s, Stack: -fs.stack})
 }
 
 func (t *translator) translateCmd(cmd ast.Cmd) Seq {
@@ -93,7 +115,7 @@ func (t *translator) translateAssert(a *ast.Assert) Seq {
 func (t *translator) translateAssign(a *ast.Assign) Seq {
 	src := t.translateRVal(a.X)
 	sz := t.info.Uses[a.Ident].Type.Size()
-	off := t.vars[a.Ident.Name]
+	off := t.fs().vars[a.Ident.Name]
 	mem := &Mem{Off: off}
 	store := &Store{Src: src, Dst: mem, Size: regType(sz), pos: a.Pos()}
 	return Seq{store}
@@ -109,21 +131,21 @@ func (t *translator) translateBlock(b *ast.Block) (s Seq) {
 
 func (t *translator) translateBreak(b *ast.Break) Seq {
 	return Seq{
-		&Jump{Label: t.forEnds[len(t.forEnds)-1], pos: b.Pos()},
+		&Jump{Label: t.fs().forEnds[len(t.fs().forEnds)-1], pos: b.Pos()},
 	}
 }
 
 func (t *translator) translateContinue(c *ast.Continue) Seq {
 	return Seq{
-		&Jump{Label: t.forStarts[len(t.forStarts)-1], pos: c.Pos()},
+		&Jump{Label: t.fs().forStarts[len(t.fs().forStarts)-1], pos: c.Pos()},
 	}
 }
 
 func (t *translator) translateFor(f *ast.For) Seq {
 	start := t.label()
 	end := t.label()
-	t.forStarts = append(t.forStarts, start)
-	t.forEnds = append(t.forEnds, end)
+	t.fs().forStarts = append(t.fs().forStarts, start)
+	t.fs().forEnds = append(t.fs().forEnds, end)
 	seq := Seq{
 		start,
 		t.boolCheck(f.X, false_),
@@ -132,9 +154,9 @@ func (t *translator) translateFor(f *ast.For) Seq {
 		&Jump{Label: start, pos: f.Pos()},
 		end,
 	}
-	i := len(t.forStarts) - 1
-	t.forStarts = t.forStarts[:i]
-	t.forEnds = t.forEnds[:i]
+	i := len(t.fs().forStarts) - 1
+	t.fs().forStarts = t.fs().forStarts[:i]
+	t.fs().forEnds = t.fs().forEnds[:i]
 	return seq
 }
 
@@ -160,9 +182,9 @@ func (t *translator) translateIf(i *ast.If) Seq {
 func (t *translator) translateVarDecl(d *ast.VarDecl) Seq {
 	src := t.translateRVal(d.X)
 	sz := t.info.Uses[d.Ident].Type.Size()
-	t.stack -= sz
-	t.vars[d.Ident.Name] = t.stack
-	mem := &Mem{Off: t.stack}
+	t.fs().stack -= sz
+	t.fs().vars[d.Ident.Name] = t.fs().stack
+	mem := &Mem{Off: t.fs().stack}
 	store := &Store{Src: src, Dst: mem, Size: regType(sz), pos: d.Pos()}
 	return Seq{store}
 }
@@ -237,7 +259,7 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 		}
 		return I64(val)
 	case *ast.Ident:
-		return &Mem{Off: t.vars[x.Name]}
+		return &Mem{Off: t.fs().vars[x.Name]}
 	case *ast.ParenExpr:
 		return t.translateRVal(x.X)
 	case *ast.UnaryExpr:
@@ -270,4 +292,8 @@ func (t *translator) translateRVal(x ast.Expr) RVal {
 func (t *translator) label() Label {
 	t.labels++
 	return Label(fmt.Sprintf(".L%d", t.labels))
+}
+
+func (t *translator) fs() *frameState {
+	return t.frameStates[len(t.frameStates)-1]
 }
