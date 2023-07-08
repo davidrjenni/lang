@@ -47,6 +47,20 @@ type parser struct {
 	tok lexer.Tok
 }
 
+// ------- Declarations -------
+
+// VarDecl -> "let" Ident ":=" Expr ";" .
+func (p *parser) parseVarDecl() *ast.VarDecl {
+	pos := p.expect(lexer.Let)
+	ident := p.parseIdent()
+	p.expect(lexer.Define)
+	x := p.parseExpr()
+	end := p.expect(lexer.Semicolon)
+	return &ast.VarDecl{Ident: ident, X: x, StartPos: pos, EndPos: end}
+}
+
+// ------- Types -------
+
 // Types -> Type { "," Type } .
 func (p *parser) parseTypes() (ts []ast.Type) {
 	ts = append(ts, p.parseType())
@@ -57,44 +71,45 @@ func (p *parser) parseTypes() (ts []ast.Type) {
 }
 
 // Type -> "bool" | "f64" | Func | "i64" | "string" .
-// Func -> "func" "(" [ Types ] ")" Type .
 func (p *parser) parseType() ast.Type {
 	switch p.tok {
 	case lexer.Bool:
-		lit := p.lit
-		pos := p.expect(lexer.Bool)
-		end := pos.Shift(len(lit))
-		return &ast.Scalar{Name: lit, StartPos: pos, EndPos: end}
+		return p.parseScalar(lexer.Bool)
 	case lexer.F64:
-		lit := p.lit
-		pos := p.expect(lexer.F64)
-		end := pos.Shift(len(lit))
-		return &ast.Scalar{Name: lit, StartPos: pos, EndPos: end}
+		return p.parseScalar(lexer.F64)
 	case lexer.Func:
-		pos := p.expect(lexer.Func)
-		p.expect(lexer.LeftParen)
-		var params []ast.Type
-		if p.tok != lexer.RightParen {
-			params = p.parseTypes()
-		}
-		p.expect(lexer.RightParen)
-		result := p.parseType()
-		return &ast.Func{Params: params, Result: result, StartPos: pos}
+		return p.parseFunc()
 	case lexer.I64:
-		lit := p.lit
-		pos := p.expect(lexer.I64)
-		end := pos.Shift(len(lit))
-		return &ast.Scalar{Name: lit, StartPos: pos, EndPos: end}
+		return p.parseScalar(lexer.I64)
 	case lexer.String:
-		lit := p.lit
-		pos := p.expect(lexer.String)
-		end := pos.Shift(len(lit))
-		return &ast.Scalar{Name: lit, StartPos: pos, EndPos: end}
+		return p.parseScalar(lexer.String)
 	default:
 		p.errs.Append(p.pos, "unexpected %s", p.lit)
 		return nil
 	}
 }
+
+// Func -> "func" "(" [ Types ] ")" Type .
+func (p *parser) parseFunc() *ast.Func {
+	pos := p.expect(lexer.Func)
+	p.expect(lexer.LeftParen)
+	var params []ast.Type
+	if p.tok != lexer.RightParen {
+		params = p.parseTypes()
+	}
+	p.expect(lexer.RightParen)
+	result := p.parseType()
+	return &ast.Func{Params: params, Result: result, StartPos: pos}
+}
+
+func (p *parser) parseScalar(tok lexer.Tok) *ast.Scalar {
+	lit := p.lit
+	pos := p.expect(tok)
+	end := pos.Shift(len(lit))
+	return &ast.Scalar{Name: lit, StartPos: pos, EndPos: end}
+}
+
+// ------- Commands -------
 
 // Block -> "{" Cmd { Cmd } "}" .
 func (p *parser) parseBlock() *ast.Block {
@@ -107,74 +122,105 @@ func (p *parser) parseBlock() *ast.Block {
 	return &b
 }
 
-// Cmd -> "assert" Expr ";" | "break" ";" | "continue" ";" | "for" Expr Block | If | "let" Ident ":=" Expr ";" | "return" Expr ";" | "set" Ident "<-" Expr ";" .
-// If  -> "if" Expr Block [ "else" ( If | Block ) ] .
+// Cmd -> Assert | Break | Continue | For | If | VarDecl | Return | Assign .
 func (p *parser) parseCmd() ast.Cmd {
 	switch p.tok {
 	case lexer.Assert:
-		pos := p.expect(lexer.Assert)
-		x := p.parseExpr()
-		end := p.expect(lexer.Semicolon)
-		return &ast.Assert{X: x, StartPos: pos, EndPos: end}
+		return p.parseAssert()
 	case lexer.Break:
-		pos := p.expect(lexer.Break)
-		end := p.expect(lexer.Semicolon)
-		return &ast.Break{StartPos: pos, EndPos: end}
+		return p.parseBreak()
 	case lexer.Continue:
-		pos := p.expect(lexer.Continue)
-		end := p.expect(lexer.Semicolon)
-		return &ast.Continue{StartPos: pos, EndPos: end}
+		return p.parseContinue()
 	case lexer.For:
-		pos := p.expect(lexer.For)
-		x := p.parseExpr()
-		b := p.parseBlock()
-		return &ast.For{X: x, Block: b, StartPos: pos}
+		return p.parseFor()
 	case lexer.If:
-		pos := p.expect(lexer.If)
-		x := p.parseExpr()
-		b := p.parseBlock()
-
-		var e *ast.Else
-		if p.tok == lexer.Else {
-			pos := p.expect(lexer.Else)
-			var cmd ast.Cmd
-			switch p.tok {
-			case lexer.LeftBrace:
-				cmd = p.parseBlock()
-			case lexer.If:
-				cmd = p.parseCmd()
-			default:
-				p.errs.Append(p.pos, "unexpected %s, expected %s or %s", p.lit, lexer.LeftBrace, lexer.If)
-			}
-			if cmd != nil {
-				e = &ast.Else{Cmd: cmd, StartPos: pos}
-			}
-		}
-		return &ast.If{X: x, Block: b, Else: e, StartPos: pos}
+		return p.parseIf()
 	case lexer.Let:
-		pos := p.expect(lexer.Let)
-		ident := p.parseIdent()
-		p.expect(lexer.Define)
-		x := p.parseExpr()
-		end := p.expect(lexer.Semicolon)
-		return &ast.VarDecl{Ident: ident, X: x, StartPos: pos, EndPos: end}
+		return p.parseVarDecl()
 	case lexer.Return:
-		pos := p.expect(lexer.Return)
-		x := p.parseExpr()
-		end := p.expect(lexer.Semicolon)
-		return &ast.Return{X: x, StartPos: pos, EndPos: end}
+		return p.parseReturn()
 	case lexer.Set:
-		pos := p.expect(lexer.Set)
-		ident := p.parseIdent()
-		p.expect(lexer.Assign)
-		x := p.parseExpr()
-		end := p.expect(lexer.Semicolon)
-		return &ast.Assign{Ident: ident, X: x, StartPos: pos, EndPos: end}
+		return p.parseAssign()
 	default:
 		p.errs.Append(p.pos, "unexpected %s", p.lit)
 		return nil
 	}
 }
+
+// Assert -> "assert" Expr ";" .
+func (p *parser) parseAssert() *ast.Assert {
+	pos := p.expect(lexer.Assert)
+	x := p.parseExpr()
+	end := p.expect(lexer.Semicolon)
+	return &ast.Assert{X: x, StartPos: pos, EndPos: end}
+}
+
+// Break -> "break" ";" .
+func (p *parser) parseBreak() *ast.Break {
+	pos := p.expect(lexer.Break)
+	end := p.expect(lexer.Semicolon)
+	return &ast.Break{StartPos: pos, EndPos: end}
+}
+
+// Continue -> "continue" ";" .
+func (p *parser) parseContinue() *ast.Continue {
+	pos := p.expect(lexer.Continue)
+	end := p.expect(lexer.Semicolon)
+	return &ast.Continue{StartPos: pos, EndPos: end}
+}
+
+// For -> "for" Expr Block .
+func (p *parser) parseFor() *ast.For {
+	pos := p.expect(lexer.For)
+	x := p.parseExpr()
+	b := p.parseBlock()
+	return &ast.For{X: x, Block: b, StartPos: pos}
+}
+
+// If  -> "if" Expr Block [ "else" ( If | Block ) ] .
+func (p *parser) parseIf() *ast.If {
+	pos := p.expect(lexer.If)
+	x := p.parseExpr()
+	b := p.parseBlock()
+
+	var e *ast.Else
+	if p.tok == lexer.Else {
+		pos := p.expect(lexer.Else)
+		var cmd ast.Cmd
+		switch p.tok {
+		case lexer.LeftBrace:
+			cmd = p.parseBlock()
+		case lexer.If:
+			cmd = p.parseCmd()
+		default:
+			p.errs.Append(p.pos, "unexpected %s, expected %s or %s", p.lit, lexer.LeftBrace, lexer.If)
+		}
+		if cmd != nil {
+			e = &ast.Else{Cmd: cmd, StartPos: pos}
+		}
+	}
+	return &ast.If{X: x, Block: b, Else: e, StartPos: pos}
+}
+
+// Return -> "return" Expr ";" .
+func (p *parser) parseReturn() *ast.Return {
+	pos := p.expect(lexer.Return)
+	x := p.parseExpr()
+	end := p.expect(lexer.Semicolon)
+	return &ast.Return{X: x, StartPos: pos, EndPos: end}
+}
+
+// Assign -> "set" Ident "<-" Expr ";" .
+func (p *parser) parseAssign() *ast.Assign {
+	pos := p.expect(lexer.Set)
+	ident := p.parseIdent()
+	p.expect(lexer.Assign)
+	x := p.parseExpr()
+	end := p.expect(lexer.Semicolon)
+	return &ast.Assign{Ident: ident, X: x, StartPos: pos, EndPos: end}
+}
+
+// ------- Expressions -------
 
 // Expr -> UnaryExpr { BinOp UnaryExpr } .
 func (p *parser) parseExpr() ast.Expr {
@@ -199,7 +245,7 @@ func (p *parser) parseBinaryExpr(parse func() ast.Expr, ops ...lexer.Tok) ast.Ex
 	return x
 }
 
-// UnaryExpr -> [ "-" | "~" ] UnaryExprExpr | PrimaryExpr .
+// UnaryExpr -> [ "-" | "~" ] UnaryExpr | PrimaryExpr .
 func (p *parser) parseUnaryExpr() ast.Expr {
 	switch p.tok {
 	case lexer.Minus, lexer.Not:
@@ -212,66 +258,73 @@ func (p *parser) parseUnaryExpr() ast.Expr {
 	}
 }
 
-// PrimaryExpr -> "(" Expr ")" | F64Lit | FuncLit | I64Lit | Identifier | StringLit | "true" | "false" .
-// FuncLit     -> "func" "(" [ Fields ] ")" Type Block .
-// Fields      -> Ident Type { "," Ident Type } .
+// PrimaryExpr -> ParenExpr | F64Lit | FuncLit | I64Lit | Identifier | StringLit | True | False .
 func (p *parser) parsePrimaryExpr() ast.Expr {
 	switch p.tok {
 	case lexer.LeftParen:
-		pos := p.expect(lexer.LeftParen)
-		x := p.parseExpr()
-		end := p.expect(lexer.RightParen)
-		return &ast.ParenExpr{X: x, StartPos: pos, EndPos: end}
+		return p.parseParenExpr()
 	case lexer.F64Lit:
-		lit := p.lit
-		pos := p.expect(lexer.F64Lit)
-		end := pos.Shift(len(lit))
-		val, err := strconv.ParseFloat(lit, 64)
-		if err != nil {
-			panic(fmt.Sprintf("cannot convert f64: %v", err))
-		}
-		return &ast.F64{Val: val, StartPos: pos, EndPos: end}
+		return p.parseF64Lit()
 	case lexer.Func:
-		pos := p.expect(lexer.Func)
-		p.expect(lexer.LeftParen)
-		var params []*ast.Field
-		if p.tok != lexer.RightParen {
-			params = p.parseFields()
-		}
-		p.expect(lexer.RightParen)
-		result := p.parseType()
-		b := p.parseBlock()
-		return &ast.FuncLit{Params: params, Result: result, Block: b, StartPos: pos}
+		return p.parseFuncLit()
 	case lexer.I64Lit:
-		lit := p.lit
-		pos := p.expect(lexer.I64Lit)
-		end := pos.Shift(len(lit))
-		val, err := strconv.ParseInt(lit, 10, 0)
-		if err != nil {
-			panic(fmt.Sprintf("cannot convert i64: %v", err))
-		}
-		return &ast.I64{Val: val, StartPos: pos, EndPos: end}
+		return p.parseI64Lit()
 	case lexer.Identifier:
 		return p.parseIdent()
 	case lexer.StringLit:
-		lit := p.lit
-		pos := p.expect(lexer.StringLit)
-		end := pos.Shift(len(lit))
-		return &ast.String{Val: lit, StartPos: pos, EndPos: end}
+		return p.parseStringLit()
 	case lexer.True:
-		lit := p.lit
-		pos := p.expect(lexer.True)
-		end := pos.Shift(len(lit))
-		return &ast.Bool{Val: true, StartPos: pos, EndPos: end}
+		return p.parseTrue()
 	case lexer.False:
-		lit := p.lit
-		pos := p.expect(lexer.False)
-		end := pos.Shift(len(lit))
-		return &ast.Bool{Val: false, StartPos: pos, EndPos: end}
+		return p.parseFalse()
 	default:
 		p.errs.Append(p.pos, "unexpected %s", p.lit)
 		return nil
 	}
+}
+
+// ParenExpr -> "(" Expr ")" .
+func (p *parser) parseParenExpr() *ast.ParenExpr {
+	pos := p.expect(lexer.LeftParen)
+	x := p.parseExpr()
+	end := p.expect(lexer.RightParen)
+	return &ast.ParenExpr{X: x, StartPos: pos, EndPos: end}
+}
+
+func (p *parser) parseF64Lit() *ast.F64 {
+	lit := p.lit
+	pos := p.expect(lexer.F64Lit)
+	end := pos.Shift(len(lit))
+	val, err := strconv.ParseFloat(lit, 64)
+	if err != nil {
+		panic(fmt.Sprintf("cannot convert f64: %v", err))
+	}
+	return &ast.F64{Val: val, StartPos: pos, EndPos: end}
+}
+
+// FuncLit -> "func" "(" [ Fields ] ")" Type Block .
+func (p *parser) parseFuncLit() *ast.FuncLit {
+	pos := p.expect(lexer.Func)
+	p.expect(lexer.LeftParen)
+	var params []*ast.Field
+	if p.tok != lexer.RightParen {
+		params = p.parseFields()
+	}
+	p.expect(lexer.RightParen)
+	result := p.parseType()
+	b := p.parseBlock()
+	return &ast.FuncLit{Params: params, Result: result, Block: b, StartPos: pos}
+}
+
+func (p *parser) parseI64Lit() *ast.I64 {
+	lit := p.lit
+	pos := p.expect(lexer.I64Lit)
+	end := pos.Shift(len(lit))
+	val, err := strconv.ParseInt(lit, 10, 0)
+	if err != nil {
+		panic(fmt.Sprintf("cannot convert i64: %v", err))
+	}
+	return &ast.I64{Val: val, StartPos: pos, EndPos: end}
 }
 
 func (p *parser) parseIdent() *ast.Ident {
@@ -280,6 +333,33 @@ func (p *parser) parseIdent() *ast.Ident {
 	return &ast.Ident{Name: name, StartPos: pos}
 }
 
+func (p *parser) parseStringLit() *ast.String {
+	lit := p.lit
+	pos := p.expect(lexer.StringLit)
+	end := pos.Shift(len(lit))
+	return &ast.String{Val: lit, StartPos: pos, EndPos: end}
+}
+
+// True -> "true" .
+func (p *parser) parseTrue() *ast.Bool {
+	lit := p.lit
+	pos := p.expect(lexer.True)
+	end := pos.Shift(len(lit))
+	return &ast.Bool{Val: true, StartPos: pos, EndPos: end}
+}
+
+// False -> "false" .
+func (p *parser) parseFalse() *ast.Bool {
+	lit := p.lit
+	pos := p.expect(lexer.False)
+	end := pos.Shift(len(lit))
+	return &ast.Bool{Val: false, StartPos: pos, EndPos: end}
+}
+
+// ------- Others -------
+
+// Fields -> Field { "," Field } .
+// Field  -> Ident Type .
 func (p *parser) parseFields() (fs []*ast.Field) {
 	id := p.parseIdent()
 	typ := p.parseType()
@@ -291,6 +371,8 @@ func (p *parser) parseFields() (fs []*ast.Field) {
 	}
 	return fs
 }
+
+// ------- Helpers -------
 
 func (p *parser) next() {
 	for {
