@@ -94,6 +94,8 @@ func (t *translator) translateCmd(cmd ast.Cmd) Seq {
 		return t.translateFor(cmd)
 	case *ast.If:
 		return t.translateIf(cmd)
+	case *ast.Return:
+		return Seq{&Return{pos: cmd.Pos()}}
 	case *ast.VarDecl:
 		return t.translateVarDecl(cmd)
 	default:

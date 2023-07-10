@@ -68,6 +68,10 @@ type (
 		pos lexer.Pos
 	}
 
+	Return struct {
+		pos lexer.Pos
+	}
+
 	Store struct {
 		Src  RVal
 		Dst  *Mem
@@ -87,6 +91,7 @@ func (c *Call) Pos() lexer.Pos        { return c.pos }
 func (c *CJump) Pos() lexer.Pos       { return c.pos }
 func (c *Jump) Pos() lexer.Pos        { return c.pos }
 func (c *Load) Pos() lexer.Pos        { return c.pos }
+func (c *Return) Pos() lexer.Pos      { return c.pos }
 func (c *Store) Pos() lexer.Pos       { return c.pos }
 func (c *UnaryInstr) Pos() lexer.Pos  { return c.pos }
 
@@ -95,6 +100,7 @@ func (*Call) node()        {}
 func (*CJump) node()       {}
 func (*Jump) node()        {}
 func (*Load) node()        {}
+func (*Return) node()      {}
 func (*Store) node()       {}
 func (*UnaryInstr) node()  {}
 
@@ -103,6 +109,7 @@ func (*Call) cmd()        {}
 func (*CJump) cmd()       {}
 func (*Jump) cmd()        {}
 func (*Load) cmd()        {}
+func (*Return) cmd()      {}
 func (*Store) cmd()       {}
 func (*UnaryInstr) cmd()  {}
 

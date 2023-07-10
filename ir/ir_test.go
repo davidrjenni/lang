@@ -17,6 +17,7 @@ var (
 	_ ir.Node = &ir.Jump{}
 	_ ir.Node = ir.Label("")
 	_ ir.Node = &ir.Load{}
+	_ ir.Node = &ir.Return{}
 	_ ir.Node = &ir.Mem{}
 	_ ir.Node = &ir.Reg{}
 	_ ir.Node = ir.Seq{}
@@ -28,6 +29,7 @@ var (
 	_ ir.Cmd = &ir.CJump{}
 	_ ir.Cmd = &ir.Jump{}
 	_ ir.Cmd = &ir.Load{}
+	_ ir.Cmd = &ir.Return{}
 	_ ir.Cmd = &ir.Store{}
 	_ ir.Cmd = &ir.UnaryInstr{}
 

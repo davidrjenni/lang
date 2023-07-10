@@ -36,8 +36,7 @@ func (c *compiler) compileFrame(f *ir.Frame) {
 	}
 
 	c.printf("%s $%d, %%rax", Movq, 0)
-	c.printf("%s", Leave)
-	c.printf("%s", Ret)
+	c.compile(&ir.Return{})
 }
 
 func (c *compiler) compile(n ir.Node) {
@@ -54,6 +53,9 @@ func (c *compiler) compile(n ir.Node) {
 		fmt.Fprintf(c.out, "%s:\n", n)
 	case *ir.Load:
 		c.printf("%s %s, %s  # %s", mov(n.Dst.Type), rval(n.Src), reg(n.Dst), n.Pos())
+	case *ir.Return:
+		c.printf("%s  # %s", Leave, n.Pos())
+		c.printf("%s  # %s", Ret, n.Pos())
 	case *ir.Store:
 		c.printf("%s %s, %d(%%rbp)  # %s", mov(n.Size), rval(n.Src), n.Dst.Off, n.Pos())
 	case *ir.UnaryInstr:

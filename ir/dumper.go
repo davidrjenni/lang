@@ -48,6 +48,8 @@ func (d *dumper) dump(n Node) {
 			src = seqx.Dst
 		}
 		d.printf("load %s <- %s  // %s", lval(n.Dst), rval(src), n.Pos())
+	case *Return:
+		d.printf("return  // %s", n.Pos())
 	case Seq:
 		for _, s := range n {
 			d.dump(s)
